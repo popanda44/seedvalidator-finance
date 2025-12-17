@@ -1,0 +1,376 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// Authentication Models (NextAuth)
+// ==========================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ==========================================
+// Core Application Models
+// ==========================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  password      String?   // For credentials auth
+  
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  company       Company?  @relation(fields: [companyId], references: [id])
+  companyId     String?
+  role          UserRole  @default(MEMBER)
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Company {
+  id              String              @id @default(cuid())
+  name            String
+  industry        String?
+  stage           CompanyStage?
+  currency        String              @default("USD")
+  fiscalYearStart Int                 @default(1) // Month 1-12
+  
+  // Relations
+  users           User[]
+  bankAccounts    BankAccount[]
+  transactions    Transaction[]
+  categories      Category[]
+  snapshots       FinancialSnapshot[]
+  alerts          Alert[]
+  forecasts       Forecast[]
+  plaidItems      PlaidItem[]
+  
+  // Settings
+  alertSettings   Json?
+  
+  // Timestamps
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+model PlaidItem {
+  id              String        @id @default(cuid())
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
+  plaidItemId     String        @unique
+  accessToken     String        @db.Text
+  institutionId   String?
+  institutionName String?
+  status          PlaidItemStatus @default(ACTIVE)
+  lastSyncedAt    DateTime?
+  cursor          String?       // For transaction sync
+  
+  // Relations
+  bankAccounts    BankAccount[]
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model BankAccount {
+  id              String        @id @default(cuid())
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
+  plaidItem       PlaidItem?    @relation(fields: [plaidItemId], references: [id])
+  plaidItemId     String?
+  plaidAccountId  String?       @unique
+  
+  // Account Info
+  name            String
+  officialName    String?
+  type            AccountType
+  subtype         String?
+  mask            String?       // Last 4 digits
+  
+  // Balances
+  currentBalance  Float         @default(0)
+  availableBalance Float?
+  limitBalance    Float?        // For credit cards
+  isoCurrencyCode String?
+  
+  // Status
+  isActive        Boolean       @default(true)
+  lastSyncedAt    DateTime?
+  
+  // Relations
+  transactions    Transaction[]
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Transaction {
+  id                  String        @id @default(cuid())
+  company             Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId           String
+  bankAccount         BankAccount   @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  bankAccountId       String
+  category            Category?     @relation(fields: [categoryId], references: [id])
+  categoryId          String?
+  
+  // Plaid Data
+  plaidTransactionId  String?       @unique
+  
+  // Transaction Details
+  date                DateTime
+  name                String        // Merchant name
+  merchantName        String?
+  amount              Float         // Positive = expense, Negative = income
+  isoCurrencyCode     String?
+  pending             Boolean       @default(false)
+  
+  // Categorization
+  plaidCategory       String[]      // Original Plaid categories
+  isManualCategory    Boolean       @default(false)
+  
+  // Additional Info
+  paymentChannel      String?       // online, in_store, etc.
+  transactionType     String?       // place, digital, special, etc.
+  notes               String?
+  
+  // Timestamps
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([companyId, date])
+  @@index([categoryId])
+}
+
+model Category {
+  id              String        @id @default(cuid())
+  company         Company?      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String?       // null = system default category
+  
+  name            String
+  slug            String
+  description     String?
+  icon            String?       // Lucide icon name
+  color           String?       // Hex color
+  
+  // Hierarchy
+  parentId        String?
+  parent          Category?     @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children        Category[]    @relation("CategoryToCategory")
+  
+  // Type
+  type            CategoryType  @default(EXPENSE)
+  isSystem        Boolean       @default(false) // System categories can't be deleted
+  
+  // Relations
+  transactions    Transaction[]
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([companyId, slug])
+}
+
+model FinancialSnapshot {
+  id              String        @id @default(cuid())
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
+  
+  // Snapshot Date
+  date            DateTime      @db.Date
+  
+  // Cash Metrics
+  totalCash       Float
+  cashChange      Float?        // Change from previous period
+  
+  // Burn Metrics
+  grossBurn       Float
+  netBurn         Float
+  runway          Float         // In months
+  
+  // Revenue Metrics
+  revenue         Float?
+  mrr             Float?
+  arr             Float?
+  revenueGrowth   Float?        // MoM growth rate
+  
+  // Expense Breakdown
+  expensesByCategory Json?      // { categorySlug: amount }
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  
+  @@unique([companyId, date])
+  @@index([companyId, date])
+}
+
+model Forecast {
+  id              String        @id @default(cuid())
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
+  
+  name            String
+  type            ForecastType
+  isActive        Boolean       @default(true)
+  
+  // Forecast Parameters
+  startDate       DateTime
+  endDate         DateTime
+  method          ForecastMethod @default(LINEAR)
+  
+  // Forecast Data
+  projections     Json          // Array of { date, amount, confidence }
+  assumptions     Json?         // User-defined assumptions
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Alert {
+  id              String        @id @default(cuid())
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
+  
+  type            AlertType
+  severity        AlertSeverity
+  title           String
+  message         String
+  data            Json?         // Additional context
+  
+  // Status
+  isRead          Boolean       @default(false)
+  isDismissed     Boolean       @default(false)
+  readAt          DateTime?
+  dismissedAt     DateTime?
+  
+  // Notifications
+  emailSent       Boolean       @default(false)
+  emailSentAt     DateTime?
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  
+  @@index([companyId, createdAt])
+  @@index([companyId, isRead])
+}
+
+// ==========================================
+// Enums
+// ==========================================
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum CompanyStage {
+  PRE_SEED
+  SEED
+  SERIES_A
+  SERIES_B
+  SERIES_C
+  GROWTH
+  PROFITABLE
+}
+
+enum AccountType {
+  DEPOSITORY    // Checking, Savings
+  CREDIT        // Credit Card
+  INVESTMENT    // Brokerage, 401k
+  LOAN          // Mortgage, Student
+  OTHER
+}
+
+enum PlaidItemStatus {
+  ACTIVE
+  PENDING
+  ERROR
+  DISCONNECTED
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+enum ForecastType {
+  REVENUE
+  EXPENSE
+  CASH_FLOW
+  HEADCOUNT
+}
+
+enum ForecastMethod {
+  LINEAR
+  EXPONENTIAL
+  SEASONAL
+  MANUAL
+}
+
+enum AlertType {
+  RUNWAY_CRITICAL     // < 6 months
+  RUNWAY_WARNING      // < 9 months
+  SPENDING_SPIKE      // > 50% increase
+  LARGE_TRANSACTION   // > threshold
+  PAYMENT_DUE         // Upcoming payment
+  SYNC_ERROR          // Bank sync failed
+  WEEKLY_DIGEST       // Weekly summary
+}
+
+enum AlertSeverity {
+  CRITICAL
+  WARNING
+  INFO
+}
