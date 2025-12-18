@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,6 +28,50 @@ const navigation = [
     { name: 'Alerts', href: '/dashboard/alerts', icon: Bell },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
+
+function UserSection() {
+    const { data: session } = useSession()
+
+    const user = session?.user
+    const initials = user?.name
+        ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+        : 'U'
+
+    const handleSignOut = () => {
+        signOut({ callbackUrl: '/login' })
+    }
+
+    return (
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800">
+            <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-800/50">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center">
+                    {user?.image ? (
+                        <img src={user.image} alt={user.name || ''} className="w-10 h-10 rounded-full" />
+                    ) : (
+                        <span className="text-sm font-bold text-white">{initials}</span>
+                    )}
+                </div>
+                <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">
+                        {user?.name || 'User'}
+                    </p>
+                    <p className="text-xs text-slate-400 truncate">
+                        {user?.email || 'Not signed in'}
+                    </p>
+                </div>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-slate-400 hover:text-white"
+                    onClick={handleSignOut}
+                    title="Sign out"
+                >
+                    <LogOut className="w-4 h-4" />
+                </Button>
+            </div>
+        </div>
+    )
+}
 
 interface DashboardLayoutProps {
     children: React.ReactNode
@@ -99,20 +144,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </nav>
 
                 {/* Bottom section */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-800/50">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center">
-                            <span className="text-sm font-bold text-white">JS</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white truncate">John Smith</p>
-                            <p className="text-xs text-slate-400 truncate">john@company.com</p>
-                        </div>
-                        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
-                            <LogOut className="w-4 h-4" />
-                        </Button>
-                    </div>
-                </div>
+                <UserSection />
             </aside>
 
             {/* Main content */}
