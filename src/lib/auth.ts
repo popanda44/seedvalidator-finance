@@ -7,28 +7,20 @@ import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import prisma from "@/lib/prisma"
 
-// Build providers array conditionally
-const providers: Provider[] = []
-
-// Add Google provider if credentials are available
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-    providers.push(
-        Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        })
-    )
-}
-
-// Add GitHub provider if credentials are available
-if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
-    providers.push(
-        GitHub({
-            clientId: process.env.GITHUB_CLIENT_ID,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        })
-    )
-}
+// Build providers array - always include OAuth providers
+// Credentials are read at runtime from environment variables
+const providers: Provider[] = [
+    // Google OAuth provider
+    Google({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    // GitHub OAuth provider
+    GitHub({
+        clientId: process.env.GITHUB_CLIENT_ID!,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
+]
 
 // Add Credentials provider
 providers.push(
