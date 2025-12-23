@@ -6,6 +6,7 @@ import GitHub from "next-auth/providers/github"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import prisma from "@/lib/prisma"
+import { authConfig } from "@/lib/auth.config"
 
 // Build providers array - always include OAuth providers
 // Credentials are read at runtime from environment variables
@@ -63,40 +64,15 @@ providers.push(
 )
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+    ...authConfig,
     adapter: PrismaAdapter(prisma),
     trustHost: true,
     session: {
         strategy: "jwt",
     },
-    pages: {
-        signIn: "/login",
-        error: "/login",
-    },
     providers,
     callbacks: {
-        async signIn({ user, account }) {
-            // Allow OAuth sign-in even for new users (adapter creates them)
-            if (account?.provider === 'google' || account?.provider === 'github') {
-                return true
-            }
-            // For credentials, user must already exist
-            if (user) {
-                return true
-            }
-            return false
-        },
-        async redirect({ url, baseUrl }) {
-            // Allow relative URLs
-            if (url.startsWith('/')) {
-                return `${baseUrl}${url}`
-            }
-            // Allow URLs from same origin
-            if (url.startsWith(baseUrl)) {
-                return url
-            }
-            // Default redirect to dashboard
-            return `${baseUrl}/dashboard`
-        },
+        ...authConfig.callbacks,
         async jwt({ token, user, account }) {
             // Initial sign-in - user object is available
             if (user) {
@@ -125,16 +101,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 }
             }
             return token
-        },
-        async session({ session, token }) {
-            if (session.user) {
-                session.user.id = token.id as string
-                session.user.email = token.email as string
-                session.user.role = token.role as string
-                session.user.companyId = token.companyId as string
-                session.user.companyName = token.companyName as string
-            }
-            return session
         },
     },
 })
