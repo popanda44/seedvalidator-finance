@@ -16,6 +16,13 @@ export async function GET() {
         AUTH_SECRET: process.env.AUTH_SECRET ? 'SET' : 'NOT SET',
         AUTH_URL: process.env.AUTH_URL || 'NOT SET',
         NODE_ENV: process.env.NODE_ENV || 'NOT SET',
+        PLAID_CLIENT_ID: process.env.PLAID_CLIENT_ID ?
+            `SET (starts with: ${process.env.PLAID_CLIENT_ID.substring(0, 8)}...)` :
+            'NOT SET',
+        PLAID_SECRET: process.env.PLAID_SECRET ?
+            `SET (length: ${process.env.PLAID_SECRET.length})` :
+            'NOT SET',
+        PLAID_ENV: process.env.PLAID_ENV || 'NOT SET',
     }
 
     return NextResponse.json({
