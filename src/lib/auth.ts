@@ -74,6 +74,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     providers,
     callbacks: {
+        async signIn({ user, account }) {
+            // Allow OAuth sign-in even for new users (adapter creates them)
+            if (account?.provider === 'google' || account?.provider === 'github') {
+                return true
+            }
+            // For credentials, user must already exist
+            if (user) {
+                return true
+            }
+            return false
+        },
+        async redirect({ url, baseUrl }) {
+            // Allow relative URLs
+            if (url.startsWith('/')) {
+                return `${baseUrl}${url}`
+            }
+            // Allow URLs from same origin
+            if (url.startsWith(baseUrl)) {
+                return url
+            }
+            // Default redirect to dashboard
+            return `${baseUrl}/dashboard`
+        },
         async jwt({ token, user }) {
             if (user) {
                 const dbUser = await prisma.user.findUnique({
