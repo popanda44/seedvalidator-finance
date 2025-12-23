@@ -16,17 +16,16 @@ export const plaidClient = new PlaidApi(configuration)
  * Create a link token for Plaid Link
  */
 export async function createLinkToken(userId: string, companyId: string) {
+    // Use the production URL or fallback
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.AUTH_URL || 'https://potent-fin.vercel.app'
+
     const response = await plaidClient.linkTokenCreate({
         user: { client_user_id: userId },
         client_name: 'SeedValidator Finance',
         products: [Products.Transactions],
         country_codes: [CountryCode.Us],
         language: 'en',
-        webhook: `${process.env.NEXT_PUBLIC_APP_URL}/api/plaid/webhook`,
-        // Optional: add account filters
-        // account_filters: {
-        //   depository: { account_subtypes: ['checking', 'savings'] },
-        // },
+        webhook: `${appUrl}/api/plaid/webhook`,
     })
 
     return response.data.link_token
