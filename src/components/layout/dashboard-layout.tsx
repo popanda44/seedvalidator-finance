@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { PlaidLinkButton } from '@/components/plaid/plaid-link-button'
 import {
     LayoutDashboard,
     DollarSign,
@@ -79,6 +80,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
     const pathname = usePathname()
+    const { data: session } = useSession()
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
     return (
@@ -174,9 +176,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                             <Bell className="w-4 h-4 mr-2" />
                             3 Alerts
                         </Button>
-                        <Button variant="gradient" size="sm">
-                            Connect Bank
-                        </Button>
+                        {session?.user?.id ? (
+                            <PlaidLinkButton
+                                companyId={session.user.companyId || session.user.id}
+                                userId={session.user.id}
+                                size="sm"
+                                onSuccess={() => window.location.reload()}
+                            />
+                        ) : (
+                            <Button variant="gradient" size="sm" disabled>
+                                Connect Bank
+                            </Button>
+                        )}
                     </div>
                 </header>
 
