@@ -97,23 +97,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             // Default redirect to dashboard
             return `${baseUrl}/dashboard`
         },
-        async jwt({ token, user }) {
+        async jwt({ token, user, account }) {
+            // Initial sign-in - user object is available
             if (user) {
-                const dbUser = await prisma.user.findUnique({
-                    where: { id: user.id },
-                    include: { company: true },
-                })
-
                 token.id = user.id
-                token.role = dbUser?.role
-                token.companyId = dbUser?.companyId
-                token.companyName = dbUser?.company?.name
+                token.email = user.email
+
+                // For OAuth users, try to get additional user info from database
+                // Use email lookup since ID might not be in DB yet during first OAuth
+                if (user.email) {
+                    try {
+                        const dbUser = await prisma.user.findUnique({
+                            where: { email: user.email },
+                            include: { company: true },
+                        })
+
+                        if (dbUser) {
+                            token.id = dbUser.id
+                            token.role = dbUser.role
+                            token.companyId = dbUser.companyId
+                            token.companyName = dbUser.company?.name
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user in jwt callback:', error)
+                        // Continue with basic token - don't fail the auth
+                    }
+                }
             }
             return token
         },
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id as string
+                session.user.email = token.email as string
                 session.user.role = token.role as string
                 session.user.companyId = token.companyId as string
                 session.user.companyName = token.companyName as string
