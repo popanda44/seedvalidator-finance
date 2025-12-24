@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { PlaidLinkButton } from '@/components/plaid/plaid-link-button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { OnboardingModal } from '@/components/onboarding/onboarding-modal'
 import {
     LayoutDashboard,
     DollarSign,
@@ -20,7 +21,7 @@ import {
     Menu,
     X,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -83,9 +84,36 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     const pathname = usePathname()
     const { data: session } = useSession()
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [showOnboarding, setShowOnboarding] = useState(false)
+
+    // Check if user needs onboarding (only on first visit)
+    useEffect(() => {
+        if (session?.user && typeof window !== 'undefined') {
+            const hasCompletedOnboarding = localStorage.getItem('seedvalidator_onboarding_complete')
+            if (!hasCompletedOnboarding) {
+                // Small delay to let the page load first
+                const timer = setTimeout(() => {
+                    setShowOnboarding(true)
+                }, 500)
+                return () => clearTimeout(timer)
+            }
+        }
+    }, [session?.user])
+
+    const handleOnboardingComplete = () => {
+        setShowOnboarding(false)
+        localStorage.setItem('seedvalidator_onboarding_complete', 'true')
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+            {/* Onboarding Modal */}
+            <OnboardingModal
+                isOpen={showOnboarding}
+                onClose={() => setShowOnboarding(false)}
+                onComplete={handleOnboardingComplete}
+                userName={session?.user?.name?.split(' ')[0]}
+            />
             {/* Mobile sidebar overlay */}
             {sidebarOpen && (
                 <div
