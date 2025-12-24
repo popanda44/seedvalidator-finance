@@ -1,0 +1,295 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+    FileText,
+    Download,
+    Calendar,
+    Mail,
+    Loader2,
+    CheckCircle,
+    FileSpreadsheet,
+    BarChart3,
+    PieChart,
+} from "lucide-react";
+
+type ReportType = "executive" | "detailed" | "forecast";
+type PeriodType = "month" | "quarter" | "year";
+type FormatType = "pdf" | "csv" | "excel";
+
+export default function ReportsPage() {
+    const [selectedReport, setSelectedReport] = useState<ReportType>("executive");
+    const [selectedPeriod, setPeriod] = useState<PeriodType>("month");
+    const [selectedFormat, setFormat] = useState<FormatType>("csv");
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [isEmailing, setIsEmailing] = useState(false);
+    const [success, setSuccess] = useState<string | null>(null);
+
+    const reportTypes = [
+        {
+            id: "executive" as ReportType,
+            name: "Executive Summary",
+            description: "High-level overview for stakeholders and board meetings",
+            icon: BarChart3,
+        },
+        {
+            id: "detailed" as ReportType,
+            name: "Detailed Financial Report",
+            description: "Comprehensive breakdown of all transactions and metrics",
+            icon: FileText,
+        },
+        {
+            id: "forecast" as ReportType,
+            name: "Forecast Report",
+            description: "Future projections with scenarios and assumptions",
+            icon: PieChart,
+        },
+    ];
+
+    const periods = [
+        { id: "month" as PeriodType, name: "This Month" },
+        { id: "quarter" as PeriodType, name: "This Quarter" },
+        { id: "year" as PeriodType, name: "This Year" },
+    ];
+
+    const formats = [
+        { id: "csv" as FormatType, name: "CSV", icon: FileSpreadsheet },
+        { id: "excel" as FormatType, name: "Excel", icon: FileSpreadsheet },
+        { id: "pdf" as FormatType, name: "PDF", icon: FileText },
+    ];
+
+    const handleDownload = async () => {
+        setIsGenerating(true);
+        setSuccess(null);
+
+        try {
+            const response = await fetch(`/api/export?format=${selectedFormat}&period=${selectedPeriod}`);
+
+            if (!response.ok) throw new Error("Export failed");
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `seedvalidator-${selectedReport}-${selectedPeriod}.${selectedFormat === "excel" ? "xlsx" : selectedFormat}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+
+            setSuccess("Report downloaded successfully!");
+        } catch (error) {
+            console.error("Download error:", error);
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    const handleEmailReport = async () => {
+        setIsEmailing(true);
+        setSuccess(null);
+
+        try {
+            const response = await fetch("/api/notifications", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    type: "weekly_digest",
+                    data: {
+                        metrics: {
+                            cashBalance: 842500,
+                            burnRate: 85000,
+                            runway: 9.9,
+                            mrr: 125000,
+                            mrrChange: 12.5,
+                            topExpenses: [
+                                { category: "Payroll", amount: 45200 },
+                                { category: "Infrastructure", amount: 12450 },
+                                { category: "Marketing", amount: 8900 },
+                            ],
+                        },
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || "Failed to send email");
+            }
+
+            setSuccess("Report sent to your email!");
+        } catch (error) {
+            console.error("Email error:", error);
+            setSuccess("Email service not configured. Add RESEND_API_KEY to enable.");
+        } finally {
+            setIsEmailing(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-background p-6 lg:p-8">
+            <div className="max-w-4xl mx-auto space-y-8">
+                {/* Header */}
+                <div>
+                    <h1 className="text-3xl font-bold text-foreground">Reports</h1>
+                    <p className="text-muted-foreground mt-1">
+                        Generate and export financial reports
+                    </p>
+                </div>
+
+                {/* Report Type Selection */}
+                <div className="space-y-4">
+                    <h2 className="text-lg font-semibold text-foreground">Report Type</h2>
+                    <div className="grid md:grid-cols-3 gap-4">
+                        {reportTypes.map((report) => (
+                            <motion.button
+                                key={report.id}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => setSelectedReport(report.id)}
+                                className={`p-4 rounded-xl border text-left transition-all ${selectedReport === report.id
+                                        ? "border-primary bg-primary/10"
+                                        : "border-border bg-card hover:border-primary/50"
+                                    }`}
+                            >
+                                <report.icon className={`h-6 w-6 mb-2 ${selectedReport === report.id ? "text-primary" : "text-muted-foreground"
+                                    }`} />
+                                <h3 className="font-medium text-foreground">{report.name}</h3>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                    {report.description}
+                                </p>
+                            </motion.button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Period Selection */}
+                <div className="space-y-4">
+                    <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                        <Calendar className="h-5 w-5" />
+                        Time Period
+                    </h2>
+                    <div className="flex gap-3">
+                        {periods.map((period) => (
+                            <button
+                                key={period.id}
+                                onClick={() => setPeriod(period.id)}
+                                className={`px-4 py-2 rounded-lg font-medium transition-all ${selectedPeriod === period.id
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                                    }`}
+                            >
+                                {period.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Format Selection */}
+                <div className="space-y-4">
+                    <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                        <FileText className="h-5 w-5" />
+                        Export Format
+                    </h2>
+                    <div className="flex gap-3">
+                        {formats.map((format) => (
+                            <button
+                                key={format.id}
+                                onClick={() => setFormat(format.id)}
+                                className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-all ${selectedFormat === format.id
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                                    }`}
+                            >
+                                <format.icon className="h-4 w-4" />
+                                {format.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Success Message */}
+                {success && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center gap-2 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                    >
+                        <CheckCircle className="h-5 w-5" />
+                        {success}
+                    </motion.div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleDownload}
+                        disabled={isGenerating}
+                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50"
+                    >
+                        {isGenerating ? (
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                            <Download className="h-5 w-5" />
+                        )}
+                        Download Report
+                    </motion.button>
+
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleEmailReport}
+                        disabled={isEmailing}
+                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 disabled:opacity-50"
+                    >
+                        {isEmailing ? (
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                            <Mail className="h-5 w-5" />
+                        )}
+                        Email Report
+                    </motion.button>
+                </div>
+
+                {/* Scheduled Reports */}
+                <div className="mt-8 p-6 rounded-xl bg-card border border-border">
+                    <h2 className="text-lg font-semibold text-foreground mb-4">
+                        Scheduled Reports
+                    </h2>
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                            <div>
+                                <p className="font-medium text-foreground">Weekly Digest</p>
+                                <p className="text-sm text-muted-foreground">Every Monday at 9:00 AM</p>
+                            </div>
+                            <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
+                                Active
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                            <div>
+                                <p className="font-medium text-foreground">Monthly Summary</p>
+                                <p className="text-sm text-muted-foreground">1st of each month</p>
+                            </div>
+                            <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
+                                Active
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                            <div>
+                                <p className="font-medium text-foreground">Board Deck Export</p>
+                                <p className="text-sm text-muted-foreground">Not scheduled</p>
+                            </div>
+                            <span className="px-2 py-1 rounded text-xs font-medium bg-muted text-muted-foreground">
+                                Disabled
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -20,6 +20,7 @@ import {
     ChevronRight,
     Menu,
     X,
+    FileText,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
@@ -29,6 +30,7 @@ const navigation = [
     { name: 'Expenses', href: '/dashboard/expenses', icon: CreditCard },
     { name: 'Forecasts', href: '/dashboard/forecasts', icon: TrendingUp },
     { name: 'Alerts', href: '/dashboard/alerts', icon: Bell },
+    { name: 'Reports', href: '/dashboard/reports', icon: FileText },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
