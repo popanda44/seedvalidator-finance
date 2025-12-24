@@ -156,24 +156,37 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(10px);
   }
-  to { 
+
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .animate-fade-in {
@@ -203,3 +216,250 @@ body {
   background-clip: text;
 }
 
+/* ==========================================
+   Enhanced Animations for Premium UI
+   ========================================== */
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+      transparent,
+      hsl(var(--foreground) / 0.05),
+      transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Glow pulse effect for alerts */
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 4px 2px hsl(var(--primary) / 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 16px 4px hsl(var(--primary) / 0.4);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Floating animation for hero elements */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Draw line animation for sparklines */
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-draw-line {
+  animation: draw-line 1s ease-out forwards;
+}
+
+/* Fade in with delay for dots */
+@keyframes fade-in-delayed {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-delayed {
+  animation: fade-in-delayed 0.3s ease-out 0.8s forwards;
+  opacity: 0;
+}
+
+/* Staggered entrance for cards */
+@keyframes stagger-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-stagger-in {
+  animation: stagger-in 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Apply stagger delay to children */
+.stagger-children>*:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.stagger-children>*:nth-child(2) {
+  animation-delay: 75ms;
+}
+
+.stagger-children>*:nth-child(3) {
+  animation-delay: 150ms;
+}
+
+.stagger-children>*:nth-child(4) {
+  animation-delay: 225ms;
+}
+
+.stagger-children>*:nth-child(5) {
+  animation-delay: 300ms;
+}
+
+.stagger-children>*:nth-child(6) {
+  animation-delay: 375ms;
+}
+
+/* Hover glow effect for cards */
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow:
+    0 0 0 1px hsl(var(--primary) / 0.2),
+    0 8px 32px -8px hsl(var(--primary) / 0.25);
+  transform: translateY(-2px);
+}
+
+/* Gradient border utility */
+.gradient-border {
+  position: relative;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(280 65% 60%));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Success/Error glow variants */
+.glow-success {
+  box-shadow: 0 0 20px -5px hsl(142.1 76.2% 36.3% / 0.4);
+}
+
+.glow-error {
+  box-shadow: 0 0 20px -5px hsl(0 84.2% 60.2% / 0.4);
+}
+
+/* Breathing animation for status indicators */
+@keyframes breathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+.animate-breathe {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+/* Spin slow for loading indicators */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Scale in animation */
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out;
+}
+
+/* Number tick animation for counters */
+@keyframes number-tick {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  25% {
+    transform: translateY(-2px);
+  }
+
+  75% {
+    transform: translateY(2px);
+  }
+}
+
+.animate-number-tick {
+  animation: number-tick 0.1s ease-out;
+}

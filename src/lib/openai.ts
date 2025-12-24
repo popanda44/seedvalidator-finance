@@ -1,11 +1,16 @@
 import OpenAI from 'openai'
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazy initialization to prevent build-time errors
+let _openai: OpenAI | null = null
 
-export default openai
+function getOpenAIClient(): OpenAI {
+    if (!_openai) {
+        _openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
+        })
+    }
+    return _openai
+}
 
 // Helper function to generate financial insights
 export async function generateFinancialInsights(data: {
@@ -41,7 +46,7 @@ Provide insights in this JSON format:
 
 Respond only with valid JSON.`
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
         model: 'gpt-4o-mini', // Cost-effective model for insights
         messages: [
             { role: 'system', content: 'You are a startup financial advisor. Always respond in valid JSON format.' },
@@ -86,7 +91,7 @@ ${context.mrr ? `- Monthly Recurring Revenue: $${context.mrr.toLocaleString()}` 
 
 Provide a clear, concise answer in 2-3 sentences. Be specific with numbers when relevant.`
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
             { role: 'system', content: 'You are a helpful startup financial assistant. Be concise and data-driven.' },

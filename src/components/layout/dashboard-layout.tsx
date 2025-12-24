@@ -6,6 +6,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { PlaidLinkButton } from '@/components/plaid/plaid-link-button'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import {
     LayoutDashboard,
     DollarSign,
@@ -172,6 +173,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        <ThemeToggle />
                         <Button variant="outline" size="sm" className="hidden md:flex">
                             <Bell className="w-4 h-4 mr-2" />
                             3 Alerts
