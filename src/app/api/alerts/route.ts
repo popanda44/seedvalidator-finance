@@ -1,17 +1,17 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-// GET /api/alerts - Get alerts
+// GET /api/alerts - Get all alerts for a company
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
         const companyId = searchParams.get('companyId')
-        const filter = searchParams.get('filter') || 'all' // all, unread, critical, warning, info, success
+        const filter = searchParams.get('filter') || 'all'
         const limit = parseInt(searchParams.get('limit') || '50')
 
-        // Return sample data if no companyId
+        // For development, return sample data if no companyId
         if (!companyId) {
-            return NextResponse.json(getSampleAlertsData(filter))
+            return NextResponse.json(getSampleAlerts(filter))
         }
 
         // Build where clause
@@ -19,11 +19,10 @@ export async function GET(request: Request) {
 
         if (filter === 'unread') {
             where.isRead = false
-        } else if (['CRITICAL', 'WARNING', 'INFO', 'SUCCESS'].includes(filter.toUpperCase())) {
-            where.severity = filter.toUpperCase()
+        } else if (filter !== 'all') {
+            where.type = filter.toUpperCase()
         }
 
-        // Get alerts
         const alerts = await prisma.alert.findMany({
             where,
             orderBy: { createdAt: 'desc' },
@@ -31,19 +30,11 @@ export async function GET(request: Request) {
         })
 
         // Get counts
-        const counts = await prisma.alert.groupBy({
-            by: ['severity', 'isRead'],
-            where: { companyId },
-            _count: true,
-        })
-
-        const unreadCount = counts
-            .filter(c => !c.isRead)
-            .reduce((sum, c) => sum + c._count, 0)
-
-        const criticalCount = counts
-            .filter(c => c.severity === 'CRITICAL' && !c.isRead)
-            .reduce((sum, c) => sum + c._count, 0)
+        const [total, unread, critical] = await Promise.all([
+            prisma.alert.count({ where: { companyId, isDismissed: false } }),
+            prisma.alert.count({ where: { companyId, isRead: false, isDismissed: false } }),
+            prisma.alert.count({ where: { companyId, severity: 'CRITICAL', isDismissed: false } }),
+        ])
 
         return NextResponse.json({
             alerts: alerts.map(a => ({
@@ -56,11 +47,12 @@ export async function GET(request: Request) {
                 isDismissed: a.isDismissed,
                 data: a.data,
             })),
-            summary: {
-                total: alerts.length,
-                unreadCount,
-                criticalCount,
-            },
+            counts: {
+                total,
+                unread,
+                critical,
+                success: alerts.filter(a => a.type === 'WEEKLY_DIGEST').length,
+            }
         })
     } catch (error) {
         console.error('Alerts API error:', error)
@@ -71,61 +63,46 @@ export async function GET(request: Request) {
     }
 }
 
-// PATCH /api/alerts - Mark alerts as read or dismissed
+// PATCH /api/alerts - Update alert status
 export async function PATCH(request: Request) {
     try {
         const body = await request.json()
-        const { alertIds, action } = body // action: 'read' | 'dismiss' | 'read-all'
+        const { id, isRead, isDismissed } = body
 
-        if (!alertIds && action !== 'read-all') {
+        if (!id) {
             return NextResponse.json(
-                { error: 'Alert IDs required' },
+                { error: 'Alert ID is required' },
                 { status: 400 }
             )
         }
 
-        if (action === 'read-all') {
-            // Mark all as read for company
-            const { companyId } = body
-            if (!companyId) {
-                return NextResponse.json(
-                    { error: 'Company ID required for read-all' },
-                    { status: 400 }
-                )
-            }
-
-            await prisma.alert.updateMany({
-                where: { companyId, isRead: false },
-                data: { isRead: true },
-            })
-
-            return NextResponse.json({ success: true, message: 'All alerts marked as read' })
+        const updateData: any = {}
+        if (typeof isRead === 'boolean') {
+            updateData.isRead = isRead
+            if (isRead) updateData.readAt = new Date()
+        }
+        if (typeof isDismissed === 'boolean') {
+            updateData.isDismissed = isDismissed
+            if (isDismissed) updateData.dismissedAt = new Date()
         }
 
-        const updateData = action === 'dismiss'
-            ? { isDismissed: true }
-            : { isRead: true }
-
-        await prisma.alert.updateMany({
-            where: { id: { in: alertIds } },
+        const alert = await prisma.alert.update({
+            where: { id },
             data: updateData,
         })
 
-        return NextResponse.json({
-            success: true,
-            message: `Alerts ${action === 'dismiss' ? 'dismissed' : 'marked as read'}`,
-        })
+        return NextResponse.json({ success: true, alert })
     } catch (error) {
-        console.error('Update alerts error:', error)
+        console.error('Alert update error:', error)
         return NextResponse.json(
-            { error: 'Failed to update alerts' },
+            { error: 'Failed to update alert' },
             { status: 500 }
         )
     }
 }
 
-// Sample data
-function getSampleAlertsData(filter: string) {
+// Sample data for development
+function getSampleAlerts(filter: string) {
     const allAlerts = [
         {
             id: '1',
@@ -177,21 +154,40 @@ function getSampleAlertsData(filter: string) {
             isDismissed: false,
             data: { amount: 45000 },
         },
+        {
+            id: '6',
+            type: 'info',
+            title: 'Weekly digest available',
+            message: 'Your weekly financial summary is ready to view.',
+            timestamp: new Date(Date.now() - 5 * 24 * 3600000),
+            isRead: true,
+            isDismissed: false,
+        },
+        {
+            id: '7',
+            type: 'success',
+            title: 'Bank account synced',
+            message: 'Chase Business Checking successfully synced with 23 new transactions.',
+            timestamp: new Date(Date.now() - 6 * 24 * 3600000),
+            isRead: true,
+            isDismissed: false,
+        },
     ]
 
-    let filtered = allAlerts
+    let filteredAlerts = allAlerts
     if (filter === 'unread') {
-        filtered = allAlerts.filter(a => !a.isRead)
+        filteredAlerts = allAlerts.filter(a => !a.isRead)
     } else if (filter !== 'all') {
-        filtered = allAlerts.filter(a => a.type === filter)
+        filteredAlerts = allAlerts.filter(a => a.type === filter)
     }
 
     return {
-        alerts: filtered,
-        summary: {
+        alerts: filteredAlerts,
+        counts: {
             total: allAlerts.length,
-            unreadCount: allAlerts.filter(a => !a.isRead).length,
-            criticalCount: allAlerts.filter(a => a.type === 'critical' && !a.isRead).length,
-        },
+            unread: allAlerts.filter(a => !a.isRead).length,
+            critical: allAlerts.filter(a => a.type === 'critical').length,
+            success: allAlerts.filter(a => a.type === 'success').length,
+        }
     }
 }

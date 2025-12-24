@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import useSWR from 'swr'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MetricCard } from '@/components/dashboard/metric-card'
-import { RevenueForecastChart, generateSampleForecastData } from '@/components/charts/revenue-forecast-chart'
+import { RevenueForecastChart } from '@/components/charts/revenue-forecast-chart'
 import {
     TrendingUp,
     DollarSign,
@@ -18,72 +19,54 @@ import {
     ArrowRight,
     BarChart3,
     Zap,
+    Loader2,
+    AlertTriangle,
 } from 'lucide-react'
-import { formatCurrency, formatPercentage, cn } from '@/lib/utils'
+import { formatCurrency, cn } from '@/lib/utils'
 
-// Sample metrics
-const forecastMetrics = {
-    projectedMRR: 175000,
-    currentMRR: 125000,
-    growthRate: 12.5,
-    projectedARR: 2100000,
-    confidenceScore: 85,
-}
-
-// Sample scenarios
-const scenarios = [
-    {
-        id: 'base',
-        name: 'Base Case',
-        description: 'Current growth rate continues',
-        endMRR: 175000,
-        growthRate: 12,
-        probability: 70,
-        color: '#3B82F6',
-    },
-    {
-        id: 'optimistic',
-        name: 'Optimistic',
-        description: 'Accelerated growth with new features',
-        endMRR: 220000,
-        growthRate: 18,
-        probability: 15,
-        color: '#10B981',
-    },
-    {
-        id: 'pessimistic',
-        name: 'Conservative',
-        description: 'Market slowdown scenario',
-        endMRR: 145000,
-        growthRate: 6,
-        probability: 15,
-        color: '#F59E0B',
-    },
-]
-
-// Growth drivers
-const growthDrivers = [
-    { name: 'New customer acquisition', impact: '+$25,000/mo', trend: 'up', confidence: 'High' },
-    { name: 'Expansion revenue', impact: '+$12,000/mo', trend: 'up', confidence: 'Medium' },
-    { name: 'Reduced churn', impact: '+$8,000/mo', trend: 'up', confidence: 'High' },
-    { name: 'New product line', impact: '+$15,000/mo', trend: 'up', confidence: 'Low' },
-]
-
-// Assumptions
-const assumptions = [
-    { label: 'Monthly Growth Rate', value: '12%', editable: true },
-    { label: 'Churn Rate', value: '3%', editable: true },
-    { label: 'Average Contract Value', value: '$2,500', editable: true },
-    { label: 'Sales Cycle (days)', value: '45', editable: true },
-    { label: 'Lead Conversion Rate', value: '8%', editable: true },
-]
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function ForecastsPage() {
     const [selectedScenario, setSelectedScenario] = useState('base')
     const [showScenarios, setShowScenarios] = useState(true)
-    const forecastData = generateSampleForecastData(12)
 
-    const activeScenario = scenarios.find(s => s.id === selectedScenario)!
+    const { data, error, isLoading, mutate } = useSWR('/api/forecasts', fetcher, {
+        refreshInterval: 60000,
+    })
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+                    <p className="text-muted-foreground">Loading forecast data...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-4" />
+                    <p className="text-foreground font-medium mb-2">Failed to load data</p>
+                    <Button onClick={() => mutate()} variant="outline">
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Retry
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
+    const metrics = data?.metrics || {}
+    const scenarios = data?.scenarios || []
+    const growthDrivers = data?.growthDrivers || []
+    const assumptions = data?.assumptions || []
+    const projectedData = data?.projectedData || []
+
+    const activeScenario = scenarios.find((s: any) => s.id === selectedScenario) || scenarios[0]
 
     return (
         <div className="space-y-6 animate-fade-in">
@@ -105,7 +88,7 @@ export default function ForecastsPage() {
                             <ChevronDown className="w-4 h-4 text-muted-foreground" />
                         </button>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => mutate()}>
                         <RefreshCw className="w-4 h-4 mr-2" />
                         Recalculate
                     </Button>
@@ -120,7 +103,7 @@ export default function ForecastsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <MetricCard
                     title="Current MRR"
-                    value={forecastMetrics.currentMRR}
+                    value={metrics.currentMRR || 0}
                     change={12}
                     icon={DollarSign}
                     iconColor="text-blue-500"
@@ -129,22 +112,22 @@ export default function ForecastsPage() {
                 />
                 <MetricCard
                     title="Projected MRR (EOY)"
-                    value={forecastMetrics.projectedMRR}
+                    value={metrics.projectedMRR || 0}
                     icon={Target}
                     iconColor="text-purple-500"
                     type="currency"
-                    changeLabel={`+${formatCurrency(forecastMetrics.projectedMRR - forecastMetrics.currentMRR)}`}
+                    changeLabel={`+${formatCurrency((metrics.projectedMRR || 0) - (metrics.currentMRR || 0))}`}
                 />
                 <MetricCard
                     title="Projected ARR"
-                    value={forecastMetrics.projectedARR}
+                    value={metrics.projectedARR || 0}
                     icon={BarChart3}
                     iconColor="text-emerald-500"
                     type="currency"
                 />
                 <MetricCard
                     title="Growth Rate"
-                    value={`${forecastMetrics.growthRate}%`}
+                    value={`${metrics.growthRate?.toFixed(1) || 0}%`}
                     icon={TrendingUp}
                     iconColor="text-orange-500"
                     changeLabel="monthly compound"
@@ -157,14 +140,14 @@ export default function ForecastsPage() {
                         </div>
                         <div className="flex items-end gap-2">
                             <span className="text-3xl font-bold text-slate-900 dark:text-white">
-                                {forecastMetrics.confidenceScore}%
+                                {metrics.confidenceScore || 0}%
                             </span>
                             <span className="text-sm text-emerald-500 mb-1">High</span>
                         </div>
                         <div className="mt-3 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                             <div
                                 className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                                style={{ width: `${forecastMetrics.confidenceScore}%` }}
+                                style={{ width: `${metrics.confidenceScore || 0}%` }}
                             />
                         </div>
                     </CardContent>
@@ -196,7 +179,7 @@ export default function ForecastsPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        {scenarios.map((scenario) => (
+                        {scenarios.map((scenario: any) => (
                             <button
                                 key={scenario.id}
                                 onClick={() => setSelectedScenario(scenario.id)}
@@ -234,7 +217,7 @@ export default function ForecastsPage() {
                                             "text-lg font-semibold",
                                             scenario.growthRate >= 12 ? "text-emerald-500" : "text-orange-500"
                                         )}>
-                                            +{scenario.growthRate}%
+                                            +{scenario.growthRate?.toFixed(1) || 0}%
                                         </p>
                                         <p className="text-xs text-muted-foreground">Monthly</p>
                                     </div>
@@ -245,7 +228,7 @@ export default function ForecastsPage() {
 
                     {/* Chart */}
                     <RevenueForecastChart
-                        data={forecastData}
+                        data={projectedData}
                         title="Revenue Projection"
                         showScenarios={showScenarios}
                     />
@@ -263,7 +246,7 @@ export default function ForecastsPage() {
                         </Button>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        {growthDrivers.map((driver, idx) => (
+                        {growthDrivers.map((driver: any, idx: number) => (
                             <div
                                 key={idx}
                                 className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
@@ -305,7 +288,7 @@ export default function ForecastsPage() {
                         </Button>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {assumptions.map((assumption, idx) => (
+                        {assumptions.map((assumption: any, idx: number) => (
                             <div key={idx} className="flex items-center justify-between">
                                 <label className="text-sm text-muted-foreground">{assumption.label}</label>
                                 <div className="flex items-center gap-2">
@@ -320,7 +303,7 @@ export default function ForecastsPage() {
                         ))}
 
                         <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                            <Button variant="gradient" className="w-full">
+                            <Button variant="gradient" className="w-full" onClick={() => mutate()}>
                                 <RefreshCw className="w-4 h-4 mr-2" />
                                 Update Forecast
                             </Button>

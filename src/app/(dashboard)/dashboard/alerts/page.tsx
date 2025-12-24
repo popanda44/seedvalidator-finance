@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import useSWR from 'swr'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,99 +16,14 @@ import {
     Mail,
     Smartphone,
     X,
-    Filter,
-    ChevronDown,
+    Loader2,
+    RefreshCw,
 } from 'lucide-react'
 import { formatCurrency, formatRelativeTime, cn } from '@/lib/utils'
 
 type AlertType = 'critical' | 'warning' | 'info' | 'success'
 
-interface Alert {
-    id: number
-    type: AlertType
-    title: string
-    message: string
-    timestamp: Date
-    isRead: boolean
-    isDismissed: boolean
-    data?: {
-        amount?: number
-        category?: string
-        change?: number
-    }
-}
-
-// Sample alerts
-const sampleAlerts: Alert[] = [
-    {
-        id: 1,
-        type: 'critical',
-        title: 'Runway below 6 months',
-        message: 'Your current runway is 5.8 months. Consider reducing burn rate or raising funds.',
-        timestamp: new Date(Date.now() - 2 * 3600000),
-        isRead: false,
-        isDismissed: false,
-        data: { amount: 5.8 },
-    },
-    {
-        id: 2,
-        type: 'warning',
-        title: 'Infrastructure spending up 45%',
-        message: 'AWS costs increased significantly this month compared to last month.',
-        timestamp: new Date(Date.now() - 24 * 3600000),
-        isRead: false,
-        isDismissed: false,
-        data: { category: 'Infrastructure', change: 45 },
-    },
-    {
-        id: 3,
-        type: 'info',
-        title: 'Large transaction detected',
-        message: 'A transaction of $15,000 was recorded from Stripe.',
-        timestamp: new Date(Date.now() - 2 * 24 * 3600000),
-        isRead: true,
-        isDismissed: false,
-        data: { amount: 15000 },
-    },
-    {
-        id: 4,
-        type: 'success',
-        title: 'MRR grew 12% this month',
-        message: 'Strong month-over-month growth. Your MRR is now $125,000.',
-        timestamp: new Date(Date.now() - 3 * 24 * 3600000),
-        isRead: true,
-        isDismissed: false,
-        data: { amount: 125000, change: 12 },
-    },
-    {
-        id: 5,
-        type: 'warning',
-        title: 'Payment due in 7 days',
-        message: 'Annual AWS payment of $45,000 is due on December 25.',
-        timestamp: new Date(Date.now() - 4 * 24 * 3600000),
-        isRead: true,
-        isDismissed: false,
-        data: { amount: 45000 },
-    },
-    {
-        id: 6,
-        type: 'info',
-        title: 'Weekly digest available',
-        message: 'Your weekly financial summary is ready to view.',
-        timestamp: new Date(Date.now() - 5 * 24 * 3600000),
-        isRead: true,
-        isDismissed: false,
-    },
-    {
-        id: 7,
-        type: 'success',
-        title: 'Bank account synced',
-        message: 'Chase Business Checking successfully synced with 23 new transactions.',
-        timestamp: new Date(Date.now() - 6 * 24 * 3600000),
-        isRead: true,
-        isDismissed: false,
-    },
-]
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 const alertIcons = {
     critical: AlertTriangle,
@@ -144,29 +60,87 @@ const alertColors = {
 }
 
 export default function AlertsPage() {
-    const [alerts, setAlerts] = useState(sampleAlerts)
     const [filter, setFilter] = useState<'all' | 'unread' | AlertType>('all')
+    const [localAlerts, setLocalAlerts] = useState<any[] | null>(null)
 
-    const unreadCount = alerts.filter(a => !a.isRead).length
-    const criticalCount = alerts.filter(a => a.type === 'critical' && !a.isDismissed).length
+    const { data, error, isLoading, mutate } = useSWR(
+        `/api/alerts?filter=${filter}`,
+        fetcher,
+        { refreshInterval: 30000 }
+    )
 
-    const filteredAlerts = alerts.filter(a => {
-        if (a.isDismissed) return false
-        if (filter === 'all') return true
-        if (filter === 'unread') return !a.isRead
-        return a.type === filter
-    })
+    // Use local state for optimistic updates, fall back to API data
+    const alerts = localAlerts || data?.alerts || []
+    const counts = data?.counts || { total: 0, unread: 0, critical: 0, success: 0 }
 
-    const markAsRead = (id: number) => {
-        setAlerts(prev => prev.map(a => a.id === id ? { ...a, isRead: true } : a))
+    const filteredAlerts = alerts.filter((a: any) => !a.isDismissed)
+
+    const markAsRead = async (id: string) => {
+        // Optimistic update
+        setLocalAlerts(prev =>
+            (prev || alerts).map((a: any) => a.id === id ? { ...a, isRead: true } : a)
+        )
+
+        try {
+            await fetch('/api/alerts', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, isRead: true }),
+            })
+            mutate()
+        } catch (error) {
+            console.error('Failed to mark as read:', error)
+        }
     }
 
-    const dismissAlert = (id: number) => {
-        setAlerts(prev => prev.map(a => a.id === id ? { ...a, isDismissed: true } : a))
+    const dismissAlert = async (id: string) => {
+        // Optimistic update
+        setLocalAlerts(prev =>
+            (prev || alerts).map((a: any) => a.id === id ? { ...a, isDismissed: true } : a)
+        )
+
+        try {
+            await fetch('/api/alerts', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, isDismissed: true }),
+            })
+            mutate()
+        } catch (error) {
+            console.error('Failed to dismiss alert:', error)
+        }
     }
 
-    const markAllAsRead = () => {
-        setAlerts(prev => prev.map(a => ({ ...a, isRead: true })))
+    const markAllAsRead = async () => {
+        setLocalAlerts(alerts.map((a: any) => ({ ...a, isRead: true })))
+        // In production, you'd want a bulk update endpoint
+        mutate()
+    }
+
+    if (isLoading && !localAlerts) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+                    <p className="text-muted-foreground">Loading alerts...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-4" />
+                    <p className="text-foreground font-medium mb-2">Failed to load alerts</p>
+                    <Button onClick={() => mutate()} variant="outline">
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Retry
+                    </Button>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -200,7 +174,7 @@ export default function AlertsPage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">All Alerts</p>
-                                <p className="text-2xl font-bold text-slate-900 dark:text-white">{alerts.filter(a => !a.isDismissed).length}</p>
+                                <p className="text-2xl font-bold text-slate-900 dark:text-white">{counts.total}</p>
                             </div>
                             <Bell className="w-8 h-8 text-blue-500" />
                         </div>
@@ -211,10 +185,10 @@ export default function AlertsPage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">Unread</p>
-                                <p className="text-2xl font-bold text-slate-900 dark:text-white">{unreadCount}</p>
+                                <p className="text-2xl font-bold text-slate-900 dark:text-white">{counts.unread}</p>
                             </div>
                             <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                                <span className="text-sm font-bold text-blue-600">{unreadCount}</span>
+                                <span className="text-sm font-bold text-blue-600">{counts.unread}</span>
                             </div>
                         </div>
                     </CardContent>
@@ -224,7 +198,7 @@ export default function AlertsPage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">Critical</p>
-                                <p className="text-2xl font-bold text-red-500">{criticalCount}</p>
+                                <p className="text-2xl font-bold text-red-500">{counts.critical}</p>
                             </div>
                             <AlertTriangle className="w-8 h-8 text-red-500" />
                         </div>
@@ -235,7 +209,7 @@ export default function AlertsPage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">Good News</p>
-                                <p className="text-2xl font-bold text-emerald-500">{alerts.filter(a => a.type === 'success' && !a.isDismissed).length}</p>
+                                <p className="text-2xl font-bold text-emerald-500">{counts.success}</p>
                             </div>
                             <TrendingUp className="w-8 h-8 text-emerald-500" />
                         </div>
@@ -248,7 +222,10 @@ export default function AlertsPage() {
                 {(['all', 'unread', 'critical', 'warning', 'info', 'success'] as const).map((f) => (
                     <button
                         key={f}
-                        onClick={() => setFilter(f)}
+                        onClick={() => {
+                            setFilter(f)
+                            setLocalAlerts(null) // Clear local state to refetch
+                        }}
                         className={cn(
                             "px-4 py-2 text-sm rounded-lg transition-all capitalize",
                             filter === f
@@ -272,15 +249,15 @@ export default function AlertsPage() {
                         </div>
                     ) : (
                         <div className="divide-y divide-slate-200 dark:divide-slate-700">
-                            {filteredAlerts.map((alert) => {
-                                const Icon = alertIcons[alert.type]
-                                const colors = alertColors[alert.type]
+                            {filteredAlerts.map((alert: any) => {
+                                const Icon = alertIcons[alert.type as AlertType] || Bell
+                                const colors = alertColors[alert.type as AlertType] || alertColors.info
 
                                 return (
                                     <div
                                         key={alert.id}
                                         className={cn(
-                                            "flex items-start gap-4 p-4 transition-colors",
+                                            "flex items-start gap-4 p-4 transition-colors cursor-pointer",
                                             !alert.isRead && "bg-blue-50/50 dark:bg-blue-900/10",
                                             "hover:bg-slate-50 dark:hover:bg-slate-800/50"
                                         )}
@@ -328,7 +305,7 @@ export default function AlertsPage() {
                                                 </div>
                                             )}
                                             <p className="text-xs text-muted-foreground mt-2">
-                                                {formatRelativeTime(alert.timestamp)}
+                                                {formatRelativeTime(new Date(alert.timestamp))}
                                             </p>
                                         </div>
                                         <button

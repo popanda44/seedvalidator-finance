@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import useSWR from 'swr'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MetricCard } from '@/components/dashboard/metric-card'
-import { ExpenseBreakdownChart, generateSampleExpenseData } from '@/components/charts/expense-breakdown-chart'
-import { CategoryBarChart, generateSampleCategoryData } from '@/components/charts/category-bar-chart'
+import { ExpenseBreakdownChart } from '@/components/charts/expense-breakdown-chart'
+import { CategoryBarChart } from '@/components/charts/category-bar-chart'
 import {
     TrendingUp,
     TrendingDown,
@@ -16,120 +17,59 @@ import {
     ArrowUpRight,
     ArrowDownRight,
     AlertTriangle,
+    Loader2,
+    RefreshCw,
 } from 'lucide-react'
 import { formatCurrency, cn } from '@/lib/utils'
 
-// Sample data for expense categories with trends
-const expenseCategories = [
-    {
-        id: 1,
-        name: 'Payroll & Benefits',
-        icon: '💼',
-        amount: 45000,
-        previousAmount: 42000,
-        color: '#3B82F6',
-        subcategories: [
-            { name: 'Salaries', amount: 38000 },
-            { name: 'Benefits', amount: 5000 },
-            { name: 'Payroll Taxes', amount: 2000 },
-        ],
-    },
-    {
-        id: 2,
-        name: 'Infrastructure',
-        icon: '🖥️',
-        amount: 12000,
-        previousAmount: 10500,
-        color: '#10B981',
-        subcategories: [
-            { name: 'AWS', amount: 8000 },
-            { name: 'GCP', amount: 2500 },
-            { name: 'Vercel', amount: 1500 },
-        ],
-        alert: 'Up 14% from last month',
-    },
-    {
-        id: 3,
-        name: 'Marketing',
-        icon: '📢',
-        amount: 8000,
-        previousAmount: 9500,
-        color: '#F59E0B',
-        subcategories: [
-            { name: 'Ads', amount: 5000 },
-            { name: 'Content', amount: 2000 },
-            { name: 'Events', amount: 1000 },
-        ],
-    },
-    {
-        id: 4,
-        name: 'SaaS Tools',
-        icon: '🔧',
-        amount: 5500,
-        previousAmount: 5200,
-        color: '#8B5CF6',
-        subcategories: [
-            { name: 'Slack', amount: 1200 },
-            { name: 'Notion', amount: 800 },
-            { name: 'GitHub', amount: 1500 },
-            { name: 'Others', amount: 2000 },
-        ],
-    },
-    {
-        id: 5,
-        name: 'Office & Rent',
-        icon: '🏢',
-        amount: 4000,
-        previousAmount: 4000,
-        color: '#EC4899',
-        subcategories: [
-            { name: 'WeWork', amount: 3500 },
-            { name: 'Supplies', amount: 500 },
-        ],
-    },
-    {
-        id: 6,
-        name: 'Travel & Meals',
-        icon: '✈️',
-        amount: 2500,
-        previousAmount: 3200,
-        color: '#06B6D4',
-        subcategories: [
-            { name: 'Flights', amount: 1500 },
-            { name: 'Hotels', amount: 600 },
-            { name: 'Meals', amount: 400 },
-        ],
-    },
-]
-
-const topVendors = [
-    { name: 'AWS', category: 'Infrastructure', amount: 8000, trend: 12 },
-    { name: 'Gusto', category: 'Payroll', amount: 45000, trend: 7 },
-    { name: 'Google Ads', category: 'Marketing', amount: 3500, trend: -15 },
-    { name: 'WeWork', category: 'Office', amount: 3500, trend: 0 },
-    { name: 'Slack', category: 'SaaS', amount: 1200, trend: 5 },
-]
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function ExpensesPage() {
-    const [dateRange, setDateRange] = useState('30d')
     const [expandedCategory, setExpandedCategory] = useState<number | null>(null)
 
-    const pieChartData = generateSampleExpenseData()
-    const barChartData = generateSampleCategoryData()
+    const { data, error, isLoading, mutate } = useSWR('/api/expenses', fetcher, {
+        refreshInterval: 60000,
+    })
 
-    // Calculate totals
-    const totalExpenses = expenseCategories.reduce((sum, cat) => sum + cat.amount, 0)
-    const previousTotal = expenseCategories.reduce((sum, cat) => sum + cat.previousAmount, 0)
-    const expenseChange = ((totalExpenses - previousTotal) / previousTotal) * 100
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+                    <p className="text-muted-foreground">Loading expense data...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-4" />
+                    <p className="text-foreground font-medium mb-2">Failed to load data</p>
+                    <Button onClick={() => mutate()} variant="outline">
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Retry
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
+    const categories = data?.categories || []
+    const summary = data?.summary || {}
+    const topVendors = data?.topVendors || []
+    const pieChartData = data?.pieChartData || []
+    const barChartData = data?.barChartData || []
+
+    const totalExpenses = summary.totalExpenses || 0
+    const expenseChange = summary.expenseChange || 0
 
     // Find biggest increase/decrease
-    const categoryChanges = expenseCategories.map(cat => ({
-        ...cat,
-        change: ((cat.amount - cat.previousAmount) / cat.previousAmount) * 100,
-    })).sort((a, b) => b.change - a.change)
-
-    const biggestIncrease = categoryChanges[0]
-    const biggestDecrease = categoryChanges[categoryChanges.length - 1]
+    const sortedByChange = [...categories].sort((a: any, b: any) => b.change - a.change)
+    const biggestIncrease = sortedByChange[0] || { name: '-', change: 0 }
+    const biggestDecrease = sortedByChange[sortedByChange.length - 1] || { name: '-', change: 0 }
 
     return (
         <div className="space-y-6 animate-fade-in">
@@ -171,7 +111,7 @@ export default function ExpensesPage() {
                 />
                 <MetricCard
                     title="# of Transactions"
-                    value={156}
+                    value={summary.transactionCount || 0}
                     change={12}
                     icon={TrendingUp}
                     iconColor="text-blue-500"
@@ -185,7 +125,7 @@ export default function ExpensesPage() {
                             <ArrowUpRight className="w-4 h-4 text-red-500" />
                         </div>
                         <p className="text-xl font-bold text-slate-900 dark:text-white">{biggestIncrease.name}</p>
-                        <p className="text-sm text-red-500">+{biggestIncrease.change.toFixed(1)}% vs last month</p>
+                        <p className="text-sm text-red-500">+{biggestIncrease.change?.toFixed(1)}% vs last month</p>
                     </CardContent>
                 </Card>
                 <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 border-slate-200/50 dark:border-slate-700/50">
@@ -195,7 +135,7 @@ export default function ExpensesPage() {
                             <ArrowDownRight className="w-4 h-4 text-emerald-500" />
                         </div>
                         <p className="text-xl font-bold text-slate-900 dark:text-white">{biggestDecrease.name}</p>
-                        <p className="text-sm text-emerald-500">{biggestDecrease.change.toFixed(1)}% vs last month</p>
+                        <p className="text-sm text-emerald-500">{biggestDecrease.change?.toFixed(1)}% vs last month</p>
                     </CardContent>
                 </Card>
             </div>
@@ -216,15 +156,15 @@ export default function ExpensesPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
-                        {expenseCategories.map((category) => {
-                            const isExpanded = expandedCategory === category.id
-                            const change = ((category.amount - category.previousAmount) / category.previousAmount) * 100
+                        {categories.map((category: any, index: number) => {
+                            const isExpanded = expandedCategory === index
+                            const change = category.change || 0
                             const isNegativeChange = change < 0
 
                             return (
-                                <div key={category.id} className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                                <div key={index} className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
                                     <button
-                                        onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
+                                        onClick={() => setExpandedCategory(isExpanded ? null : index)}
                                         className="w-full flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                                     >
                                         <div className="flex items-center gap-4">
@@ -232,7 +172,7 @@ export default function ExpensesPage() {
                                                 className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
                                                 style={{ backgroundColor: `${category.color}20` }}
                                             >
-                                                {category.icon}
+                                                {category.icon || '📊'}
                                             </div>
                                             <div className="text-left">
                                                 <div className="flex items-center gap-2">
@@ -247,7 +187,7 @@ export default function ExpensesPage() {
                                                     )}
                                                 </div>
                                                 <p className="text-sm text-muted-foreground">
-                                                    {category.subcategories.length} subcategories
+                                                    {category.subcategories?.length || 0} subcategories
                                                 </p>
                                             </div>
                                         </div>
@@ -274,13 +214,13 @@ export default function ExpensesPage() {
                                                     <div
                                                         className="h-full rounded-full transition-all"
                                                         style={{
-                                                            width: `${(category.amount / totalExpenses) * 100}%`,
+                                                            width: `${category.percentage || 0}%`,
                                                             backgroundColor: category.color,
                                                         }}
                                                     />
                                                 </div>
                                                 <p className="text-xs text-muted-foreground mt-1 text-right">
-                                                    {((category.amount / totalExpenses) * 100).toFixed(0)}%
+                                                    {(category.percentage || 0).toFixed(0)}%
                                                 </p>
                                             </div>
                                             <ChevronDown className={cn(
@@ -291,10 +231,10 @@ export default function ExpensesPage() {
                                     </button>
 
                                     {/* Expanded subcategories */}
-                                    {isExpanded && (
+                                    {isExpanded && category.subcategories && (
                                         <div className="border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-4">
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                                {category.subcategories.map((sub, idx) => (
+                                                {category.subcategories.map((sub: any, idx: number) => (
                                                     <div
                                                         key={idx}
                                                         className="flex items-center justify-between p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
@@ -333,7 +273,7 @@ export default function ExpensesPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                {topVendors.map((vendor, idx) => (
+                                {topVendors.map((vendor: any, idx: number) => (
                                     <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                                         <td className="py-4 px-4">
                                             <p className="font-medium text-slate-900 dark:text-white">{vendor.name}</p>

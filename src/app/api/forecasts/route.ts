@@ -1,171 +1,194 @@
 import { NextResponse } from 'next/server'
+import prisma from '@/lib/prisma'
 
-// GET /api/forecasts - Get revenue forecasts and scenarios
+// GET /api/forecasts - Get forecast data and scenarios
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
+        const companyId = searchParams.get('companyId')
         const months = parseInt(searchParams.get('months') || '12')
 
-        // Return sample data (database queries will be added when DB is connected)
-        return NextResponse.json(getSampleForecastData(months))
+        // For development, return sample data if no companyId
+        if (!companyId) {
+            return NextResponse.json(getSampleForecastData(months))
+        }
+
+        // Get company data
+        const company = await prisma.company.findUnique({
+            where: { id: companyId },
+            include: {
+                forecasts: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 1,
+                },
+                financialSnapshots: {
+                    orderBy: { date: 'desc' },
+                    take: 6,
+                },
+            },
+        })
+
+        if (!company) {
+            return NextResponse.json({ error: 'Company not found' }, { status: 404 })
+        }
+
+        // Calculate metrics from snapshots
+        const snapshots = company.financialSnapshots
+        const currentMRR = snapshots[0]?.mrr || 0
+        const previousMRR = snapshots[1]?.mrr || currentMRR
+        const growthRate = previousMRR > 0
+            ? ((currentMRR - previousMRR) / previousMRR) * 100
+            : 0
+
+        // Project future MRR based on growth rate
+        const projectedData = generateProjection(currentMRR, growthRate / 100, months)
+
+        return NextResponse.json({
+            metrics: {
+                currentMRR,
+                projectedMRR: projectedData[projectedData.length - 1]?.projected || currentMRR,
+                projectedARR: (projectedData[projectedData.length - 1]?.projected || currentMRR) * 12,
+                growthRate,
+                confidenceScore: calculateConfidenceScore(snapshots),
+            },
+            projectedData,
+            scenarios: generateScenarios(currentMRR, growthRate),
+            growthDrivers: getGrowthDrivers(),
+            assumptions: getAssumptions(growthRate),
+        })
     } catch (error) {
         console.error('Forecasts API error:', error)
         return NextResponse.json(
-            { error: 'Failed to fetch forecast data' },
+            { error: 'Failed to fetch forecasts' },
             { status: 500 }
         )
     }
 }
 
-// POST /api/forecasts - Update forecast assumptions
-export async function POST(request: Request) {
-    try {
-        const body = await request.json()
-        const { companyId, assumptions } = body
+function generateProjection(currentMRR: number, monthlyGrowthRate: number, months: number) {
+    const data = []
+    let mrr = currentMRR
 
-        if (!companyId) {
-            return NextResponse.json(
-                { error: 'Company ID required' },
-                { status: 400 }
-            )
-        }
+    for (let i = 0; i <= months; i++) {
+        const date = new Date()
+        date.setMonth(date.getMonth() + i)
 
-        // Store forecast assumptions (could be stored in company settings or separate model)
-        // For now, we'll just recalculate based on provided assumptions
-        const { growthRate, churnRate, avgContractValue } = assumptions
-
-        // Generate updated forecast based on assumptions
-        const baseGrowth = growthRate / 100 || 0.1
-        const adjustedGrowth = baseGrowth * (1 - (churnRate / 100 || 0.03))
-
-        return NextResponse.json({
-            success: true,
-            updatedGrowthRate: adjustedGrowth * 100,
-            message: 'Forecast updated with new assumptions',
+        data.push({
+            month: date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+            actual: i === 0 ? mrr : null,
+            projected: mrr,
+            optimistic: mrr * (1 + (monthlyGrowthRate * 1.5)),
+            pessimistic: mrr * (1 + (monthlyGrowthRate * 0.5)),
         })
-    } catch (error) {
-        console.error('Update forecast error:', error)
-        return NextResponse.json(
-            { error: 'Failed to update forecast' },
-            { status: 500 }
-        )
+
+        mrr *= (1 + monthlyGrowthRate)
     }
+
+    return data
 }
 
 function calculateConfidenceScore(snapshots: any[]): number {
-    // Simple confidence calculation based on data quality
-    let score = 50 // Base score
-
-    // More data = higher confidence
-    score += Math.min(snapshots.length * 5, 25)
-
-    // Consistent growth = higher confidence
-    if (snapshots.length >= 3) {
-        const growthVariance = calculateGrowthVariance(snapshots)
-        if (growthVariance < 0.1) score += 15
-        else if (growthVariance < 0.2) score += 10
-        else if (growthVariance < 0.3) score += 5
-    }
-
-    return Math.min(score, 95)
+    // Simple confidence based on data availability
+    if (snapshots.length >= 6) return 85
+    if (snapshots.length >= 3) return 70
+    return 50
 }
 
-function calculateGrowthVariance(snapshots: any[]): number {
-    const growthRates = []
-    for (let i = 1; i < snapshots.length; i++) {
-        const prev = snapshots[i - 1].mrr || 0
-        const curr = snapshots[i].mrr || 0
-        if (prev > 0) {
-            growthRates.push((curr - prev) / prev)
-        }
-    }
-
-    if (growthRates.length === 0) return 1
-
-    const avg = growthRates.reduce((a, b) => a + b, 0) / growthRates.length
-    const variance = growthRates.reduce((sum, r) => sum + Math.pow(r - avg, 2), 0) / growthRates.length
-    return Math.sqrt(variance)
-}
-
-// Sample data generator
-function getSampleForecastData(months: number) {
-    const currentMrr = 125000
-    const growthRate = 12
-
-    // Define type for projections
-    type Projection = {
-        month: string
-        actual?: number
-        projected?: number
-        optimistic?: number
-        pessimistic?: number
-    }
-
-    const projections: Projection[] = [
-        { month: 'Jul', actual: 80000 },
-        { month: 'Aug', actual: 90000 },
-        { month: 'Sep', actual: 100000 },
-        { month: 'Oct', actual: 110000 },
-        { month: 'Nov', actual: 118000 },
-        { month: 'Dec', actual: 125000 },
+function generateScenarios(currentMRR: number, growthRate: number) {
+    return [
+        {
+            id: 'base',
+            name: 'Base Case',
+            description: 'Current growth rate continues',
+            endMRR: currentMRR * Math.pow(1 + (growthRate / 100), 12),
+            growthRate: growthRate,
+            probability: 70,
+            color: '#3B82F6',
+        },
+        {
+            id: 'optimistic',
+            name: 'Optimistic',
+            description: 'Accelerated growth with new features',
+            endMRR: currentMRR * Math.pow(1 + (growthRate * 1.5 / 100), 12),
+            growthRate: growthRate * 1.5,
+            probability: 15,
+            color: '#10B981',
+        },
+        {
+            id: 'pessimistic',
+            name: 'Conservative',
+            description: 'Market slowdown scenario',
+            endMRR: currentMRR * Math.pow(1 + (growthRate * 0.5 / 100), 12),
+            growthRate: growthRate * 0.5,
+            probability: 15,
+            color: '#F59E0B',
+        },
     ]
+}
 
-    // Generate future months
-    let currentValue = currentMrr
-    const futureMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    const startMonth = 0 // January
+function getGrowthDrivers() {
+    return [
+        { name: 'New customer acquisition', impact: '+$25,000/mo', trend: 'up', confidence: 'High' },
+        { name: 'Expansion revenue', impact: '+$12,000/mo', trend: 'up', confidence: 'Medium' },
+        { name: 'Reduced churn', impact: '+$8,000/mo', trend: 'up', confidence: 'High' },
+        { name: 'New product line', impact: '+$15,000/mo', trend: 'up', confidence: 'Low' },
+    ]
+}
 
-    for (let i = 0; i < Math.min(months, 12); i++) {
-        currentValue = currentValue * (1 + growthRate / 100)
-        projections.push({
-            month: futureMonths[(startMonth + i) % 12],
-            projected: Math.round(currentValue),
-            optimistic: Math.round(currentValue * 1.2),
-            pessimistic: Math.round(currentValue * 0.85),
-        })
-    }
+function getAssumptions(growthRate: number) {
+    return [
+        { label: 'Monthly Growth Rate', value: `${growthRate.toFixed(1)}%`, editable: true },
+        { label: 'Churn Rate', value: '3%', editable: true },
+        { label: 'Average Contract Value', value: '$2,500', editable: true },
+        { label: 'Sales Cycle (days)', value: '45', editable: true },
+        { label: 'Lead Conversion Rate', value: '8%', editable: true },
+    ]
+}
 
-    const lastProjection = projections[projections.length - 1]
-    const projectedMrr = lastProjection?.projected || currentMrr
+// Sample data for development
+function getSampleForecastData(months: number) {
+    const currentMRR = 125000
+    const growthRate = 12.5
 
     return {
-        currentMrr,
-        projectedMrr,
-        projectedArr: projectedMrr * 12,
-        growthRate,
-        confidenceScore: 85,
-        projections,
+        metrics: {
+            currentMRR,
+            projectedMRR: 175000,
+            projectedARR: 2100000,
+            growthRate,
+            confidenceScore: 85,
+        },
+        projectedData: generateProjection(currentMRR, growthRate / 100, months),
         scenarios: [
             {
                 id: 'base',
                 name: 'Base Case',
                 description: 'Current growth rate continues',
-                endMrr: projectedMrr,
+                endMRR: 175000,
                 growthRate: 12,
                 probability: 70,
+                color: '#3B82F6',
             },
             {
                 id: 'optimistic',
                 name: 'Optimistic',
                 description: 'Accelerated growth with new features',
-                endMrr: Math.round(projectedMrr * 1.25),
+                endMRR: 220000,
                 growthRate: 18,
                 probability: 15,
+                color: '#10B981',
             },
             {
                 id: 'pessimistic',
                 name: 'Conservative',
                 description: 'Market slowdown scenario',
-                endMrr: Math.round(projectedMrr * 0.75),
+                endMRR: 145000,
                 growthRate: 6,
                 probability: 15,
+                color: '#F59E0B',
             },
         ],
-        growthDrivers: [
-            { name: 'New customer acquisition', impact: '+$25,000/mo', trend: 'up', confidence: 'High' },
-            { name: 'Expansion revenue', impact: '+$12,000/mo', trend: 'up', confidence: 'Medium' },
-            { name: 'Reduced churn', impact: '+$8,000/mo', trend: 'up', confidence: 'High' },
-            { name: 'New product line', impact: '+$15,000/mo', trend: 'up', confidence: 'Low' },
-        ],
+        growthDrivers: getGrowthDrivers(),
+        assumptions: getAssumptions(growthRate),
     }
 }
