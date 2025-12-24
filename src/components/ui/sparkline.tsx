@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useId } from 'react'
+
 import { cn } from '@/lib/utils'
 
 interface SparklineProps {
@@ -75,7 +76,9 @@ export function Sparkline({
         }
     }, [data, width, height, positive])
 
-    const uniqueGradientId = gradientId || `sparkline-gradient-${Math.random().toString(36).substr(2, 9)}`
+    const generatedId = useId()
+    const uniqueGradientId = gradientId || `sparkline-gradient-${generatedId}`
+
 
     if (!data || data.length < 2) {
         return (
