@@ -1,103 +1,90 @@
 "use client";
 
-import Link from "next/link";
-import { Building2, ArrowLeft } from "lucide-react";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface AuthSplitLayoutProps {
+    children: React.ReactNode;
+    heading?: string;
+    subheading?: string;
+}
 
 export const AuthSplitLayout = ({
     children,
-    title,
-    subtitle
-}: {
-    children: React.ReactNode;
-    title: string;
-    subtitle: string;
-}) => {
+    heading = "Welcome back",
+    subheading = "Enter your details to access your account",
+}: AuthSplitLayoutProps) => {
     return (
-        <div className="min-h-screen w-full flex bg-slate-950">
-            {/* Left Side - Visuals */}
-            <div className="hidden lg:flex w-1/2 relative flex-col justify-between p-12 overflow-hidden border-r border-white/5">
-                <div className="absolute inset-0 bg-slate-950 z-0">
-                    <BackgroundBeams />
-                </div>
+        <div className="min-h-screen w-full flex bg-background">
+            {/* Left Column - Visuals (Abstract/Minimalist) */}
+            <div className="hidden lg:flex w-1/2 relative bg-zinc-900 border-r border-white/5 overflow-hidden items-center justify-center">
+                <div className="absolute inset-0 bg-stone-950" />
 
-                {/* Logo Area */}
-                <div className="relative z-10">
-                    <Link href="/" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform duration-300">
-                            <Building2 className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-xl font-bold text-white tracking-tight">SeedValidator</span>
-                    </Link>
-                </div>
+                {/* Abstract animated geometric pattern */}
+                <div className="relative w-full h-full max-w-lg max-h-lg flex items-center justify-center perspective-1000">
+                    {[...Array(3)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className="absolute border border-white/10 rounded-full"
+                            style={{
+                                width: `${30 + i * 15}rem`,
+                                height: `${30 + i * 15}rem`,
+                            }}
+                            animate={{
+                                rotate: i % 2 === 0 ? 360 : -360,
+                                scale: [1, 1.02, 1],
+                            }}
+                            transition={{
+                                rotate: { duration: 40 + i * 10, ease: "linear", repeat: Infinity },
+                                scale: { duration: 5 + i, ease: "easeInOut", repeat: Infinity },
+                            }}
+                        />
+                    ))}
 
-                {/* Animated Data Visual (Abstract) */}
-                <div className="relative z-10 flex-1 flex items-center justify-center">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1 }}
-                        className="relative"
-                    >
-                        {/* Glowing Orb */}
-                        <div className="w-64 h-64 rounded-full bg-indigo-500/20 blur-[60px]" />
-                        <div className="absolute inset-0 border border-white/10 rounded-full animate-spin-slow" />
-                        <div className="absolute inset-4 border border-white/5 rounded-full animate-reverse-spin" />
+                        className="absolute w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl"
+                        animate={{ opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    />
 
-                        {/* Floating Cards */}
-                        <motion.div
-                            animate={{ y: [-10, 10, -10] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute -right-12 top-0 p-4 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl"
-                        >
-                            <div className="text-xs text-slate-400 mb-1">Current Runway</div>
-                            <div className="text-lg font-bold text-emerald-400">18.4 Months</div>
-                        </motion.div>
-
-                        <motion.div
-                            animate={{ y: [10, -10, 10] }}
-                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                            className="absolute -left-12 bottom-0 p-4 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl"
-                        >
-                            <div className="text-xs text-slate-400 mb-1">Burn Rate</div>
-                            <div className="text-lg font-bold text-indigo-400">$42.5k / mo</div>
-                        </motion.div>
-                    </motion.div>
+                    {/* Central Hub */}
+                    <div className="relative z-10 text-center space-y-4 p-8 backdrop-blur-sm bg-white/5 rounded-2xl border border-white/10 max-w-sm">
+                        <div className="h-10 w-10 mx-auto bg-white rounded-full flex items-center justify-center mb-4 shadow-lg shadow-white/20">
+                            <div className="h-3 w-3 bg-black rounded-full" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white tracking-tight">Financial Intelligence</h2>
+                        <p className="text-zinc-400 text-sm leading-relaxed">
+                            &quot;Real-time modeling for the modern CFO. Reduce burn, extend runway, and predict the future.&quot;
+                        </p>
+                    </div>
                 </div>
 
-                {/* Testimonial */}
-                <div className="relative z-10 w-full max-w-md">
-                    <blockquote className="text-lg text-slate-300 font-medium leading-relaxed">
-                        "The financial clarity we gained was immediate. It's not just software; it's a competitive advantage."
-                    </blockquote>
-                    <div className="mt-4 flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-indigo-500/20" />
-                        <div>
-                            <div className="text-sm font-semibold text-white">Alex Riviera</div>
-                            <div className="text-xs text-slate-500">Founder, Orbital AI</div>
+                {/* Brand */}
+                <div className="absolute top-8 left-8 z-20">
+                    <Link href="/" className="flex items-center gap-2 group">
+                        <div className="h-6 w-6 bg-white rounded-full flex items-center justify-center">
+                            <div className="h-2 w-2 bg-black rounded-full" />
                         </div>
-                    </div>
+                        <span className="text-white font-bold tracking-tight">SeedValidator</span>
+                    </Link>
                 </div>
             </div>
 
-            {/* Right Side - Form */}
-            <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 lg:p-12 relative">
-                {/* Mobile Back Link */}
-                <div className="absolute top-6 left-6 lg:hidden">
-                    <Link href="/" className="flex items-center text-sm text-slate-400 hover:text-white">
-                        <ArrowLeft className="w-4 h-4 mr-2" /> Back
-                    </Link>
-                </div>
+            {/* Right Column - Form */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-background relative">
+                <Link
+                    href="/"
+                    className="absolute top-8 left-8 lg:hidden text-sm text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
+                >
+                    <ArrowLeft className="w-4 h-4" /> Back
+                </Link>
 
                 <div className="w-full max-w-md space-y-8">
-                    <div className="text-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-white">
-                            {title}
-                        </h2>
-                        <p className="mt-2 text-sm text-slate-400">
-                            {subtitle}
-                        </p>
+                    <div className="text-center lg:text-left">
+                        <h1 className="text-3xl font-bold tracking-tight text-foreground">{heading}</h1>
+                        <p className="mt-2 text-sm text-muted-foreground">{subheading}</p>
                     </div>
 
                     {children}
