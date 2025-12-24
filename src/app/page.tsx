@@ -34,6 +34,9 @@ export default function HomePage() {
               <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Pricing
               </Link>
+              <Link href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Contact
+              </Link>
             </div>
             <div className="flex items-center space-x-4">
               <Link
@@ -195,9 +198,9 @@ export default function HomePage() {
           </div>
 
           <div className="flex gap-8 text-sm text-zinc-500">
-            <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
-            <Link href="#" className="hover:text-white transition-colors">GitHub</Link>
-            <Link href="#" className="hover:text-white transition-colors">Discord</Link>
+            <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+            <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
+            <Link href="/login" className="hover:text-white transition-colors">Login</Link>
           </div>
 
           <p className="text-zinc-600 text-xs">

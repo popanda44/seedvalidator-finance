@@ -101,6 +101,12 @@ export default function PricingPage() {
                         </Link>
                         <div className="flex items-center space-x-4">
                             <Link
+                                href="/contact"
+                                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                Contact
+                            </Link>
+                            <Link
                                 href="/login"
                                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                             >
@@ -270,6 +276,7 @@ export default function PricingPage() {
                     <div className="flex gap-8 text-sm text-muted-foreground">
                         <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
                         <Link href="/pricing" className="hover:text-foreground transition-colors">Pricing</Link>
+                        <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
                         <Link href="/login" className="hover:text-foreground transition-colors">Login</Link>
                     </div>
 
