@@ -169,87 +169,60 @@ export default function HomePage() {
         />
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto text-center relative bg-zinc-900/50 border border-white/10 rounded-3xl p-12 overflow-hidden backdrop-blur-sm">
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-3xl opacity-30 pointer-events-none" />
-          <BackgroundBeams className="opacity-20 translate-y-20" />
+      {/* Mega CTA Section */}
+      <section className="relative py-32 bg-zinc-950 overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6 relative z-10 text-foreground">
-            Ready to validate your future?
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <h2 className="text-white text-[12vw] font-bold tracking-tighter leading-none opacity-90 select-none">
+            VALIDATE
           </h2>
-          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto relative z-10 font-light">
-            Join 500+ founders who are building with financial clarity. <br className="hidden sm:block" />
-            Start your free 14-day trial today.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-            <Link
-              href="/register"
-              className="inline-flex h-12 items-center justify-center rounded-lg bg-foreground px-8 text-base font-medium text-background shadow-lg transition-all hover:bg-foreground/90 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Get Started for Free <ChevronRight className="ml-2 h-4 w-4" />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background/50 backdrop-blur-sm px-8 text-base font-medium transition-all hover:bg-accent hover:text-accent-foreground"
-            >
-              Contact Sales
-            </Link>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 -mt-4 md:-mt-12 mb-12">
+            <h2 className="text-zinc-500 text-[12vw] font-bold tracking-tighter leading-none opacity-50 select-none">
+              NOW
+            </h2>
+          </div>
+
+          <div className="max-w-xl mx-auto space-y-8">
+            <p className="text-zinc-400 text-lg md:text-xl font-light">
+              Join the new standard of financial modeling. <br />
+              Predictable. Precise. Powerful.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/register"
+                className="w-full sm:w-auto inline-flex h-14 items-center justify-center rounded-full bg-white px-10 text-lg font-bold text-black hover:bg-zinc-200 transition-colors"
+              >
+                Start Validation
+              </Link>
+              <Link
+                href="/contact"
+                className="w-full sm:w-auto inline-flex h-14 items-center justify-center rounded-full border border-white/20 bg-transparent px-10 text-lg font-medium text-white hover:bg-white/10 transition-colors"
+              >
+                Book Demo
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950 border-t border-white/5">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
-          <div className="col-span-2 md:col-span-1 space-y-4">
-            <Link href="/" className="flex items-center space-x-2 group">
-              <div className="h-6 w-6 bg-white rounded-full flex items-center justify-center">
-                <div className="h-2 w-2 bg-black rounded-full" />
-              </div>
-              <span className="text-lg font-bold tracking-tight text-white">SeedValidator</span>
-            </Link>
-            <p className="text-sm text-zinc-500 leading-relaxed max-w-xs">
-              The financial nervous system for modern startups. Predict, plan, and pivot with confidence.
-            </p>
+      <footer className="bg-black py-12 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2">
+            <div className="h-6 w-6 bg-white rounded-md"></div>
+            <span className="text-white font-bold tracking-tight">SeedValidator</span>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Product</h3>
-            <ul className="space-y-2">
-              <li><Link href="#features" className="text-sm text-zinc-500 hover:text-white transition-colors">Features</Link></li>
-              <li><Link href="#pricing" className="text-sm text-zinc-500 hover:text-white transition-colors">Pricing</Link></li>
-              <li><Link href="/changelog" className="text-sm text-zinc-500 hover:text-white transition-colors">Changelog</Link></li>
-              <li><Link href="/docs" className="text-sm text-zinc-500 hover:text-white transition-colors">Documentation</Link></li>
-            </ul>
+          <div className="flex gap-8 text-sm text-zinc-500">
+            <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
+            <Link href="#" className="hover:text-white transition-colors">GitHub</Link>
+            <Link href="#" className="hover:text-white transition-colors">Discord</Link>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Company</h3>
-            <ul className="space-y-2">
-              <li><Link href="/about" className="text-sm text-zinc-500 hover:text-white transition-colors">About</Link></li>
-              <li><Link href="/blog" className="text-sm text-zinc-500 hover:text-white transition-colors">Blog</Link></li>
-              <li><Link href="/careers" className="text-sm text-zinc-500 hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="/contact" className="text-sm text-zinc-500 hover:text-white transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Legal</h3>
-            <ul className="space-y-2">
-              <li><Link href="/privacy" className="text-sm text-zinc-500 hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-sm text-zinc-500 hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><Link href="/security" className="text-sm text-zinc-500 hover:text-white transition-colors">Security</Link></li>
-            </ul>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-zinc-600">© 2025 SeedValidator Finance Inc. All rights reserved.</p>
-          <div className="flex space-x-6">
-            <Link href="#" className="text-zinc-600 hover:text-white transition-colors text-xs">Twitter</Link>
-            <Link href="#" className="text-zinc-600 hover:text-white transition-colors text-xs">LinkedIn</Link>
-            <Link href="#" className="text-zinc-600 hover:text-white transition-colors text-xs">GitHub</Link>
-          </div>
+          <p className="text-zinc-600 text-xs">
+            © 2025 SeedValidator Inc.
+          </p>
         </div>
       </footer>
     </div>

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -16,48 +15,49 @@ export const AuthSplitLayout = ({
     subheading = "Enter your details to access your account",
 }: AuthLayoutProps) => {
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950 relative overflow-hidden">
-            {/* Ambient Background */}
-            <BackgroundBeams className="opacity-20" />
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px] pointer-events-none" />
-
-            {/* Ambient Glows */}
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="min-h-screen w-full flex items-center justify-center bg-white relative overflow-hidden text-zinc-900">
+            {/* Subtle Enterprise Grid Background */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            <div className="absolute inset-0 bg-white/90 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.1),rgba(255,255,255,0))]"></div>
 
             <div className="relative z-10 w-full max-w-md px-4">
                 {/* Back Link */}
                 <Link
                     href="/"
-                    className="absolute -top-16 left-4 lg:left-0 text-sm text-zinc-500 hover:text-white flex items-center gap-2 transition-colors"
+                    className="absolute -top-16 left-4 lg:left-0 text-sm font-medium text-zinc-500 hover:text-zinc-900 flex items-center gap-2 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" /> Back to Home
                 </Link>
 
-                {/* Glass Card */}
-                <div className="w-full bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+                {/* Clean Enterprise Card */}
+                <div className="w-full bg-white ring-1 ring-zinc-200 shadow-xl shadow-zinc-200/50 rounded-2xl overflow-hidden">
                     <div className="p-8 sm:p-10 space-y-8">
-                        {/* Brand Header */}
-                        <div className="text-center space-y-2">
-                            <Link href="/" className="inline-flex items-center gap-2 group mb-6">
-                                <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-lg shadow-white/10">
-                                    <div className="h-3 w-3 bg-black rounded-full" />
+                        {/* Clean Header */}
+                        <div className="text-center space-y-3">
+                            <Link href="/" className="inline-flex items-center gap-2 group mb-4">
+                                <div className="h-8 w-8 bg-black rounded-lg flex items-center justify-center">
+                                    <div className="h-3 w-3 bg-white rounded-full" />
                                 </div>
                             </Link>
-                            <h1 className="text-2xl font-bold tracking-tight text-white">{heading}</h1>
-                            <p className="text-sm text-zinc-400">{subheading}</p>
+                            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{heading}</h1>
+                            <p className="text-sm text-zinc-500">{subheading}</p>
                         </div>
 
                         {/* Form Content */}
-                        <div className="space-y-6">
+                        <div className="space-y-6 text-left">
                             {children}
                         </div>
                     </div>
+                    {/* Security Badge */}
+                    <div className="bg-zinc-50 px-8 py-4 border-t border-zinc-100 flex items-center justify-center gap-2 text-xs text-zinc-500 font-medium">
+                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                        Bank-Grade Security (AES-256)
+                    </div>
                 </div>
 
-                {/* Footer Footer */}
-                <p className="mt-8 text-center text-xs text-zinc-600">
-                    Protected by SeedValidator Financial Security
+                {/* Footer */}
+                <p className="mt-8 text-center text-xs text-zinc-400">
+                    © 2025 SeedValidator Finance Inc.
                 </p>
             </div>
         </div>
