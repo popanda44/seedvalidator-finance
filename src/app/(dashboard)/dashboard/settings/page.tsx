@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import useSWR from 'swr'
+import { useSession } from 'next-auth/react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { PlaidLinkDemoButton } from '@/components/plaid/plaid-link-button'
 import {
     User,
     Building2,
@@ -16,10 +19,10 @@ import {
     Check,
     Plus,
     Trash2,
-    Mail,
-    ExternalLink,
+    Loader2,
+    RefreshCw,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatCurrency } from '@/lib/utils'
 
 const settingsSections = [
     { id: 'profile', name: 'Profile', icon: User },
@@ -32,29 +35,61 @@ const settingsSections = [
     { id: 'export', name: 'Data Export', icon: Download },
 ]
 
-const teamMembers = [
-    { id: 1, name: 'John Smith', email: 'john@company.com', role: 'Owner', avatar: 'JS' },
-    { id: 2, name: 'Sarah Chen', email: 'sarah@company.com', role: 'Admin', avatar: 'SC' },
-    { id: 3, name: 'Mike Johnson', email: 'mike@company.com', role: 'Member', avatar: 'MJ' },
-]
-
-const connectedBanks = [
-    { id: 1, name: 'Chase Business Checking', status: 'connected', lastSync: 'Just now' },
-    { id: 2, name: 'Mercury', status: 'connected', lastSync: '5 min ago' },
-]
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function SettingsPage() {
+    const { data: session } = useSession()
     const [activeSection, setActiveSection] = useState('profile')
+    const [isSaving, setIsSaving] = useState(false)
+    const [saveSuccess, setSaveSuccess] = useState(false)
+
+    // Fetch dashboard data for accounts
+    const { data: dashboardData, mutate } = useSWR('/api/dashboard', fetcher)
+
+    // Initialize form data from session
     const [formData, setFormData] = useState({
-        name: 'John Smith',
-        email: 'john@company.com',
-        companyName: 'Acme Startup Inc.',
+        name: '',
+        email: '',
+        companyName: '',
         industry: 'SaaS / Technology',
         currency: 'USD',
         fiscalYearStart: 'January',
         runwayAlert: '6',
         spendingAlert: '50',
     })
+
+    // Update form data when session loads
+    useEffect(() => {
+        if (session?.user) {
+            setFormData(prev => ({
+                ...prev,
+                name: session.user.name || '',
+                email: session.user.email || '',
+            }))
+        }
+    }, [session])
+
+    const accounts = dashboardData?.accounts || []
+
+    // Get initials from name
+    const initials = formData.name
+        ? formData.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+        : 'U'
+
+    const handleSave = async () => {
+        setIsSaving(true)
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        setIsSaving(false)
+        setSaveSuccess(true)
+        setTimeout(() => setSaveSuccess(false), 3000)
+    }
+
+    const handleDisconnectBank = async (accountId: string) => {
+        // In production, this would call the API to disconnect the bank
+        console.log('Disconnecting account:', accountId)
+        mutate()
+    }
 
     return (
         <div className="space-y-6 animate-fade-in">
@@ -99,7 +134,11 @@ export default function SettingsPage() {
                             <CardContent className="space-y-6">
                                 <div className="flex items-center gap-6">
                                     <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-2xl font-bold text-white">
-                                        JS
+                                        {session?.user?.image ? (
+                                            <img src={session.user.image} alt={formData.name} className="w-20 h-20 rounded-full" />
+                                        ) : (
+                                            initials
+                                        )}
                                     </div>
                                     <div>
                                         <Button variant="outline" size="sm">Change Photo</Button>
@@ -130,7 +169,21 @@ export default function SettingsPage() {
 
                                 <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
                                     <Button variant="outline">Cancel</Button>
-                                    <Button variant="gradient">Save Changes</Button>
+                                    <Button variant="gradient" onClick={handleSave} disabled={isSaving}>
+                                        {isSaving ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                Saving...
+                                            </>
+                                        ) : saveSuccess ? (
+                                            <>
+                                                <Check className="w-4 h-4 mr-2" />
+                                                Saved!
+                                            </>
+                                        ) : (
+                                            'Save Changes'
+                                        )}
+                                    </Button>
                                 </div>
                             </CardContent>
                         </Card>
@@ -151,6 +204,7 @@ export default function SettingsPage() {
                                                 type="text"
                                                 value={formData.companyName}
                                                 onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                                                placeholder="Enter company name"
                                                 className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                             />
                                         </div>
@@ -197,7 +251,9 @@ export default function SettingsPage() {
 
                                     <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
                                         <Button variant="outline">Cancel</Button>
-                                        <Button variant="gradient">Save Changes</Button>
+                                        <Button variant="gradient" onClick={handleSave} disabled={isSaving}>
+                                            {isSaving ? 'Saving...' : 'Save Changes'}
+                                        </Button>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -205,34 +261,55 @@ export default function SettingsPage() {
                             <Card>
                                 <CardHeader className="flex flex-row items-center justify-between">
                                     <CardTitle className="text-lg">Connected Banks</CardTitle>
-                                    <Button variant="gradient" size="sm">
+                                    <PlaidLinkDemoButton
+                                        onSuccess={() => mutate()}
+                                        variant="gradient"
+                                        size="sm"
+                                    >
                                         <Plus className="w-4 h-4 mr-2" />
                                         Add Bank
-                                    </Button>
+                                    </PlaidLinkDemoButton>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
-                                    {connectedBanks.map((bank) => (
-                                        <div key={bank.id} className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                                                    <Building2 className="w-5 h-5 text-white" />
-                                                </div>
-                                                <div>
-                                                    <p className="font-medium text-slate-900 dark:text-white">{bank.name}</p>
-                                                    <p className="text-sm text-muted-foreground">Last synced: {bank.lastSync}</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                                    <Check className="w-3 h-3" />
-                                                    Connected
-                                                </span>
-                                                <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30">
-                                                    <Trash2 className="w-4 h-4" />
-                                                </Button>
-                                            </div>
+                                    {accounts.length === 0 ? (
+                                        <div className="text-center py-8">
+                                            <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                                            <p className="text-muted-foreground mb-4">No bank accounts connected</p>
+                                            <PlaidLinkDemoButton onSuccess={() => mutate()} variant="outline">
+                                                Connect Your First Bank
+                                            </PlaidLinkDemoButton>
                                         </div>
-                                    ))}
+                                    ) : (
+                                        accounts.map((account: any) => (
+                                            <div key={account.id} className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                                        <Building2 className="w-5 h-5 text-white" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-medium text-slate-900 dark:text-white">{account.name}</p>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            {formatCurrency(account.balance)} • Last synced: Just now
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                                        <Check className="w-3 h-3" />
+                                                        Connected
+                                                    </span>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="text-red-500 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30"
+                                                        onClick={() => handleDisconnectBank(account.id)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
                                 </CardContent>
                             </Card>
                         </>
@@ -298,7 +375,7 @@ export default function SettingsPage() {
 
                                 <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
                                     <Button variant="outline">Cancel</Button>
-                                    <Button variant="gradient">Save Changes</Button>
+                                    <Button variant="gradient" onClick={handleSave}>Save Changes</Button>
                                 </div>
                             </CardContent>
                         </Card>
@@ -316,33 +393,29 @@ export default function SettingsPage() {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-3">
-                                    {teamMembers.map((member) => (
-                                        <div key={member.id} className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-sm font-bold text-white">
-                                                    {member.avatar}
-                                                </div>
-                                                <div>
-                                                    <p className="font-medium text-slate-900 dark:text-white">{member.name}</p>
-                                                    <p className="text-sm text-muted-foreground">{member.email}</p>
-                                                </div>
+                                    {/* Current User */}
+                                    <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-sm font-bold text-white">
+                                                {initials}
                                             </div>
-                                            <div className="flex items-center gap-3">
-                                                <select className="px-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                                                    <option>{member.role}</option>
-                                                    <option>Owner</option>
-                                                    <option>Admin</option>
-                                                    <option>Member</option>
-                                                    <option>Viewer</option>
-                                                </select>
-                                                {member.role !== 'Owner' && (
-                                                    <Button variant="ghost" size="icon" className="text-red-500">
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </Button>
-                                                )}
+                                            <div>
+                                                <p className="font-medium text-slate-900 dark:text-white">{formData.name || 'You'}</p>
+                                                <p className="text-sm text-muted-foreground">{formData.email}</p>
                                             </div>
                                         </div>
-                                    ))}
+                                        <div className="flex items-center gap-3">
+                                            <span className="px-3 py-1 text-sm rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                                                Owner
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Placeholder for additional team members */}
+                                    <div className="text-center py-8 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg">
+                                        <Users className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                                        <p className="text-muted-foreground">Invite team members to collaborate</p>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -359,7 +432,7 @@ export default function SettingsPage() {
                                     <div className="flex items-center justify-between p-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                                         <div>
                                             <p className="text-lg font-bold">Growth Plan</p>
-                                            <p className="opacity-80">$199/month • Billed monthly</p>
+                                            <p className="opacity-80">$299/month • Billed monthly</p>
                                         </div>
                                         <Button className="bg-white text-blue-600 hover:bg-blue-50">
                                             Upgrade Plan
