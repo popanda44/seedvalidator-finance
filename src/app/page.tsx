@@ -171,32 +171,84 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-3xl rounded-full opacity-20 pointer-events-none" />
+        <div className="max-w-5xl mx-auto text-center relative bg-zinc-900/50 border border-white/10 rounded-3xl p-12 overflow-hidden backdrop-blur-sm">
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-3xl opacity-30 pointer-events-none" />
+          <BackgroundBeams className="opacity-20 translate-y-20" />
 
           <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6 relative z-10 text-foreground">
             Ready to validate your future?
           </h2>
-          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto relative z-10">
-            Join 500+ founders who are building with financial clarity. Start your free trial today.
+          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto relative z-10 font-light">
+            Join 500+ founders who are building with financial clarity. <br className="hidden sm:block" />
+            Start your free 14-day trial today.
           </p>
-          <Link
-            href="/register"
-            className="inline-flex h-14 items-center justify-center rounded-full bg-foreground px-8 text-lg font-medium text-background shadow transition-all hover:bg-foreground/90 hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-50 relative z-10"
-          >
-            Get Started for Free <ChevronRight className="ml-2 h-5 w-5" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+            <Link
+              href="/register"
+              className="inline-flex h-12 items-center justify-center rounded-lg bg-foreground px-8 text-base font-medium text-background shadow-lg transition-all hover:bg-foreground/90 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Get Started for Free <ChevronRight className="ml-2 h-4 w-4" />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background/50 backdrop-blur-sm px-8 text-base font-medium transition-all hover:bg-accent hover:text-accent-foreground"
+            >
+              Contact Sales
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-zinc-950">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center opacity-50 text-sm">
-          <p className="text-muted-foreground">© 2025 SeedValidator Finance. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="#" className="hover:text-foreground text-muted-foreground">Privacy</Link>
-            <Link href="#" className="hover:text-foreground text-muted-foreground">Terms</Link>
-            <Link href="#" className="hover:text-foreground text-muted-foreground">Twitter</Link>
+      <footer className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950 border-t border-white/5">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
+          <div className="col-span-2 md:col-span-1 space-y-4">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="h-6 w-6 bg-white rounded-full flex items-center justify-center">
+                <div className="h-2 w-2 bg-black rounded-full" />
+              </div>
+              <span className="text-lg font-bold tracking-tight text-white">SeedValidator</span>
+            </Link>
+            <p className="text-sm text-zinc-500 leading-relaxed max-w-xs">
+              The financial nervous system for modern startups. Predict, plan, and pivot with confidence.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Product</h3>
+            <ul className="space-y-2">
+              <li><Link href="#features" className="text-sm text-zinc-500 hover:text-white transition-colors">Features</Link></li>
+              <li><Link href="#pricing" className="text-sm text-zinc-500 hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/changelog" className="text-sm text-zinc-500 hover:text-white transition-colors">Changelog</Link></li>
+              <li><Link href="/docs" className="text-sm text-zinc-500 hover:text-white transition-colors">Documentation</Link></li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Company</h3>
+            <ul className="space-y-2">
+              <li><Link href="/about" className="text-sm text-zinc-500 hover:text-white transition-colors">About</Link></li>
+              <li><Link href="/blog" className="text-sm text-zinc-500 hover:text-white transition-colors">Blog</Link></li>
+              <li><Link href="/careers" className="text-sm text-zinc-500 hover:text-white transition-colors">Careers</Link></li>
+              <li><Link href="/contact" className="text-sm text-zinc-500 hover:text-white transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Legal</h3>
+            <ul className="space-y-2">
+              <li><Link href="/privacy" className="text-sm text-zinc-500 hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-sm text-zinc-500 hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link href="/security" className="text-sm text-zinc-500 hover:text-white transition-colors">Security</Link></li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-zinc-600">© 2025 SeedValidator Finance Inc. All rights reserved.</p>
+          <div className="flex space-x-6">
+            <Link href="#" className="text-zinc-600 hover:text-white transition-colors text-xs">Twitter</Link>
+            <Link href="#" className="text-zinc-600 hover:text-white transition-colors text-xs">LinkedIn</Link>
+            <Link href="#" className="text-zinc-600 hover:text-white transition-colors text-xs">GitHub</Link>
           </div>
         </div>
       </footer>

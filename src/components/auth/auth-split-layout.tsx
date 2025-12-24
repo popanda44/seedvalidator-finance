@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface AuthSplitLayoutProps {
     children: React.ReactNode;
@@ -19,7 +18,7 @@ export const AuthSplitLayout = ({
     return (
         <div className="min-h-screen w-full flex bg-background">
             {/* Left Column - Visuals (Abstract/Minimalist) */}
-            <div className="hidden lg:flex w-1/2 relative bg-zinc-900 border-r border-white/5 overflow-hidden items-center justify-center">
+            <div className="hidden lg:flex lg:w-[40%] relative bg-zinc-900 border-r border-white/5 overflow-hidden items-center justify-center">
                 <div className="absolute inset-0 bg-stone-950" />
 
                 {/* Abstract animated geometric pattern */}
@@ -73,7 +72,7 @@ export const AuthSplitLayout = ({
             </div>
 
             {/* Right Column - Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-background relative">
+            <div className="w-full lg:w-[60%] flex items-center justify-center p-8 bg-background relative">
                 <Link
                     href="/"
                     className="absolute top-8 left-8 lg:hidden text-sm text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
@@ -81,10 +80,10 @@ export const AuthSplitLayout = ({
                     <ArrowLeft className="w-4 h-4" /> Back
                 </Link>
 
-                <div className="w-full max-w-md space-y-8">
-                    <div className="text-center lg:text-left">
-                        <h1 className="text-3xl font-bold tracking-tight text-foreground">{heading}</h1>
-                        <p className="mt-2 text-sm text-muted-foreground">{subheading}</p>
+                <div className="w-full max-w-lg space-y-10 px-4 sm:px-8">
+                    <div className="text-center lg:text-left space-y-2">
+                        <h1 className="text-4xl font-bold tracking-tight text-foreground">{heading}</h1>
+                        <p className="text-muted-foreground text-lg">{subheading}</p>
                     </div>
 
                     {children}
