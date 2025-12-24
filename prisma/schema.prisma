@@ -55,7 +55,7 @@ model VerificationToken {
 // ==========================================
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(uuid())
   email         String    @unique
   emailVerified DateTime?
   name          String?
@@ -72,25 +72,35 @@ model User {
   // Timestamps
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  @@index([companyId])
+  @@index([email])
 }
 
 model Company {
-  id              String              @id @default(cuid())
+  id              String              @id @default(uuid())
   name            String
   industry        String?
   stage           CompanyStage?
-  currency        String              @default("USD")
+  foundingDate    DateTime?           @db.Date
+  fiscalYearEnd   DateTime?           @db.Date
   fiscalYearStart Int                 @default(1) // Month 1-12
+  currencyCode    String              @default("USD") @db.Char(3)
+  timezone        String              @default("America/New_York")
   
   // Relations
   users           User[]
   bankAccounts    BankAccount[]
   transactions    Transaction[]
   categories      Category[]
+  departments     Department[]
+  customers       Customer[]
+  revenueStreams  RevenueStream[]
   snapshots       FinancialSnapshot[]
   alerts          Alert[]
   forecasts       Forecast[]
   plaidItems      PlaidItem[]
+  integrations    Integration[]
   
   // Settings
   alertSettings   Json?
@@ -101,7 +111,7 @@ model Company {
 }
 
 model PlaidItem {
-  id              String        @id @default(cuid())
+  id              String        @id @default(uuid())
   company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String
   plaidItemId     String        @unique
@@ -118,10 +128,12 @@ model PlaidItem {
   // Timestamps
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+
+  @@index([companyId])
 }
 
 model BankAccount {
-  id              String        @id @default(cuid())
+  id              String        @id @default(uuid())
   company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String
   plaidItem       PlaidItem?    @relation(fields: [plaidItemId], references: [id])
@@ -135,11 +147,11 @@ model BankAccount {
   subtype         String?
   mask            String?       // Last 4 digits
   
-  // Balances
-  currentBalance  Float         @default(0)
-  availableBalance Float?
-  limitBalance    Float?        // For credit cards
-  isoCurrencyCode String?
+  // Balances (using Decimal for precision)
+  currentBalance  Decimal       @default(0) @db.Decimal(15, 2)
+  availableBalance Decimal?     @db.Decimal(15, 2)
+  limitBalance    Decimal?      @db.Decimal(15, 2) // For credit cards
+  currency        String        @default("USD") @db.Char(3)
   
   // Status
   isActive        Boolean       @default(true)
@@ -151,10 +163,13 @@ model BankAccount {
   // Timestamps
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+
+  @@index([companyId])
+  @@index([plaidAccountId])
 }
 
 model Transaction {
-  id                  String        @id @default(cuid())
+  id                  String        @id @default(uuid())
   company             Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId           String
   bankAccount         BankAccount   @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
@@ -166,12 +181,13 @@ model Transaction {
   plaidTransactionId  String?       @unique
   
   // Transaction Details
-  date                DateTime
+  date                DateTime      @db.Date
   name                String        // Merchant name
   merchantName        String?
-  amount              Float         // Positive = expense, Negative = income
+  amount              Decimal       @db.Decimal(15, 2) // Positive = expense, Negative = income
   isoCurrencyCode     String?
   pending             Boolean       @default(false)
+  isRecurring         Boolean       @default(false)
   
   // Categorization
   plaidCategory       String[]      // Original Plaid categories
@@ -181,25 +197,33 @@ model Transaction {
   paymentChannel      String?       // online, in_store, etc.
   transactionType     String?       // place, digital, special, etc.
   notes               String?
+  metadata            Json?         // Flexible metadata storage
   
   // Timestamps
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
-  @@index([companyId, date])
+  @@index([companyId, date(sort: Desc)])
   @@index([categoryId])
+  @@index([bankAccountId])
+  @@index([date(sort: Desc)])
 }
 
 model Category {
-  id              String        @id @default(cuid())
+  id              String        @id @default(uuid())
   company         Company?      @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String?       // null = system default category
+  department      Department?   @relation(fields: [departmentId], references: [id])
+  departmentId    String?
   
   name            String
   slug            String
   description     String?
   icon            String?       // Lucide icon name
   color           String?       // Hex color
+  
+  // Budget (for expense tracking)
+  budgetAmount    Decimal?      @db.Decimal(15, 2)
   
   // Hierarchy
   parentId        String?
@@ -218,10 +242,101 @@ model Category {
   updatedAt       DateTime      @updatedAt
 
   @@unique([companyId, slug])
+  @@index([companyId])
+  @@index([type])
+}
+
+model Department {
+  id              String        @id @default(uuid())
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
+  
+  name            String
+  code            String?       // Short code like "ENG", "MKT"
+  budgetAmount    Decimal?      @db.Decimal(15, 2)
+  headcount       Int?
+  
+  // Relations
+  categories      Category[]
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+model Customer {
+  id              String          @id @default(uuid())
+  company         Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId       String
+  
+  name            String
+  email           String?
+  externalId      String?         // ID from CRM or billing system
+  
+  // Lifecycle
+  status          CustomerStatus  @default(ACTIVE)
+  acquiredAt      DateTime?
+  churnedAt       DateTime?
+  
+  // Revenue
+  lifetimeValue   Decimal?        @db.Decimal(15, 2)
+  
+  // Relations
+  revenueStreams  RevenueStream[]
+  
+  // Timestamps
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([companyId, externalId])
+  @@index([companyId])
+  @@index([status])
+}
+
+model RevenueStream {
+  id                  String        @id @default(uuid())
+  company             Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId           String
+  customer            Customer?     @relation(fields: [customerId], references: [id])
+  customerId          String?
+  
+  // Revenue Details
+  sourceType          RevenueSourceType
+  amount              Decimal       @db.Decimal(15, 2)
+  currency            String        @default("USD") @db.Char(3)
+  
+  // Booking & Recognition (for ASC 606 compliance)
+  bookingDate         DateTime      @db.Date
+  recognitionStart    DateTime?     @db.Date
+  recognitionEnd      DateTime?     @db.Date
+  
+  // Subscription Details (if applicable)
+  isRecurring         Boolean       @default(false)
+  recurringInterval   RecurringInterval?
+  contractValue       Decimal?      @db.Decimal(15, 2)
+  
+  // Status
+  status              RevenueStatus @default(ACTIVE)
+  
+  // Metadata
+  description         String?
+  externalId          String?       // ID from billing system
+  metadata            Json?
+  
+  // Timestamps
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([companyId, bookingDate(sort: Desc)])
+  @@index([customerId])
+  @@index([sourceType])
 }
 
 model FinancialSnapshot {
-  id              String        @id @default(cuid())
+  id              String        @id @default(uuid())
   company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String
   
@@ -229,19 +344,19 @@ model FinancialSnapshot {
   date            DateTime      @db.Date
   
   // Cash Metrics
-  totalCash       Float
-  cashChange      Float?        // Change from previous period
+  totalCash       Decimal       @db.Decimal(15, 2)
+  cashChange      Decimal?      @db.Decimal(15, 2) // Change from previous period
   
   // Burn Metrics
-  grossBurn       Float
-  netBurn         Float
-  runway          Float         // In months
+  grossBurn       Decimal       @db.Decimal(15, 2)
+  netBurn         Decimal       @db.Decimal(15, 2)
+  runway          Decimal       @db.Decimal(5, 1) // In months
   
   // Revenue Metrics
-  revenue         Float?
-  mrr             Float?
-  arr             Float?
-  revenueGrowth   Float?        // MoM growth rate
+  revenue         Decimal?      @db.Decimal(15, 2)
+  mrr             Decimal?      @db.Decimal(15, 2)
+  arr             Decimal?      @db.Decimal(15, 2)
+  revenueGrowth   Decimal?      @db.Decimal(5, 2) // MoM growth rate as percentage
   
   // Expense Breakdown
   expensesByCategory Json?      // { categorySlug: amount }
@@ -250,41 +365,52 @@ model FinancialSnapshot {
   createdAt       DateTime      @default(now())
   
   @@unique([companyId, date])
-  @@index([companyId, date])
+  @@index([companyId, date(sort: Desc)])
 }
 
 model Forecast {
-  id              String        @id @default(cuid())
-  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId       String
+  id                      String        @id @default(uuid())
+  company                 Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId               String
   
-  name            String
-  type            ForecastType
-  isActive        Boolean       @default(true)
+  name                    String
+  type                    ForecastType
+  modelVersion            String?       // Model/algorithm version used
+  isActive                Boolean       @default(true)
   
   // Forecast Parameters
-  startDate       DateTime
-  endDate         DateTime
-  method          ForecastMethod @default(LINEAR)
+  predictionDate          DateTime      @db.Date
+  startDate               DateTime
+  endDate                 DateTime
+  method                  ForecastMethod @default(LINEAR)
+  
+  // Prediction Values
+  predictedValue          Decimal?      @db.Decimal(15, 2)
+  confidenceIntervalLower Decimal?      @db.Decimal(15, 2)
+  confidenceIntervalUpper Decimal?      @db.Decimal(15, 2)
+  confidenceScore         Decimal?      @db.Decimal(3, 2) // 0.00 to 1.00
   
   // Forecast Data
-  projections     Json          // Array of { date, amount, confidence }
-  assumptions     Json?         // User-defined assumptions
+  projections             Json          // Array of { date, amount, confidence }
+  assumptions             Json?         // User-defined assumptions
   
   // Timestamps
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  @@index([companyId, predictionDate(sort: Desc)])
+  @@index([type])
 }
 
 model Alert {
-  id              String        @id @default(cuid())
+  id              String        @id @default(uuid())
   company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       String
   
   type            AlertType
   severity        AlertSeverity
   title           String
-  message         String
+  message         String        @db.Text
   data            Json?         // Additional context
   
   // Status
@@ -293,6 +419,9 @@ model Alert {
   readAt          DateTime?
   dismissedAt     DateTime?
   
+  // Trigger Info
+  triggeredAt     DateTime      @default(now())
+  
   // Notifications
   emailSent       Boolean       @default(false)
   emailSentAt     DateTime?
@@ -300,8 +429,37 @@ model Alert {
   // Timestamps
   createdAt       DateTime      @default(now())
   
-  @@index([companyId, createdAt])
+  @@index([companyId, triggeredAt(sort: Desc)])
   @@index([companyId, isRead])
+  @@index([severity])
+}
+
+model Integration {
+  id                  String            @id @default(uuid())
+  company             Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId           String
+  
+  integrationType     IntegrationType
+  credentials         Json?             // Encrypted credentials
+  accessToken         String?           @db.Text
+  refreshToken        String?           @db.Text
+  tokenExpiresAt      DateTime?
+  
+  // Sync Status
+  status              IntegrationStatus @default(PENDING)
+  lastSyncAt          DateTime?
+  lastSyncError       String?
+  
+  // Configuration
+  config              Json?             // Integration-specific settings
+  
+  // Timestamps
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@unique([companyId, integrationType])
+  @@index([companyId])
+  @@index([status])
 }
 
 // ==========================================
@@ -309,10 +467,11 @@ model Alert {
 // ==========================================
 
 enum UserRole {
-  OWNER
-  ADMIN
-  MEMBER
-  VIEWER
+  OWNER     // Full access, billing management
+  ADMIN     // Full access except billing
+  FINANCE   // Financial data access
+  MEMBER    // Limited access
+  VIEWER    // Read-only access
 }
 
 enum CompanyStage {
@@ -326,8 +485,10 @@ enum CompanyStage {
 }
 
 enum AccountType {
-  DEPOSITORY    // Checking, Savings
-  CREDIT        // Credit Card
+  CHECKING
+  SAVINGS
+  CREDIT
+  DEPOSITORY    // Generic checking/savings
   INVESTMENT    // Brokerage, 401k
   LOAN          // Mortgage, Student
   OTHER
@@ -346,17 +507,48 @@ enum CategoryType {
   TRANSFER
 }
 
+enum CustomerStatus {
+  PROSPECT
+  ACTIVE
+  CHURNED
+  PAUSED
+}
+
+enum RevenueSourceType {
+  SUBSCRIPTION      // Recurring SaaS revenue
+  ONE_TIME          // One-time purchases
+  USAGE_BASED       // Metered/usage-based billing
+  PROFESSIONAL_SERVICES
+  LICENSE
+  OTHER
+}
+
+enum RecurringInterval {
+  MONTHLY
+  QUARTERLY
+  ANNUAL
+}
+
+enum RevenueStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PENDING
+}
+
 enum ForecastType {
   REVENUE
   EXPENSE
   CASH_FLOW
   HEADCOUNT
+  RUNWAY
 }
 
 enum ForecastMethod {
   LINEAR
   EXPONENTIAL
   SEASONAL
+  AI_POWERED
   MANUAL
 }
 
@@ -366,6 +558,7 @@ enum AlertType {
   SPENDING_SPIKE      // > 50% increase
   LARGE_TRANSACTION   // > threshold
   PAYMENT_DUE         // Upcoming payment
+  MILESTONE           // Achievement milestones
   SYNC_ERROR          // Bank sync failed
   WEEKLY_DIGEST       // Weekly summary
 }
@@ -374,4 +567,22 @@ enum AlertSeverity {
   CRITICAL
   WARNING
   INFO
+  SUCCESS
+}
+
+enum IntegrationType {
+  PLAID
+  QUICKBOOKS
+  XERO
+  SALESFORCE
+  STRIPE
+  HUBSPOT
+  SLACK
+}
+
+enum IntegrationStatus {
+  ACTIVE
+  PENDING
+  ERROR
+  DISCONNECTED
 }
