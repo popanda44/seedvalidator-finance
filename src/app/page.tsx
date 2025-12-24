@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ChevronRight, BarChart3, Lock, Zap, MessageSquare } from "lucide-react";
+import { ArrowRight, Zap, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { cn } from "@/lib/utils";
 import { BackgroundBeams } from "@/components/ui/background-beams";
-import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import { RunwaySimulator } from "@/components/marketing/runway-simulator";
-import { AIChatPreview } from "@/components/marketing/ai-chat-preview";
+import { FeatureShowcase } from "@/components/marketing/feature-showcase";
 
 export default function HomePage() {
   return (
@@ -119,39 +117,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-50/50 dark:bg-zinc-900/20 border-y border-white/5">
+      {/* Features Showcase */}
+      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-50/50 dark:bg-zinc-950/50 border-y border-zinc-200 dark:border-white/5">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight mb-4 text-foreground">Everything you need to validate</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive financial tools designed for the modern founder. No fluff, just data.
+          <div className="mb-16 md:text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-sm font-medium text-indigo-500 mb-4">
+              <Zap className="mr-2 h-3.5 w-3.5" />
+              Powerful Features
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-foreground">Why founders love SeedValidator</h2>
+            <p className="text-muted-foreground text-lg">
+              We&apos;ve combined the speed of a spreadsheet with the power of a financial engine.
             </p>
           </div>
 
-          <BentoGrid>
-            <BentoGridItem
-              title="Real-time Cash Flow"
-              description="Connect via Plaid for instant, verified bank balances and transaction categorization."
-              header={<div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 items-center justify-center"><BarChart3 className="h-10 w-10 text-neutral-500" /></div>}
-              icon={<Zap className="h-4 w-4 text-neutral-500" />}
-              className="md:col-span-1"
-            />
-            <BentoGridItem
-              title="AI-Powered Insights"
-              description="Ask questions about your finances and get instant, data-backed answers."
-              header={<AIChatPreview />}
-              icon={<MessageSquare className="h-4 w-4 text-neutral-500" />}
-              className="md:col-span-2"
-            />
-            <BentoGridItem
-              title="Bank-Grade Security"
-              description="Your data is encrypted with AES-256 and SOC-2 compliant protocols."
-              header={<div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 items-center justify-center"><Lock className="h-10 w-10 text-neutral-500" /></div>}
-              icon={<Lock className="h-4 w-4 text-neutral-500" />}
-              className="md:col-span-1"
-            />
-          </BentoGrid>
+          <FeatureShowcase />
         </div>
       </section>
 
