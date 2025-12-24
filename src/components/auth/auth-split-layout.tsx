@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 
-interface AuthSplitLayoutProps {
+interface AuthLayoutProps {
     children: React.ReactNode;
     heading?: string;
     subheading?: string;
@@ -14,80 +14,51 @@ export const AuthSplitLayout = ({
     children,
     heading = "Welcome back",
     subheading = "Enter your details to access your account",
-}: AuthSplitLayoutProps) => {
+}: AuthLayoutProps) => {
     return (
-        <div className="min-h-screen w-full flex bg-background">
-            {/* Left Column - Visuals (Abstract/Minimalist) */}
-            <div className="hidden lg:flex lg:w-[40%] relative bg-zinc-900 border-r border-white/5 overflow-hidden items-center justify-center">
-                <div className="absolute inset-0 bg-stone-950" />
+        <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950 relative overflow-hidden">
+            {/* Ambient Background */}
+            <BackgroundBeams className="opacity-20" />
+            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px] pointer-events-none" />
 
-                {/* Abstract animated geometric pattern */}
-                <div className="relative w-full h-full max-w-lg max-h-lg flex items-center justify-center perspective-1000">
-                    {[...Array(3)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="absolute border border-white/10 rounded-full"
-                            style={{
-                                width: `${30 + i * 15}rem`,
-                                height: `${30 + i * 15}rem`,
-                            }}
-                            animate={{
-                                rotate: i % 2 === 0 ? 360 : -360,
-                                scale: [1, 1.02, 1],
-                            }}
-                            transition={{
-                                rotate: { duration: 40 + i * 10, ease: "linear", repeat: Infinity },
-                                scale: { duration: 5 + i, ease: "easeInOut", repeat: Infinity },
-                            }}
-                        />
-                    ))}
+            {/* Ambient Glows */}
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
-                    <motion.div
-                        className="absolute w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl"
-                        animate={{ opacity: [0.3, 0.6, 0.3] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    />
-
-                    {/* Central Hub */}
-                    <div className="relative z-10 text-center space-y-4 p-8 backdrop-blur-sm bg-white/5 rounded-2xl border border-white/10 max-w-sm">
-                        <div className="h-10 w-10 mx-auto bg-white rounded-full flex items-center justify-center mb-4 shadow-lg shadow-white/20">
-                            <div className="h-3 w-3 bg-black rounded-full" />
-                        </div>
-                        <h2 className="text-2xl font-bold text-white tracking-tight">Financial Intelligence</h2>
-                        <p className="text-zinc-400 text-sm leading-relaxed">
-                            &quot;Real-time modeling for the modern CFO. Reduce burn, extend runway, and predict the future.&quot;
-                        </p>
-                    </div>
-                </div>
-
-                {/* Brand */}
-                <div className="absolute top-8 left-8 z-20">
-                    <Link href="/" className="flex items-center gap-2 group">
-                        <div className="h-6 w-6 bg-white rounded-full flex items-center justify-center">
-                            <div className="h-2 w-2 bg-black rounded-full" />
-                        </div>
-                        <span className="text-white font-bold tracking-tight">SeedValidator</span>
-                    </Link>
-                </div>
-            </div>
-
-            {/* Right Column - Form */}
-            <div className="w-full lg:w-[60%] flex items-center justify-center p-8 bg-background relative">
+            <div className="relative z-10 w-full max-w-md px-4">
+                {/* Back Link */}
                 <Link
                     href="/"
-                    className="absolute top-8 left-8 lg:hidden text-sm text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
+                    className="absolute -top-16 left-4 lg:left-0 text-sm text-zinc-500 hover:text-white flex items-center gap-2 transition-colors"
                 >
-                    <ArrowLeft className="w-4 h-4" /> Back
+                    <ArrowLeft className="w-4 h-4" /> Back to Home
                 </Link>
 
-                <div className="w-full max-w-lg space-y-10 px-4 sm:px-8">
-                    <div className="text-center lg:text-left space-y-2">
-                        <h1 className="text-4xl font-bold tracking-tight text-foreground">{heading}</h1>
-                        <p className="text-muted-foreground text-lg">{subheading}</p>
-                    </div>
+                {/* Glass Card */}
+                <div className="w-full bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+                    <div className="p-8 sm:p-10 space-y-8">
+                        {/* Brand Header */}
+                        <div className="text-center space-y-2">
+                            <Link href="/" className="inline-flex items-center gap-2 group mb-6">
+                                <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-lg shadow-white/10">
+                                    <div className="h-3 w-3 bg-black rounded-full" />
+                                </div>
+                            </Link>
+                            <h1 className="text-2xl font-bold tracking-tight text-white">{heading}</h1>
+                            <p className="text-sm text-zinc-400">{subheading}</p>
+                        </div>
 
-                    {children}
+                        {/* Form Content */}
+                        <div className="space-y-6">
+                            {children}
+                        </div>
+                    </div>
                 </div>
+
+                {/* Footer Footer */}
+                <p className="mt-8 text-center text-xs text-zinc-600">
+                    Protected by SeedValidator Financial Security
+                </p>
             </div>
         </div>
     );
