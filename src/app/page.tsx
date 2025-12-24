@@ -31,7 +31,7 @@ export default function HomePage() {
               <Link href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Testimonials
               </Link>
-              <Link href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Pricing
               </Link>
             </div>
