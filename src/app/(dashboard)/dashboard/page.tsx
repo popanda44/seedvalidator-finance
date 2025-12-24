@@ -1,5 +1,8 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import useSWR from 'swr'
+import { useSession } from 'next-auth/react'
 import {
     CashBalanceCard,
     BurnRateCard,
@@ -8,8 +11,9 @@ import {
     TeamSizeCard,
     NetBurnCard
 } from '@/components/dashboard/metric-card'
-import { BurnTrendChart, generateSampleBurnData } from '@/components/charts/burn-trend-chart'
+import { BurnTrendChart } from '@/components/charts/burn-trend-chart'
 import { AIInsightsPanel } from '@/components/ai/ai-insights-panel'
+import { PlaidLinkDemoButton } from '@/components/plaid/plaid-link-button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -25,41 +29,72 @@ import {
     Clock,
     TrendingUp,
     Zap,
+    Loader2,
 } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 
-// Sample data for demo
-const sampleMetrics = {
-    cashBalance: 842500,
-    cashChange: 12000,
-    burnRate: 68000,
-    burnRateChange: -3000,
-    runway: 12.4,
-    runwayChange: 0.5,
-    mrr: 125000,
-    mrrChange: 15000,
-    teamSize: 24,
-    teamSizeChange: 2,
-    netBurn: 57000,
-    netBurnChange: -5000,
-}
-
-const recentTransactions = [
-    { id: 1, name: 'AWS', amount: -12450, category: 'Infrastructure', date: new Date() },
-    { id: 2, name: 'Stripe Deposit', amount: 28700, category: 'Revenue', date: new Date(Date.now() - 86400000) },
-    { id: 3, name: 'Gusto Payroll', amount: -45200, category: 'Payroll', date: new Date(Date.now() - 2 * 86400000) },
-    { id: 4, name: 'Google Workspace', amount: -890, category: 'SaaS', date: new Date(Date.now() - 3 * 86400000) },
-    { id: 5, name: 'Slack', amount: -750, category: 'SaaS', date: new Date(Date.now() - 4 * 86400000) },
-]
-
-const alerts = [
-    { id: 1, type: 'warning', title: 'Runway below 12 months', message: 'Consider extending runway', time: '2h ago' },
-    { id: 2, type: 'info', title: 'AWS spending up 25%', message: 'Review infrastructure costs', time: '1d ago' },
-    { id: 3, type: 'success', title: 'MRR grew 12%', message: 'Strong month-over-month growth', time: '2d ago' },
-]
+// Fetcher for SWR
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function DashboardPage() {
-    const burnTrendData = generateSampleBurnData()
+    const { data: session } = useSession()
+    const [isRefreshing, setIsRefreshing] = useState(false)
+
+    // Fetch dashboard data from API
+    const { data, error, isLoading, mutate } = useSWR(
+        '/api/dashboard',
+        fetcher,
+        {
+            refreshInterval: 60000, // Refresh every minute
+            revalidateOnFocus: true,
+        }
+    )
+
+    const handleRefresh = async () => {
+        setIsRefreshing(true)
+        await mutate()
+        setIsRefreshing(false)
+    }
+
+    const handleBankConnected = (accounts: any[]) => {
+        // Refresh dashboard data after bank connection
+        mutate()
+    }
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+                    <p className="text-muted-foreground">Loading your financial data...</p>
+                </div>
+            </div>
+        )
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-4" />
+                    <p className="text-foreground font-medium mb-2">Failed to load dashboard</p>
+                    <p className="text-muted-foreground text-sm mb-4">Please try again later</p>
+                    <Button onClick={() => mutate()} variant="outline">
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Retry
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
+    const metrics = data?.metrics || {}
+    const recentTransactions = data?.recentTransactions || []
+    const alerts = data?.alerts || []
+    const burnTrend = data?.burnTrend || []
+    const accounts = data?.accounts || []
 
     return (
         <div className="space-y-6 animate-fade-in">
@@ -84,8 +119,14 @@ export default function DashboardPage() {
                             </p>
                         </div>
                         <div className="flex items-center gap-3">
-                            <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                                <RefreshCw className="w-4 h-4 mr-2" />
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                                onClick={handleRefresh}
+                                disabled={isRefreshing}
+                            >
+                                <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
                                 Sync
                             </Button>
                             <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
@@ -103,50 +144,68 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-6">
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-slate-300 mb-1">Cash Balance</p>
-                            <p className="text-xl font-bold text-white">{formatCurrency(sampleMetrics.cashBalance)}</p>
+                            <p className="text-xl font-bold text-white">{formatCurrency(metrics.cashBalance || 0)}</p>
                             <div className="flex items-center gap-1 mt-1">
                                 <ArrowUpRight className="w-3 h-3 text-emerald-400" />
-                                <span className="text-xs text-emerald-400">+{formatCurrency(sampleMetrics.cashChange)}</span>
+                                <span className="text-xs text-emerald-400">Live</span>
                             </div>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-slate-300 mb-1">Burn Rate</p>
-                            <p className="text-xl font-bold text-white">{formatCurrency(sampleMetrics.burnRate)}/mo</p>
+                            <p className="text-xl font-bold text-white">{formatCurrency(metrics.monthlyBurn || 0)}/mo</p>
                             <div className="flex items-center gap-1 mt-1">
-                                <ArrowDownRight className="w-3 h-3 text-emerald-400" />
-                                <span className="text-xs text-emerald-400">{formatCurrency(sampleMetrics.burnRateChange)}</span>
+                                {metrics.burnChange < 0 ? (
+                                    <>
+                                        <ArrowDownRight className="w-3 h-3 text-emerald-400" />
+                                        <span className="text-xs text-emerald-400">{metrics.burnChange?.toFixed(1)}%</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ArrowUpRight className="w-3 h-3 text-red-400" />
+                                        <span className="text-xs text-red-400">+{metrics.burnChange?.toFixed(1)}%</span>
+                                    </>
+                                )}
                             </div>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-slate-300 mb-1">Runway</p>
-                            <p className="text-xl font-bold text-white">{sampleMetrics.runway} months</p>
+                            <p className="text-xl font-bold text-white">{metrics.runway?.toFixed(1) || 0} months</p>
                             <div className="flex items-center gap-1 mt-1">
-                                <ArrowUpRight className="w-3 h-3 text-emerald-400" />
-                                <span className="text-xs text-emerald-400">+{sampleMetrics.runwayChange} mo</span>
+                                <span className={`text-xs ${metrics.runway > 12 ? 'text-emerald-400' : metrics.runway > 6 ? 'text-yellow-400' : 'text-red-400'}`}>
+                                    {metrics.runway > 12 ? 'Healthy' : metrics.runway > 6 ? 'Monitor' : 'Critical'}
+                                </span>
                             </div>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-slate-300 mb-1">MRR</p>
-                            <p className="text-xl font-bold text-white">{formatCurrency(sampleMetrics.mrr)}</p>
+                            <p className="text-xl font-bold text-white">{formatCurrency(metrics.mrr || 0)}</p>
                             <div className="flex items-center gap-1 mt-1">
-                                <TrendingUp className="w-3 h-3 text-emerald-400" />
-                                <span className="text-xs text-emerald-400">+{formatCurrency(sampleMetrics.mrrChange)}</span>
+                                {metrics.mrrChange > 0 ? (
+                                    <>
+                                        <TrendingUp className="w-3 h-3 text-emerald-400" />
+                                        <span className="text-xs text-emerald-400">+{metrics.mrrChange?.toFixed(1)}%</span>
+                                    </>
+                                ) : (
+                                    <span className="text-xs text-slate-400">No change</span>
+                                )}
                             </div>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-slate-300 mb-1">Team Size</p>
-                            <p className="text-xl font-bold text-white">{sampleMetrics.teamSize}</p>
+                            <p className="text-xl font-bold text-white">{metrics.teamSize || 0}</p>
                             <div className="flex items-center gap-1 mt-1">
-                                <ArrowUpRight className="w-3 h-3 text-blue-400" />
-                                <span className="text-xs text-blue-400">+{sampleMetrics.teamSizeChange}</span>
+                                <span className="text-xs text-slate-400">Members</span>
                             </div>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-slate-300 mb-1">Net Burn</p>
-                            <p className="text-xl font-bold text-white">{formatCurrency(sampleMetrics.netBurn)}/mo</p>
+                            <p className="text-xl font-bold text-white">{formatCurrency(metrics.netBurn || 0)}/mo</p>
                             <div className="flex items-center gap-1 mt-1">
-                                <ArrowDownRight className="w-3 h-3 text-emerald-400" />
-                                <span className="text-xs text-emerald-400">{formatCurrency(sampleMetrics.netBurnChange)}</span>
+                                {metrics.netBurn < 0 ? (
+                                    <span className="text-xs text-emerald-400">Profitable!</span>
+                                ) : (
+                                    <span className="text-xs text-slate-400">Burning</span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -158,7 +217,7 @@ export default function DashboardPage() {
                 {/* Left Column - Charts & Transactions */}
                 <div className="xl:col-span-2 space-y-6">
                     {/* Burn Trend Chart */}
-                    <BurnTrendChart data={burnTrendData} />
+                    <BurnTrendChart data={burnTrend.length > 0 ? burnTrend : undefined} />
 
                     {/* Recent Transactions */}
                     <Card className="border-0 shadow-lg">
@@ -170,42 +229,55 @@ export default function DashboardPage() {
                             <Button variant="ghost" size="sm">View All</Button>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-1">
-                                {recentTransactions.map((transaction) => (
-                                    <div
-                                        key={transaction.id}
-                                        className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                            {recentTransactions.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <p className="text-muted-foreground mb-4">No transactions yet</p>
+                                    <PlaidLinkDemoButton
+                                        onSuccess={handleBankConnected}
+                                        variant="outline"
+                                        size="sm"
                                     >
-                                        <div className="flex items-center gap-4">
-                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${transaction.amount > 0
-                                                ? 'bg-emerald-100 dark:bg-emerald-900/30'
-                                                : 'bg-slate-100 dark:bg-slate-800'
-                                                }`}>
-                                                {transaction.amount > 0 ? (
-                                                    <ArrowUpRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                                                ) : (
-                                                    <ArrowDownRight className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                                                )}
+                                        Connect Bank to Import
+                                    </PlaidLinkDemoButton>
+                                </div>
+                            ) : (
+                                <div className="space-y-1">
+                                    {recentTransactions.map((transaction: any) => (
+                                        <div
+                                            key={transaction.id}
+                                            className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${transaction.amount > 0
+                                                    ? 'bg-emerald-100 dark:bg-emerald-900/30'
+                                                    : 'bg-slate-100 dark:bg-slate-800'
+                                                    }`}>
+                                                    {transaction.amount > 0 ? (
+                                                        <ArrowUpRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                                                    ) : (
+                                                        <ArrowDownRight className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-medium text-slate-900 dark:text-white">
+                                                        {transaction.name}
+                                                    </p>
+                                                    <p className="text-xs text-muted-foreground">{transaction.category}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                                    {transaction.name}
+                                            <div className="text-right">
+                                                <p className={`text-sm font-semibold ${transaction.amount > 0 ? 'text-emerald-600 dark:text-emerald-400' : ''
+                                                    }`}>
+                                                    {transaction.amount > 0 ? '+' : ''}{formatCurrency(transaction.amount)}
                                                 </p>
-                                                <p className="text-xs text-muted-foreground">{transaction.category}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {formatDate(new Date(transaction.date), { month: 'short', day: 'numeric' })}
+                                                </p>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <p className={`text-sm font-semibold ${transaction.amount > 0 ? 'text-emerald-600 dark:text-emerald-400' : ''
-                                                }`}>
-                                                {transaction.amount > 0 ? '+' : ''}{formatCurrency(transaction.amount)}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {formatDate(transaction.date, { month: 'short', day: 'numeric' })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
@@ -225,44 +297,55 @@ export default function DashboardPage() {
                             <Button variant="ghost" size="sm">View All</Button>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            {alerts.map((alert) => (
-                                <div
-                                    key={alert.id}
-                                    className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"
-                                >
-                                    <div className={`mt-0.5 ${alert.type === 'warning' ? 'text-orange-500' :
-                                        alert.type === 'success' ? 'text-emerald-500' :
-                                            'text-blue-500'
-                                        }`}>
-                                        {alert.type === 'warning' ? <AlertTriangle className="w-5 h-5" /> :
-                                            alert.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> :
-                                                <Clock className="w-5 h-5" />}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                            {alert.title}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground">{alert.message}</p>
-                                    </div>
-                                    <span className="text-xs text-muted-foreground">{alert.time}</span>
+                            {alerts.length === 0 ? (
+                                <div className="text-center py-4">
+                                    <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
+                                    <p className="text-sm text-muted-foreground">All clear! No alerts</p>
                                 </div>
-                            ))}
+                            ) : (
+                                alerts.map((alert: any) => (
+                                    <div
+                                        key={alert.id}
+                                        className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"
+                                    >
+                                        <div className={`mt-0.5 ${alert.type === 'critical' ? 'text-red-500' :
+                                            alert.type === 'warning' ? 'text-orange-500' :
+                                                alert.type === 'success' ? 'text-emerald-500' :
+                                                    'text-blue-500'
+                                            }`}>
+                                            {alert.type === 'critical' || alert.type === 'warning' ? <AlertTriangle className="w-5 h-5" /> :
+                                                alert.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> :
+                                                    <Clock className="w-5 h-5" />}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-slate-900 dark:text-white">
+                                                {alert.title}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">{alert.message}</p>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </CardContent>
                     </Card>
 
                     {/* Quick Actions */}
                     <div className="grid grid-cols-1 gap-3">
-                        <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:border-blue-500/50 border-0">
-                            <CardContent className="p-4 flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <PlaidLinkDemoButton
+                            onSuccess={handleBankConnected}
+                            variant="outline"
+                            className="w-full justify-start p-4 h-auto"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                                     <Building2 className="w-5 h-5 text-white" />
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <p className="font-semibold text-slate-900 dark:text-white text-sm">Connect Bank</p>
                                     <p className="text-xs text-muted-foreground">Link accounts via Plaid</p>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </PlaidLinkDemoButton>
 
                         <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:border-purple-500/50 border-0">
                             <CardContent className="p-4 flex items-center gap-4">
@@ -293,4 +376,3 @@ export default function DashboardPage() {
         </div>
     )
 }
-
