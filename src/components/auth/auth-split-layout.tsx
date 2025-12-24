@@ -16,105 +16,82 @@ export const AuthSplitLayout = ({
     subheading = "Enter your details to access your account",
 }: AuthLayoutProps) => {
     return (
-        <div className="min-h-screen w-full flex bg-white font-sans text-zinc-900 selection:bg-indigo-100 selection:text-indigo-900">
+        <div className="min-h-screen w-full flex items-center justify-center bg-zinc-950 relative overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-white">
 
-            {/* LEFT COLUMN - Visual Experience (45%) */}
-            <div className="hidden lg:flex w-[45%] bg-zinc-950 relative overflow-hidden flex-col justify-between p-12 text-white">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/40 via-zinc-950 to-zinc-950" />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+            {/* AMBIENT BACKDROP - High-End Mesh Gradient */}
+            <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(79,70,229,0.1),transparent_50%)]" />
+                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.15] brightness-100 contrast-150 mix-blend-overlay pointer-events-none" />
 
-                {/* Visual Pulse Animation */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 100, ease: "linear", repeat: Infinity }}
-                        className="w-[800px] h-[800px] border border-white/5 rounded-full absolute"
-                    />
-                    <motion.div
-                        animate={{ rotate: -360 }}
-                        transition={{ duration: 70, ease: "linear", repeat: Infinity }}
-                        className="w-[600px] h-[600px] border border-dashed border-white/10 rounded-full absolute"
-                    />
-                </div>
-
-                {/* Top: Brand */}
-                <div className="relative z-10">
-                    <Link href="/" className="inline-flex items-center gap-2 group">
-                        <div className="h-8 w-8 bg-white text-black rounded-lg flex items-center justify-center font-bold text-lg">
-                            SV
-                        </div>
-                        <span className="text-xl font-bold tracking-tight">SeedValidator</span>
-                    </Link>
-                </div>
-
-                {/* Middle: Floating Data Card (Visual Candy) */}
-                <div className="relative z-10 pl-8">
-                    <div className="relative bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-6 rounded-2xl w-full max-w-sm shadow-2xl transform rotate-3">
-                        <div className="flex justify-between items-center mb-6">
-                            <div className="flex gap-2">
-                                <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
-                                <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
-                                <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
-                            </div>
-                            <div className="text-[10px] font-mono text-zinc-500">LIVE MONITORING</div>
-                        </div>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-end">
-                                <div className="space-y-1">
-                                    <div className="text-xs text-zinc-400">Current Burn Rate</div>
-                                    <div className="text-2xl font-bold font-mono">$42,500<span className="text-zinc-600 text-lg">/mo</span></div>
-                                </div>
-                                <div className="text-emerald-400 text-xs bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">+12% runway</div>
-                            </div>
-                            <div className="h-16 flex items-end gap-1">
-                                {[40, 70, 45, 90, 65, 80, 50, 95, 75, 60].map((h, i) => (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ height: 0 }}
-                                        animate={{ height: `${h}%` }}
-                                        transition={{ delay: i * 0.05, duration: 1, repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}
-                                        className="flex-1 bg-indigo-500/80 rounded-t-sm"
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Bottom: Testimonial */}
-                <div className="relative z-10 max-w-sm">
-                    <blockquote className="text-lg font-medium leading-relaxed text-zinc-300">
-                        &quot;The most precise financial modeling tool I&apos;ve used. It feels like having a CFO in your pocket.&quot;
-                    </blockquote>
-                    <div className="mt-4 flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400" />
-                        <div className="text-sm">
-                            <div className="font-semibold text-white">Elena R.</div>
-                            <div className="text-zinc-500">Founder, TechSpace</div>
-                        </div>
-                    </div>
-                </div>
+                <motion.div
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0.5, 0.3],
+                        x: [0, 50, 0],
+                        y: [0, -50, 0]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-indigo-500/10 blur-[120px] rounded-full"
+                />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.2, 0.4, 0.2],
+                        x: [0, -70, 0],
+                        y: [0, 40, 0]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                    className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-purple-500/10 blur-[120px] rounded-full"
+                />
             </div>
 
-            {/* RIGHT COLUMN - Form (55%) */}
-            <div className="w-full lg:w-[55%] flex items-center justify-center p-8 relative">
+            {/* MAIN CONTENT CONTAINER */}
+            <div className="relative z-10 w-full max-w-[440px] px-6 py-12 flex flex-col items-center">
+
+                {/* BACK LINK */}
                 <Link
                     href="/"
-                    className="absolute top-8 left-8 text-sm font-medium text-zinc-500 hover:text-zinc-900 flex items-center gap-2 transition-colors lg:hidden"
+                    className="group mb-12 flex items-center gap-2 text-zinc-500 hover:text-white transition-all duration-300"
                 >
-                    <ArrowLeft className="w-4 h-4" /> Back
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900 group-hover:border-zinc-700">
+                        <ArrowLeft className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium tracking-tight">Return Home</span>
                 </Link>
 
-                <div className="w-full max-w-[420px] space-y-8">
-                    <div className="text-center lg:text-left space-y-2">
-                        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">{heading}</h1>
-                        <p className="text-zinc-500">{subheading}</p>
+                {/* FORM CARD */}
+                <div className="w-full space-y-10">
+
+                    {/* BRAND & HEADER */}
+                    <div className="text-center space-y-3">
+                        <Link href="/" className="inline-block mb-6">
+                            <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/20 ring-1 ring-white/20">
+                                <div className="h-4 w-4 bg-zinc-950 rounded-full" />
+                            </div>
+                        </Link>
+                        <h1 className="text-3xl font-bold tracking-tight text-white">{heading}</h1>
+                        <p className="text-zinc-500 text-sm max-w-[280px] mx-auto leading-relaxed">
+                            {subheading}
+                        </p>
                     </div>
-                    {children}
-                    <p className="px-8 text-center text-sm text-zinc-500 mt-8">
-                        By clicking continue, you agree to our <Link href="/terms" className="underline underline-offset-4 hover:text-primary">Terms of Service</Link> and <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">Privacy Policy</Link>.
-                    </p>
+
+                    {/* FORM COMPONENT */}
+                    <div className="w-full bg-zinc-900/40 backdrop-blur-2xl border border-white/5 p-8 sm:p-10 rounded-[2.5rem] shadow-3xl shadow-black/50">
+                        {children}
+                    </div>
+
+                    {/* SECURITY FOOTER */}
+                    <div className="flex flex-col items-center gap-4 pt-4">
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10">
+                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                            <span className="text-[10px] font-bold text-emerald-500/80 tracking-widest uppercase">Verified Secure</span>
+                        </div>
+                        <p className="text-[11px] text-zinc-600 text-center tracking-tight">
+                            SeedValidator uses 256-bit encryption for all data transmissions.
+                        </p>
+                    </div>
                 </div>
+
             </div>
 
         </div>

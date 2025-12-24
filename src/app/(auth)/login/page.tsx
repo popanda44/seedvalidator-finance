@@ -78,9 +78,9 @@ function LoginContent() {
                     <button
                         onClick={() => handleOAuthSignIn("google")}
                         disabled={isLoading}
-                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-input hover:bg-accent hover:text-accent-foreground transition-all disabled:opacity-50"
+                        className="flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:text-white transition-all disabled:opacity-50 group"
                     >
-                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-zinc-400 group-hover:text-white" viewBox="0 0 24 24">
                             <path
                                 fill="currentColor"
                                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -98,16 +98,16 @@ function LoginContent() {
                                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                             />
                         </svg>
-                        <span className="text-sm font-medium">Google</span>
+                        <span className="text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white">Google</span>
                     </button>
 
                     <button
                         onClick={() => handleOAuthSignIn("github")}
                         disabled={isLoading}
-                        className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-input hover:bg-accent hover:text-accent-foreground transition-all disabled:opacity-50"
+                        className="flex items-center justify-center gap-3 px-4 py-3.5 rounded-2xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:text-white transition-all disabled:opacity-50 group"
                     >
-                        <Github className="w-5 h-5" />
-                        <span className="text-sm font-medium">GitHub</span>
+                        <Github className="w-4 h-4 text-zinc-400 group-hover:text-white" />
+                        <span className="text-xs font-semibold tracking-wide text-zinc-400 group-hover:text-white">GitHub</span>
                     </button>
                 </div>
 
@@ -123,38 +123,38 @@ function LoginContent() {
                 </div>
 
                 {/* Email Form */}
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-foreground">Email</label>
+                        <label className="text-xs font-bold uppercase tracking-widest text-zinc-500 ml-1">Email Address</label>
                         <div className="relative group">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 group-focus-within:text-indigo-400 transition-colors" />
                             <input
                                 type="email"
                                 value={formData.email}
                                 onChange={(e) =>
                                     setFormData({ ...formData, email: e.target.value })
                                 }
-                                placeholder="name@company.com"
+                                placeholder="ceo@startup.com"
                                 required
-                                className="w-full bg-secondary/30 border border-input rounded-xl px-10 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all"
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-11 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all shadow-inner"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <label className="text-sm font-medium text-foreground">
+                        <div className="flex items-center justify-between ml-1">
+                            <label className="text-xs font-bold uppercase tracking-widest text-zinc-500">
                                 Password
                             </label>
                             <Link
                                 href="/forgot-password"
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                className="text-[11px] font-medium text-zinc-500 hover:text-white transition-colors"
                             >
-                                Forgot password?
+                                Forgot?
                             </Link>
                         </div>
                         <div className="relative group">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 group-focus-within:text-indigo-400 transition-colors" />
                             <input
                                 type={showPassword ? "text" : "password"}
                                 value={formData.password}
@@ -163,17 +163,17 @@ function LoginContent() {
                                 }
                                 placeholder="••••••••"
                                 required
-                                className="w-full bg-secondary/30 border border-input rounded-xl px-10 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all"
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-11 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all shadow-inner"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
                             >
                                 {showPassword ? (
-                                    <EyeOff className="w-4 h-4" />
+                                    <EyeOff className="w-3.5 h-3.5" />
                                 ) : (
-                                    <Eye className="w-4 h-4" />
+                                    <Eye className="w-3.5 h-3.5" />
                                 )}
                             </button>
                         </div>
@@ -181,17 +181,17 @@ function LoginContent() {
 
                     <Button
                         type="submit"
-                        className="w-full bg-foreground text-background hover:bg-foreground/90 h-12 rounded-xl text-base font-medium shadow-sm transition-all hover:scale-[1.01]"
+                        className="w-full bg-white text-zinc-950 hover:bg-zinc-200 h-14 rounded-2xl text-sm font-bold shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98] mt-2"
                         disabled={isLoading}
                     >
                         {isLoading ? (
                             <>
                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Signing in...
+                                Verifying...
                             </>
                         ) : (
                             <>
-                                Sign in
+                                Sign in to Account
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </>
                         )}
