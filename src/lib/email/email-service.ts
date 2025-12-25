@@ -3,8 +3,9 @@ import { Resend } from 'resend';
 // Initialize Resend client only if API key is available
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-// Email sender configuration
-const FROM_EMAIL = process.env.EMAIL_FROM || 'SeedValidator <noreply@seedvalidator.com>';
+// Email sender configuration - Use Resend's default domain for testing
+// For production, add a verified domain and set EMAIL_FROM environment variable
+const FROM_EMAIL = process.env.EMAIL_FROM || 'SeedValidator <onboarding@resend.dev>';
 
 export interface EmailOptions {
   to: string | string[];
