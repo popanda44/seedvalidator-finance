@@ -1,13 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import useSWR from 'swr'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MetricCard } from '@/components/dashboard/metric-card'
 import { RevenueForecastChart } from '@/components/charts/revenue-forecast-chart'
+import { ScenarioBuilder, DeleteScenarioDialog, type CustomScenario } from '@/components/forecasting/scenario-builder'
 import {
     TrendingUp,
+    TrendingDown,
     DollarSign,
     Target,
     Calendar,
@@ -21,18 +23,52 @@ import {
     Zap,
     Loader2,
     AlertTriangle,
+    Activity,
+    Brain,
+    LineChart,
+    Plus,
+    Trash2,
+    Settings2,
 } from 'lucide-react'
 import { formatCurrency, cn } from '@/lib/utils'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
+// Period options for forecast
+const PERIOD_OPTIONS = [
+    { label: '3 months', value: 3 },
+    { label: '6 months', value: 6 },
+    { label: '12 months', value: 12 },
+    { label: '24 months', value: 24 },
+]
+
+// Confidence level options
+const CONFIDENCE_LEVELS = [
+    { label: '90%', value: 0.90 },
+    { label: '95%', value: 0.95 },
+    { label: '99%', value: 0.99 },
+]
+
 export default function ForecastsPage() {
     const [selectedScenario, setSelectedScenario] = useState('base')
     const [showScenarios, setShowScenarios] = useState(true)
+    const [showConfidenceBand, setShowConfidenceBand] = useState(true)
+    const [forecastMonths, setForecastMonths] = useState(12)
+    const [confidenceLevel, setConfidenceLevel] = useState(0.95)
+    const [showPeriodDropdown, setShowPeriodDropdown] = useState(false)
+    const [showConfidenceDropdown, setShowConfidenceDropdown] = useState(false)
 
-    const { data, error, isLoading, mutate } = useSWR('/api/forecasts', fetcher, {
-        refreshInterval: 60000,
-    })
+    // Custom scenarios state
+    const [customScenarios, setCustomScenarios] = useState<CustomScenario[]>([])
+    const [showScenarioBuilder, setShowScenarioBuilder] = useState(false)
+    const [editingScenario, setEditingScenario] = useState<CustomScenario | null>(null)
+    const [deleteScenario, setDeleteScenario] = useState<CustomScenario | null>(null)
+
+    const { data, error, isLoading, mutate } = useSWR(
+        `/api/forecasts?months=${forecastMonths}&confidence=${confidenceLevel}`,
+        fetcher,
+        { refreshInterval: 60000 }
+    )
 
     if (isLoading) {
         return (
@@ -65,8 +101,38 @@ export default function ForecastsPage() {
     const growthDrivers = data?.growthDrivers || []
     const assumptions = data?.assumptions || []
     const projectedData = data?.projectedData || []
+    const modelMetrics = data?.modelMetrics || {}
 
-    const activeScenario = scenarios.find((s: any) => s.id === selectedScenario) || scenarios[0]
+    // Combine preset and custom scenarios
+    const allScenarios = [...scenarios, ...customScenarios]
+    const activeScenario = allScenarios.find((s: any) => s.id === selectedScenario) || allScenarios[0]
+
+    // Handle save custom scenario
+    const handleSaveScenario = (scenario: CustomScenario) => {
+        setCustomScenarios(prev => {
+            const existingIndex = prev.findIndex(s => s.id === scenario.id)
+            if (existingIndex >= 0) {
+                // Update existing
+                const updated = [...prev]
+                updated[existingIndex] = scenario
+                return updated
+            }
+            // Add new
+            return [...prev, scenario]
+        })
+        setEditingScenario(null)
+    }
+
+    // Handle delete custom scenario
+    const handleDeleteScenario = () => {
+        if (deleteScenario) {
+            setCustomScenarios(prev => prev.filter(s => s.id !== deleteScenario.id))
+            if (selectedScenario === deleteScenario.id) {
+                setSelectedScenario('base')
+            }
+            setDeleteScenario(null)
+        }
+    }
 
     return (
         <div className="space-y-6 animate-fade-in">
@@ -80,14 +146,81 @@ export default function ForecastsPage() {
                         Project your revenue growth and plan for the future
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
+                    {/* Period Selector */}
                     <div className="relative">
-                        <button className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700">
+                        <button
+                            onClick={() => {
+                                setShowPeriodDropdown(!showPeriodDropdown)
+                                setShowConfidenceDropdown(false)
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                        >
                             <Calendar className="w-4 h-4 text-muted-foreground" />
-                            <span>Next 12 months</span>
-                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                            <span>Next {forecastMonths} months</span>
+                            <ChevronDown className={cn(
+                                "w-4 h-4 text-muted-foreground transition-transform",
+                                showPeriodDropdown && "rotate-180"
+                            )} />
                         </button>
+                        {showPeriodDropdown && (
+                            <div className="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg z-10 py-1">
+                                {PERIOD_OPTIONS.map(option => (
+                                    <button
+                                        key={option.value}
+                                        onClick={() => {
+                                            setForecastMonths(option.value)
+                                            setShowPeriodDropdown(false)
+                                        }}
+                                        className={cn(
+                                            "w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors",
+                                            forecastMonths === option.value && "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                                        )}
+                                    >
+                                        {option.label}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
+
+                    {/* Confidence Level Selector */}
+                    <div className="relative">
+                        <button
+                            onClick={() => {
+                                setShowConfidenceDropdown(!showConfidenceDropdown)
+                                setShowPeriodDropdown(false)
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                        >
+                            <Settings2 className="w-4 h-4 text-muted-foreground" />
+                            <span>{Math.round(confidenceLevel * 100)}% CI</span>
+                            <ChevronDown className={cn(
+                                "w-4 h-4 text-muted-foreground transition-transform",
+                                showConfidenceDropdown && "rotate-180"
+                            )} />
+                        </button>
+                        {showConfidenceDropdown && (
+                            <div className="absolute right-0 top-full mt-1 w-32 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg z-10 py-1">
+                                {CONFIDENCE_LEVELS.map(option => (
+                                    <button
+                                        key={option.value}
+                                        onClick={() => {
+                                            setConfidenceLevel(option.value)
+                                            setShowConfidenceDropdown(false)
+                                        }}
+                                        className={cn(
+                                            "w-full px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors",
+                                            confidenceLevel === option.value && "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                                        )}
+                                    >
+                                        {option.label} confidence
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
                     <Button variant="outline" size="sm" onClick={() => mutate()}>
                         <RefreshCw className="w-4 h-4 mr-2" />
                         Recalculate
@@ -154,6 +287,72 @@ export default function ForecastsPage() {
                 </Card>
             </div>
 
+            {/* AI Model Metrics */}
+            {modelMetrics?.method && (
+                <Card className="border-emerald-200/50 dark:border-emerald-800/50 bg-gradient-to-br from-emerald-50/50 to-blue-50/50 dark:from-emerald-900/10 dark:to-blue-900/10">
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-2">
+                                <Brain className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                                <span className="font-semibold text-slate-900 dark:text-white">AI Forecasting Model</span>
+                            </div>
+                            <span className="text-xs px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
+                                <Activity className="w-3 h-3" />
+                                Holt-Winters Smoothing
+                            </span>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="p-3 rounded-lg bg-white/70 dark:bg-slate-800/50">
+                                <p className="text-xs text-muted-foreground mb-1">Model Accuracy</p>
+                                <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+                                    {(100 - (modelMetrics.mape || 15)).toFixed(1)}%
+                                </p>
+                                <p className="text-xs text-muted-foreground">MAPE: {modelMetrics.mape?.toFixed(1) || '15.0'}%</p>
+                            </div>
+                            <div className="p-3 rounded-lg bg-white/70 dark:bg-slate-800/50">
+                                <p className="text-xs text-muted-foreground mb-1">Trend Direction</p>
+                                <div className="flex items-center gap-1">
+                                    {modelMetrics.trendDirection === 'up' ? (
+                                        <TrendingUp className="w-5 h-5 text-emerald-500" />
+                                    ) : modelMetrics.trendDirection === 'down' ? (
+                                        <TrendingDown className="w-5 h-5 text-red-500" />
+                                    ) : (
+                                        <LineChart className="w-5 h-5 text-yellow-500" />
+                                    )}
+                                    <span className={cn(
+                                        "text-lg font-semibold capitalize",
+                                        modelMetrics.trendDirection === 'up' ? "text-emerald-600" :
+                                            modelMetrics.trendDirection === 'down' ? "text-red-600" : "text-yellow-600"
+                                    )}>
+                                        {modelMetrics.trendDirection || 'Stable'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="p-3 rounded-lg bg-white/70 dark:bg-slate-800/50">
+                                <p className="text-xs text-muted-foreground mb-1">Seasonality</p>
+                                <p className={cn(
+                                    "text-lg font-semibold",
+                                    modelMetrics.seasonalityDetected ? "text-blue-600" : "text-slate-500"
+                                )}>
+                                    {modelMetrics.seasonalityDetected ? 'Detected' : 'Not Detected'}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                    Period: {modelMetrics.modelParams?.seasonalPeriod || 12} months
+                                </p>
+                            </div>
+                            <div className="p-3 rounded-lg bg-white/70 dark:bg-slate-800/50">
+                                <p className="text-xs text-muted-foreground mb-1">Smoothing Params</p>
+                                <div className="text-xs space-y-0.5">
+                                    <p>α (level): {modelMetrics.modelParams?.alpha?.toFixed(2) || '0.30'}</p>
+                                    <p>β (trend): {modelMetrics.modelParams?.beta?.toFixed(2) || '0.10'}</p>
+                                    <p>γ (season): {modelMetrics.modelParams?.gamma?.toFixed(2) || '0.30'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             {/* Scenario Selector */}
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
@@ -161,35 +360,73 @@ export default function ForecastsPage() {
                         <Zap className="w-5 h-5 text-yellow-500" />
                         Scenario Planning
                     </CardTitle>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">Show all scenarios</span>
-                        <button
-                            onClick={() => setShowScenarios(!showScenarios)}
-                            className={cn(
-                                "relative w-11 h-6 rounded-full transition-colors",
-                                showScenarios ? "bg-blue-500" : "bg-slate-300 dark:bg-slate-600"
-                            )}
+                    <div className="flex items-center gap-4">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowScenarioBuilder(true)}
+                            className="gap-2"
                         >
-                            <span className={cn(
-                                "absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform",
-                                showScenarios ? "translate-x-5" : "translate-x-0.5"
-                            )} />
-                        </button>
+                            <Plus className="w-4 h-4" />
+                            Create Scenario
+                        </Button>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground">Show all scenarios</span>
+                            <button
+                                onClick={() => setShowScenarios(!showScenarios)}
+                                className={cn(
+                                    "relative w-11 h-6 rounded-full transition-colors",
+                                    showScenarios ? "bg-blue-500" : "bg-slate-300 dark:bg-slate-600"
+                                )}
+                            >
+                                <span className={cn(
+                                    "absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform",
+                                    showScenarios ? "translate-x-5" : "translate-x-0.5"
+                                )} />
+                            </button>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground">Confidence band</span>
+                            <button
+                                onClick={() => setShowConfidenceBand(!showConfidenceBand)}
+                                className={cn(
+                                    "relative w-11 h-6 rounded-full transition-colors",
+                                    showConfidenceBand ? "bg-blue-500" : "bg-slate-300 dark:bg-slate-600"
+                                )}
+                            >
+                                <span className={cn(
+                                    "absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform",
+                                    showConfidenceBand ? "translate-x-5" : "translate-x-0.5"
+                                )} />
+                            </button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        {scenarios.map((scenario: any) => (
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                        {allScenarios.map((scenario: any) => (
                             <button
                                 key={scenario.id}
                                 onClick={() => setSelectedScenario(scenario.id)}
                                 className={cn(
-                                    "p-4 rounded-xl border-2 transition-all text-left",
+                                    "p-4 rounded-xl border-2 transition-all text-left relative group",
                                     selectedScenario === scenario.id
                                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                                         : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
                                 )}
                             >
+                                {/* Delete button for custom scenarios */}
+                                {scenario.isCustom && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            setDeleteScenario(scenario)
+                                        }}
+                                        className="absolute top-2 right-2 p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-red-100 dark:hover:bg-red-900/30 opacity-0 group-hover:opacity-100 transition-all"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5 text-slate-500 hover:text-red-500" />
+                                    </button>
+                                )}
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
                                         <div
@@ -204,7 +441,7 @@ export default function ForecastsPage() {
                                         {scenario.probability}% likely
                                     </span>
                                 </div>
-                                <p className="text-sm text-muted-foreground mb-3">{scenario.description}</p>
+                                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{scenario.description}</p>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-xl font-bold text-slate-900 dark:text-white">
@@ -231,6 +468,8 @@ export default function ForecastsPage() {
                         data={projectedData}
                         title="Revenue Projection"
                         showScenarios={showScenarios}
+                        showConfidenceBand={showConfidenceBand}
+                        confidenceLevel={confidenceLevel}
                     />
                 </CardContent>
             </Card>
@@ -361,6 +600,23 @@ export default function ForecastsPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Scenario Builder Modal */}
+            <ScenarioBuilder
+                open={showScenarioBuilder}
+                onOpenChange={setShowScenarioBuilder}
+                currentMRR={metrics.currentMRR || 125000}
+                onSave={handleSaveScenario}
+                editingScenario={editingScenario}
+            />
+
+            {/* Delete Confirmation Dialog */}
+            <DeleteScenarioDialog
+                open={!!deleteScenario}
+                onOpenChange={(open) => !open && setDeleteScenario(null)}
+                scenarioName={deleteScenario?.name || ''}
+                onConfirm={handleDeleteScenario}
+            />
         </div>
     )
 }

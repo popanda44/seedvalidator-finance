@@ -6,9 +6,9 @@
 |--------|-----------|----------|--------|
 | Sprint 1-2 | Foundation | 85% | ✅ Nearly Complete |
 | Sprint 3-4 | Core Financial Tracking | 70% | 🔄 In Progress |
-| Sprint 5-6 | Forecasting Engine | 40% | 🔄 In Progress |
+| Sprint 5-6 | Forecasting Engine | 60% | 🔄 In Progress |
 | Sprint 7-8 | Alerts & Notifications | 30% | ⏳ Pending |
-| Sprint 9-10 | Reporting & Exports | 40% | ⏳ Pending |
+| Sprint 9-10 | Reporting & Exports | 70% | 🔄 In Progress |
 | Sprint 11-12 | Polish & Beta Launch | 10% | ⏳ Pending |
 
 ---
@@ -59,14 +59,14 @@
 | Revenue forecasting model | ⚠️ Basic | Needs ML model (Prophet) |
 | MRR/ARR calculations | ✅ Done | In dashboard |
 | Forecast vs actuals | ✅ Done | UI exists |
-| Scenario planning UI | ⚠️ Basic | 3 scenarios (Conservative, Base, Optimistic) |
+| Scenario planning UI | ✅ Done | Advanced builder with custom scenarios |
 
 **Remaining:**
 - [ ] Salesforce OAuth integration
 - [ ] HubSpot OAuth integration
 - [ ] Prophet/time-series forecasting model
-- [ ] Confidence interval visualization
-- [ ] Advanced scenario builder
+- [x] Confidence interval visualization
+- [x] Advanced scenario builder
 
 ---
 

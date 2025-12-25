@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     FileText,
     Download,
@@ -12,11 +12,18 @@ import {
     FileSpreadsheet,
     BarChart3,
     PieChart,
+    Share2,
+    Link2,
+    Copy,
+    X,
+    Clock,
+    FileJson,
+    FileCode,
 } from "lucide-react";
 
 type ReportType = "executive" | "detailed" | "forecast";
 type PeriodType = "month" | "quarter" | "year";
-type FormatType = "pdf" | "csv" | "excel";
+type FormatType = "pdf" | "csv" | "excel" | "json" | "markdown";
 
 export default function ReportsPage() {
     const [selectedReport, setSelectedReport] = useState<ReportType>("executive");
@@ -24,6 +31,11 @@ export default function ReportsPage() {
     const [selectedFormat, setFormat] = useState<FormatType>("csv");
     const [isGenerating, setIsGenerating] = useState(false);
     const [isEmailing, setIsEmailing] = useState(false);
+    const [isSharing, setIsSharing] = useState(false);
+    const [showShareModal, setShowShareModal] = useState(false);
+    const [shareUrl, setShareUrl] = useState<string | null>(null);
+    const [shareExpiry, setShareExpiry] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
     const [success, setSuccess] = useState<string | null>(null);
 
     const reportTypes = [
@@ -57,6 +69,8 @@ export default function ReportsPage() {
         { id: "csv" as FormatType, name: "CSV", icon: FileSpreadsheet },
         { id: "excel" as FormatType, name: "Excel", icon: FileSpreadsheet },
         { id: "pdf" as FormatType, name: "PDF", icon: FileText },
+        { id: "json" as FormatType, name: "JSON", icon: FileJson },
+        { id: "markdown" as FormatType, name: "Markdown", icon: FileCode },
     ];
 
     const handleDownload = async () => {
@@ -130,7 +144,9 @@ export default function ReportsPage() {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = `seedvalidator-${selectedReport}-${selectedPeriod}.${selectedFormat === "excel" ? "xlsx" : selectedFormat}`;
+                const extMap: Record<string, string> = { excel: 'xlsx', markdown: 'md', csv: 'csv', json: 'json' };
+                const ext = extMap[selectedFormat] || selectedFormat;
+                a.download = `seedvalidator-${selectedReport}-${selectedPeriod}.${ext}`;
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
@@ -187,6 +203,45 @@ export default function ReportsPage() {
         }
     };
 
+    const handleShareReport = async () => {
+        setIsSharing(true);
+        setSuccess(null);
+
+        try {
+            const response = await fetch("/api/reports/share", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    reportType: selectedReport,
+                    period: selectedPeriod,
+                    expiresInDays: 7,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to create share link");
+            }
+
+            const data = await response.json();
+            setShareUrl(data.shareUrl);
+            setShareExpiry(data.expiresAt);
+            setShowShareModal(true);
+        } catch (error) {
+            console.error("Share error:", error);
+            setSuccess("Failed to create share link. Please try again.");
+        } finally {
+            setIsSharing(false);
+        }
+    };
+
+    const handleCopyLink = async () => {
+        if (shareUrl) {
+            await navigator.clipboard.writeText(shareUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background p-6 lg:p-8">
             <div className="max-w-4xl mx-auto space-y-8">
@@ -194,7 +249,7 @@ export default function ReportsPage() {
                 <div>
                     <h1 className="text-3xl font-bold text-foreground">Reports</h1>
                     <p className="text-muted-foreground mt-1">
-                        Generate and export financial reports
+                        Generate, export, and share financial reports
                     </p>
                 </div>
 
@@ -301,6 +356,21 @@ export default function ReportsPage() {
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        onClick={handleShareReport}
+                        disabled={isSharing}
+                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+                    >
+                        {isSharing ? (
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                            <Share2 className="h-5 w-5" />
+                        )}
+                        Share Report
+                    </motion.button>
+
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={handleEmailReport}
                         disabled={isEmailing}
                         className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 disabled:opacity-50"
@@ -350,6 +420,74 @@ export default function ReportsPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Share Modal */}
+            <AnimatePresence>
+                {showShareModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                        onClick={() => setShowShareModal(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+                        >
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                    <Link2 className="w-5 h-5 text-blue-500" />
+                                    Share Report
+                                </h3>
+                                <button
+                                    onClick={() => setShowShareModal(false)}
+                                    className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                                >
+                                    <X className="w-5 h-5 text-slate-500" />
+                                </button>
+                            </div>
+
+                            <p className="text-slate-600 dark:text-slate-400 mb-4">
+                                Anyone with this link can view your report. The link expires in 7 days.
+                            </p>
+
+                            <div className="flex gap-2 mb-4">
+                                <input
+                                    type="text"
+                                    value={shareUrl || ""}
+                                    readOnly
+                                    className="flex-1 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-sm"
+                                />
+                                <button
+                                    onClick={handleCopyLink}
+                                    className="px-4 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium flex items-center gap-2 transition-colors"
+                                >
+                                    {copied ? (
+                                        <>
+                                            <CheckCircle className="w-4 h-4" />
+                                            Copied!
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Copy className="w-4 h-4" />
+                                            Copy
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                                <Clock className="w-4 h-4" />
+                                Expires: {shareExpiry ? new Date(shareExpiry).toLocaleDateString() : "7 days"}
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

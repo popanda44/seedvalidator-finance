@@ -1,19 +1,24 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { prophetService, type DataPoint } from '@/lib/forecasting'
 
-// GET /api/forecasts - Get forecast data and scenarios
+// GET /api/forecasts - Get forecast data and scenarios using Prophet-style forecasting
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
         const companyId = searchParams.get('companyId')
         const months = parseInt(searchParams.get('months') || '12')
+        const confidence = parseFloat(searchParams.get('confidence') || '0.95')
+
+        // Validate confidence level
+        const validConfidence = [0.90, 0.95, 0.99].includes(confidence) ? confidence : 0.95
 
         // For development, return sample data if no companyId
         if (!companyId) {
-            return NextResponse.json(getSampleForecastData(months))
+            return NextResponse.json(getSampleForecastData(months, validConfidence))
         }
 
-        // Get company data
+        // Get company data with more historical snapshots for better forecasting
         const company = await prisma.company.findUnique({
             where: { id: companyId },
             include: {
@@ -21,9 +26,9 @@ export async function GET(request: Request) {
                     orderBy: { createdAt: 'desc' },
                     take: 1,
                 },
-                financialSnapshots: {
+                snapshots: {
                     orderBy: { date: 'desc' },
-                    take: 6,
+                    take: 24, // Get up to 2 years of data for seasonality detection
                 },
             },
         })
@@ -32,29 +37,67 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'Company not found' }, { status: 404 })
         }
 
-        // Calculate metrics from snapshots
-        const snapshots = company.financialSnapshots
-        const currentMRR = snapshots[0]?.mrr || 0
-        const previousMRR = snapshots[1]?.mrr || currentMRR
+        // Convert snapshots to DataPoints for Prophet service
+        const snapshotData = company.snapshots
+        const historicalData: DataPoint[] = snapshotData
+            .filter(s => s.mrr !== null)
+            .map(s => ({
+                date: new Date(s.date),
+                value: s.mrr ? Number(s.mrr.toString()) : 0
+            }))
+            .reverse() // Chronological order
+
+        // Use Prophet service for forecasting
+        const forecastResult = prophetService.forecast(historicalData, {
+            horizonMonths: months,
+            confidenceLevel: 0.95,
+            seasonalPeriod: 12
+        })
+
+        // Get current metrics
+        const currentMRR = historicalData.length > 0
+            ? historicalData[historicalData.length - 1].value
+            : 0
+        const previousMRR = historicalData.length > 1
+            ? historicalData[historicalData.length - 2].value
+            : currentMRR
         const growthRate = previousMRR > 0
             ? ((currentMRR - previousMRR) / previousMRR) * 100
             : 0
 
-        // Project future MRR based on growth rate
-        const projectedData = generateProjection(currentMRR, growthRate / 100, months)
+        // Get final projected value
+        const finalForecast = forecastResult.forecasts[forecastResult.forecasts.length - 1]
+
+        // Transform forecast data to expected format
+        const projectedData = forecastResult.forecasts.map(f => ({
+            month: f.month,
+            actual: f.actual,
+            projected: f.projected,
+            optimistic: f.upperBound,
+            pessimistic: f.lowerBound,
+        }))
 
         return NextResponse.json({
             metrics: {
                 currentMRR,
-                projectedMRR: projectedData[projectedData.length - 1]?.projected || currentMRR,
-                projectedARR: (projectedData[projectedData.length - 1]?.projected || currentMRR) * 12,
+                projectedMRR: finalForecast?.projected || currentMRR,
+                projectedARR: (finalForecast?.projected || currentMRR) * 12,
                 growthRate,
-                confidenceScore: calculateConfidenceScore(snapshots),
+                confidenceScore: Math.round(100 - forecastResult.metrics.mape),
             },
             projectedData,
             scenarios: generateScenarios(currentMRR, growthRate),
             growthDrivers: getGrowthDrivers(),
             assumptions: getAssumptions(growthRate),
+            // New Prophet-specific metrics
+            modelMetrics: {
+                mape: forecastResult.metrics.mape,
+                mae: forecastResult.metrics.mae,
+                trendDirection: forecastResult.metrics.trendDirection,
+                seasonalityDetected: forecastResult.metrics.seasonalityDetected,
+                modelParams: forecastResult.modelParams,
+                method: 'HOLT_WINTERS'
+            }
         })
     } catch (error) {
         console.error('Forecasts API error:', error)
@@ -63,35 +106,6 @@ export async function GET(request: Request) {
             { status: 500 }
         )
     }
-}
-
-function generateProjection(currentMRR: number, monthlyGrowthRate: number, months: number) {
-    const data = []
-    let mrr = currentMRR
-
-    for (let i = 0; i <= months; i++) {
-        const date = new Date()
-        date.setMonth(date.getMonth() + i)
-
-        data.push({
-            month: date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
-            actual: i === 0 ? mrr : null,
-            projected: mrr,
-            optimistic: mrr * (1 + (monthlyGrowthRate * 1.5)),
-            pessimistic: mrr * (1 + (monthlyGrowthRate * 0.5)),
-        })
-
-        mrr *= (1 + monthlyGrowthRate)
-    }
-
-    return data
-}
-
-function calculateConfidenceScore(snapshots: any[]): number {
-    // Simple confidence based on data availability
-    if (snapshots.length >= 6) return 85
-    if (snapshots.length >= 3) return 70
-    return 50
 }
 
 function generateScenarios(currentMRR: number, growthRate: number) {
@@ -145,20 +159,51 @@ function getAssumptions(growthRate: number) {
     ]
 }
 
-// Sample data for development
-function getSampleForecastData(months: number) {
+// Sample data for development using Prophet service
+function getSampleForecastData(months: number, confidence: number = 0.95) {
     const currentMRR = 125000
     const growthRate = 12.5
+
+    // Generate sample historical data (6 months)
+    const historicalData: DataPoint[] = []
+    const now = new Date()
+    for (let i = 5; i >= 0; i--) {
+        const date = new Date(now)
+        date.setMonth(date.getMonth() - i)
+        // Add some realistic variation
+        const seasonalFactor = 1 + 0.1 * Math.sin(i * Math.PI / 6) // Slight seasonality
+        const randomNoise = 1 + (Math.random() - 0.5) * 0.05 // ±2.5% noise
+        const value = currentMRR * Math.pow(1 - growthRate / 100 / 12, i) * seasonalFactor * randomNoise
+        historicalData.push({ date, value })
+    }
+
+    // Use Prophet service for sample data
+    const forecastResult = prophetService.forecast(historicalData, {
+        horizonMonths: months,
+        confidenceLevel: confidence,
+        seasonalPeriod: 12
+    })
+
+    // Transform forecast data to expected format
+    const projectedData = forecastResult.forecasts.map(f => ({
+        month: f.month,
+        actual: f.actual,
+        projected: f.projected,
+        optimistic: f.upperBound,
+        pessimistic: f.lowerBound,
+    }))
+
+    const finalForecast = forecastResult.forecasts[forecastResult.forecasts.length - 1]
 
     return {
         metrics: {
             currentMRR,
-            projectedMRR: 175000,
-            projectedARR: 2100000,
+            projectedMRR: finalForecast?.projected || 175000,
+            projectedARR: (finalForecast?.projected || 175000) * 12,
             growthRate,
-            confidenceScore: 85,
+            confidenceScore: Math.round(100 - forecastResult.metrics.mape),
         },
-        projectedData: generateProjection(currentMRR, growthRate / 100, months),
+        projectedData,
         scenarios: [
             {
                 id: 'base',
@@ -190,5 +235,14 @@ function getSampleForecastData(months: number) {
         ],
         growthDrivers: getGrowthDrivers(),
         assumptions: getAssumptions(growthRate),
+        // New Prophet-specific metrics
+        modelMetrics: {
+            mape: forecastResult.metrics.mape,
+            mae: forecastResult.metrics.mae,
+            trendDirection: forecastResult.metrics.trendDirection,
+            seasonalityDetected: forecastResult.metrics.seasonalityDetected,
+            modelParams: forecastResult.modelParams,
+            method: 'HOLT_WINTERS'
+        }
     }
 }
