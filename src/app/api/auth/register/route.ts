@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import prisma from '@/lib/prisma'
+import { rateLimitCheck, rateLimitResponse } from '@/lib/rate-limiter'
 
 export async function POST(request: Request) {
+    // Rate limiting for brute force protection
+    if (!rateLimitCheck(request)) {
+        return rateLimitResponse();
+    }
+
     try {
         const { name, email, password, companyName } = await request.json()
 
