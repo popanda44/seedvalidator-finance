@@ -34,19 +34,19 @@ function CustomTooltip({ active, payload }: TooltipProps<number, string>) {
     const data = payload[0].payload as ExpenseCategory
 
     return (
-        <div className="bg-slate-900 border border-slate-700 rounded-lg p-3 shadow-xl">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 shadow-xl">
             <div className="flex items-center gap-2 mb-1">
                 <div
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: data.color }}
                 />
-                <span className="text-white font-medium">{data.name}</span>
+                <span className="text-slate-900 dark:text-white font-medium">{data.name}</span>
             </div>
-            <p className="text-slate-300 text-sm">
+            <p className="text-slate-600 dark:text-slate-300 text-sm">
                 {formatCurrency(data.value)}
             </p>
             {data.percentage && (
-                <p className="text-slate-400 text-xs">
+                <p className="text-slate-500 dark:text-slate-400 text-xs">
                     {data.percentage.toFixed(1)}% of total
                 </p>
             )}

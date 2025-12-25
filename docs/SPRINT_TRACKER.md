@@ -8,7 +8,7 @@
 | Sprint 3-4 | Core Financial Tracking | 70% | 🔄 In Progress |
 | Sprint 5-6 | Forecasting Engine | 60% | 🔄 In Progress |
 | Sprint 7-8 | Alerts & Notifications | 30% | ⏳ Pending |
-| Sprint 9-10 | Reporting & Exports | 70% | 🔄 In Progress |
+| Sprint 9-10 | Reporting & Exports | 90% | ✅ Nearly Complete |
 | Sprint 11-12 | Polish & Beta Launch | 10% | ⏳ Pending |
 
 ---

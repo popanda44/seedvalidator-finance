@@ -36,23 +36,23 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
     const data = payload[0].payload as CategoryData
 
     return (
-        <div className="bg-slate-900 border border-slate-700 rounded-lg p-3 shadow-xl">
-            <p className="text-white font-medium mb-2">{label}</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 shadow-xl">
+            <p className="text-slate-900 dark:text-white font-medium mb-2">{label}</p>
             <div className="space-y-1">
                 <div className="flex items-center justify-between gap-4">
-                    <span className="text-slate-300 text-sm">Current:</span>
-                    <span className="text-white font-medium">{formatCurrency(data.current)}</span>
+                    <span className="text-slate-600 dark:text-slate-300 text-sm">Current:</span>
+                    <span className="text-slate-900 dark:text-white font-medium">{formatCurrency(data.current)}</span>
                 </div>
                 {data.previous !== undefined && (
                     <div className="flex items-center justify-between gap-4">
-                        <span className="text-slate-400 text-sm">Previous:</span>
-                        <span className="text-slate-300">{formatCurrency(data.previous)}</span>
+                        <span className="text-slate-500 dark:text-slate-400 text-sm">Previous:</span>
+                        <span className="text-slate-700 dark:text-slate-300">{formatCurrency(data.previous)}</span>
                     </div>
                 )}
                 {data.change !== undefined && (
-                    <div className="flex items-center justify-between gap-4 pt-1 border-t border-slate-700">
-                        <span className="text-slate-400 text-sm">Change:</span>
-                        <span className={data.change >= 0 ? 'text-red-400' : 'text-emerald-400'}>
+                    <div className="flex items-center justify-between gap-4 pt-1 border-t border-slate-200 dark:border-slate-700">
+                        <span className="text-slate-500 dark:text-slate-400 text-sm">Change:</span>
+                        <span className={data.change >= 0 ? 'text-red-500' : 'text-emerald-500'}>
                             {data.change >= 0 ? '+' : ''}{data.change.toFixed(1)}%
                         </span>
                     </div>

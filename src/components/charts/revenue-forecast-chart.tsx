@@ -41,8 +41,8 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
     if (!active || !payload || !payload.length) return null
 
     return (
-        <div className="bg-slate-900 border border-slate-700 rounded-lg p-3 shadow-xl">
-            <p className="text-slate-400 text-sm mb-2">{label}</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-3 shadow-xl">
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-2">{label}</p>
             {payload.map((entry, index) => {
                 // Skip rendering the range (it's shown as area)
                 if (entry.name === 'Confidence Range') return null
@@ -52,10 +52,10 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-slate-300 text-sm capitalize">
+                        <span className="text-slate-600 dark:text-slate-300 text-sm capitalize">
                             {entry.name}:
                         </span>
-                        <span className="text-white font-medium">
+                        <span className="text-slate-900 dark:text-white font-medium">
                             {formatCurrency(entry.value as number)}
                         </span>
                     </div>
@@ -63,14 +63,14 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
             })}
             {/* Show confidence bounds if available */}
             {payload[0]?.payload?.upperBound && payload[0]?.payload?.lowerBound && (
-                <div className="mt-2 pt-2 border-t border-slate-700 text-xs text-slate-400">
+                <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
                     <div className="flex justify-between">
                         <span>Upper bound:</span>
-                        <span className="text-slate-300">{formatCurrency(payload[0].payload.upperBound)}</span>
+                        <span className="text-slate-700 dark:text-slate-300">{formatCurrency(payload[0].payload.upperBound)}</span>
                     </div>
                     <div className="flex justify-between">
                         <span>Lower bound:</span>
-                        <span className="text-slate-300">{formatCurrency(payload[0].payload.lowerBound)}</span>
+                        <span className="text-slate-700 dark:text-slate-300">{formatCurrency(payload[0].payload.lowerBound)}</span>
                     </div>
                 </div>
             )}

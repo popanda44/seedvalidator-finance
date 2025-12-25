@@ -111,7 +111,7 @@ export function MetricCard({
                 {/* Main value */}
                 <div className="flex items-end gap-3">
                     <span className={cn(
-                        "font-bold tracking-tight",
+                        "font-bold tracking-tight text-slate-900 dark:text-white",
                         size === 'lg' ? 'text-4xl' : 'text-3xl',
                         runwayStatus && runwayStatus.color
                     )}>
