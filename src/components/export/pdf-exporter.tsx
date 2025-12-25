@@ -1,0 +1,227 @@
+"use client";
+
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import {
+    FileText,
+    Download,
+    Loader2,
+    CheckCircle,
+    Building2,
+    DollarSign,
+    TrendingUp,
+    Calendar,
+} from "lucide-react";
+
+interface ReportData {
+    companyName: string;
+    period: string;
+    generatedAt: string;
+    metrics: {
+        cashBalance: number;
+        burnRate: number;
+        runway: number;
+        mrr: number;
+        mrrChange: number;
+    };
+    expenses: { category: string; amount: number }[];
+}
+
+export function PDFExporter({ data }: { data?: ReportData }) {
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const reportRef = useRef<HTMLDivElement>(null);
+
+    const defaultData: ReportData = data || {
+        companyName: "Your Company",
+        period: new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }),
+        generatedAt: new Date().toISOString(),
+        metrics: {
+            cashBalance: 842500,
+            burnRate: 85000,
+            runway: 9.9,
+            mrr: 125000,
+            mrrChange: 12.5,
+        },
+        expenses: [
+            { category: "Payroll", amount: 45200 },
+            { category: "Infrastructure", amount: 12450 },
+            { category: "Marketing", amount: 8900 },
+            { category: "Operations", amount: 6200 },
+            { category: "Software", amount: 4100 },
+        ],
+    };
+
+    const handleExportPDF = async () => {
+        setIsGenerating(true);
+        setSuccess(false);
+
+        try {
+            // Dynamic import of jspdf for client-side only
+            const { default: jsPDF } = await import("jspdf");
+
+            const pdf = new jsPDF("p", "mm", "a4");
+            const pageWidth = pdf.internal.pageSize.getWidth();
+
+            // Header
+            pdf.setFillColor(15, 23, 42); // Dark navy
+            pdf.rect(0, 0, pageWidth, 40, "F");
+
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(24);
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Financial Report", 20, 25);
+
+            pdf.setFontSize(12);
+            pdf.setFont("helvetica", "normal");
+            pdf.text(`${defaultData.companyName} | ${defaultData.period}`, 20, 35);
+
+            // Reset colors for body
+            pdf.setTextColor(15, 23, 42);
+
+            // Key Metrics Section
+            pdf.setFontSize(16);
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Key Metrics", 20, 55);
+
+            pdf.setFontSize(11);
+            pdf.setFont("helvetica", "normal");
+
+            const metrics = [
+                { label: "Cash Balance", value: `$${defaultData.metrics.cashBalance.toLocaleString()}` },
+                { label: "Monthly Burn", value: `$${defaultData.metrics.burnRate.toLocaleString()}` },
+                { label: "Runway", value: `${defaultData.metrics.runway.toFixed(1)} months` },
+                { label: "MRR", value: `$${defaultData.metrics.mrr.toLocaleString()}` },
+                { label: "MRR Growth", value: `${defaultData.metrics.mrrChange > 0 ? "+" : ""}${defaultData.metrics.mrrChange}%` },
+            ];
+
+            let yPos = 65;
+            metrics.forEach((metric, index) => {
+                const xPos = 20 + (index % 2) * 85;
+                if (index > 0 && index % 2 === 0) yPos += 15;
+
+                pdf.setFont("helvetica", "normal");
+                pdf.setTextColor(100, 116, 139); // Gray
+                pdf.text(metric.label, xPos, yPos);
+
+                pdf.setFont("helvetica", "bold");
+                pdf.setTextColor(15, 23, 42);
+                pdf.text(metric.value, xPos, yPos + 6);
+            });
+
+            // Expenses Section
+            yPos += 30;
+            pdf.setFontSize(16);
+            pdf.setFont("helvetica", "bold");
+            pdf.text("Top Expenses", 20, yPos);
+
+            yPos += 10;
+            pdf.setFontSize(10);
+
+            // Table header
+            pdf.setFillColor(241, 245, 249);
+            pdf.rect(20, yPos, 170, 8, "F");
+
+            pdf.setFont("helvetica", "bold");
+            pdf.setTextColor(71, 85, 105);
+            pdf.text("Category", 25, yPos + 5);
+            pdf.text("Amount", 160, yPos + 5, { align: "right" });
+
+            yPos += 8;
+
+            // Table rows
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor(15, 23, 42);
+
+            defaultData.expenses.forEach((expense, index) => {
+                if (index % 2 === 0) {
+                    pdf.setFillColor(249, 250, 251);
+                    pdf.rect(20, yPos, 170, 8, "F");
+                }
+
+                pdf.text(expense.category, 25, yPos + 5);
+                pdf.text(`$${expense.amount.toLocaleString()}`, 160, yPos + 5, { align: "right" });
+                yPos += 8;
+            });
+
+            // Footer
+            const footerY = pdf.internal.pageSize.getHeight() - 15;
+            pdf.setFontSize(8);
+            pdf.setTextColor(148, 163, 184);
+            pdf.text(`Generated by SeedValidator Finance | ${new Date().toLocaleDateString()}`, 20, footerY);
+            pdf.text(`Page 1 of 1`, pageWidth - 20, footerY, { align: "right" });
+
+            // Save the PDF
+            pdf.save(`financial-report-${defaultData.period.toLowerCase().replace(" ", "-")}.pdf`);
+
+            setSuccess(true);
+            setTimeout(() => setSuccess(false), 3000);
+        } catch (error) {
+            console.error("PDF generation error:", error);
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    return (
+        <div className="space-y-4">
+            <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleExportPDF}
+                disabled={isGenerating}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 transition-all"
+            >
+                {isGenerating ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                ) : success ? (
+                    <CheckCircle className="h-5 w-5" />
+                ) : (
+                    <FileText className="h-5 w-5" />
+                )}
+                {isGenerating ? "Generating PDF..." : success ? "Downloaded!" : "Export PDF Report"}
+            </motion.button>
+
+            {/* Preview Card */}
+            <div
+                ref={reportRef}
+                className="p-6 rounded-xl bg-card border border-border"
+            >
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <Building2 className="h-5 w-5 text-muted-foreground" />
+                        <span className="font-semibold text-foreground">{defaultData.companyName}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        {defaultData.period}
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="p-3 rounded-lg bg-secondary/50">
+                        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                            <DollarSign className="h-4 w-4" />
+                            Cash Balance
+                        </div>
+                        <p className="text-xl font-bold text-foreground mt-1">
+                            ${(defaultData.metrics.cashBalance / 1000).toFixed(0)}K
+                        </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-secondary/50">
+                        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                            <TrendingUp className="h-4 w-4" />
+                            MRR
+                        </div>
+                        <p className="text-xl font-bold text-foreground mt-1">
+                            ${(defaultData.metrics.mrr / 1000).toFixed(0)}K
+                            <span className="text-sm text-emerald-500 ml-1">
+                                +{defaultData.metrics.mrrChange}%
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

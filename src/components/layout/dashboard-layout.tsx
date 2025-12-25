@@ -21,6 +21,7 @@ import {
     Menu,
     X,
     FileText,
+    Link2,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
@@ -31,6 +32,7 @@ const navigation = [
     { name: 'Forecasts', href: '/dashboard/forecasts', icon: TrendingUp },
     { name: 'Alerts', href: '/dashboard/alerts', icon: Bell },
     { name: 'Reports', href: '/dashboard/reports', icon: FileText },
+    { name: 'Integrations', href: '/dashboard/integrations', icon: Link2 },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
