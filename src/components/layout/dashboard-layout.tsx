@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
@@ -42,11 +43,11 @@ function UserSection() {
   const user = session?.user
   const initials = user?.name
     ? user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
     : 'U'
 
   const handleSignOut = () => {
@@ -138,8 +139,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-slate-800">
           <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-              <Building2 className="w-4 h-4 text-white" />
+            <div className="relative w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
+              <Image
+                src="/logo.png"
+                alt="FinYeld AI"
+                fill
+                className="object-cover"
+              />
             </div>
             <span className="text-lg font-bold text-white">FinYeld AI</span>
           </Link>
