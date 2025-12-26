@@ -15,7 +15,8 @@ export const plaidClient = new PlaidApi(configuration)
 /**
  * Create a link token for Plaid Link
  */
-export async function createLinkToken(userId: string, companyId: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function createLinkToken(userId: string, _companyId: string) {
     // Use the production URL or fallback
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.AUTH_URL || 'https://potent-fin.vercel.app'
 

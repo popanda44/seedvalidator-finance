@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
-import { Sun, Moon, Monitor, ChevronDown } from 'lucide-react'
+import { Sun, Moon, Monitor } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function ThemeToggle() {
@@ -56,9 +56,6 @@ export function ThemeToggle() {
             description: 'Match OS setting'
         },
     ]
-
-    const currentTheme = themes.find(t => t.value === theme) || themes[2]
-    const CurrentIcon = resolvedTheme === 'dark' ? Moon : Sun
 
     return (
         <div className="relative" ref={dropdownRef}>

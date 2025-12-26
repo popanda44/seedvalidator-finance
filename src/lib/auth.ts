@@ -73,7 +73,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     providers,
     callbacks: {
         ...authConfig.callbacks,
-        async jwt({ token, user, account }) {
+        async jwt({ token, user }) {
             // Initial sign-in - user object is available
             if (user) {
                 token.id = user.id
