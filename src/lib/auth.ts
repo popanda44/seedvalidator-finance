@@ -80,10 +80,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Use email lookup since ID might not be in DB yet during first OAuth
         if (user.email) {
           try {
-            const dbUser = await prisma.user.findUnique({
+            let dbUser = await prisma.user.findUnique({
               where: { email: user.email },
               include: { company: true },
             })
+
+            // If user exists but has no company, create one
+            if (dbUser && !dbUser.companyId) {
+              const company = await prisma.company.create({
+                data: {
+                  name: `${dbUser.name || dbUser.email?.split('@')[0]}'s Company`,
+                },
+              })
+              dbUser = await prisma.user.update({
+                where: { id: dbUser.id },
+                data: { companyId: company.id },
+                include: { company: true },
+              })
+            }
 
             if (dbUser) {
               token.id = dbUser.id
