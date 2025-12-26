@@ -1,155 +1,255 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Zap, ChevronRight } from 'lucide-react'
+import { ArrowRight, TrendingUp, Shield, Zap, BarChart3, Wallet, Brain, Building2, ChartLine, PieChart, LineChart } from 'lucide-react'
 import { motion } from 'framer-motion'
 
-import { BackgroundBeams } from '@/components/ui/background-beams'
 import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards'
 import { RunwaySimulator } from '@/components/marketing/runway-simulator'
 import { FeatureShowcase } from '@/components/marketing/feature-showcase'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background selection:bg-foreground selection:text-background overflow-x-hidden">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-2 group">
-                <div className="h-8 w-8 bg-foreground rounded-full flex items-center justify-center group-hover:bg-foreground/90 transition-colors">
-                  <div className="h-3 w-3 bg-background rounded-full" />
-                </div>
-                <span className="text-xl font-bold tracking-tight text-foreground">FinYeld AI</span>
-              </Link>
+    <div className="min-h-screen selection:bg-foreground selection:text-background overflow-x-hidden">
+      {/* Floating Navigation */}
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+        <div className="floating-nav px-2 py-2 flex items-center gap-1">
+          <Link href="/" className="flex items-center gap-2 px-4 py-2">
+            <div className="h-7 w-7 bg-emerald-500 rounded-lg flex items-center justify-center">
+              <TrendingUp className="h-4 w-4 text-white" />
             </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link
-                href="#features"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Features
-              </Link>
-              <Link
-                href="#testimonials"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Testimonials
-              </Link>
-              <Link
-                href="/pricing"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Pricing
-              </Link>
-              <Link
-                href="/contact"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Contact
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/login"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/register"
-                className="inline-flex h-9 items-center justify-center rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background shadow transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-              >
-                Get Started
-              </Link>
-            </div>
+            <span className="font-bold text-foreground">FinYeld AI</span>
+          </Link>
+          <div className="hidden md:flex items-center">
+            <Link href="#features" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Product
+            </Link>
+            <Link href="/pricing" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Pricing
+            </Link>
+            <Link href="#security" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Security
+            </Link>
+            <Link href="/contact" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Contact
+            </Link>
           </div>
+          <Link
+            href="/login"
+            className="ml-2 px-4 py-2 text-sm font-medium text-foreground bg-foreground/5 hover:bg-foreground/10 rounded-full transition-colors"
+          >
+            Sign In
+          </Link>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-screen max-h-[1080px] flex items-center">
-        <BackgroundBeams className="opacity-40" />
-
-        <div className="max-w-7xl mx-auto relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+      {/* Hero Section with Cloud Gradient */}
+      <section className="cloud-gradient-bg relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16">
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          {/* Credibility Badge */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-left"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 credibility-badge mb-8"
           >
-            <div className="inline-flex items-center space-x-2 border border-white/10 rounded-full px-3 py-1 mb-6 bg-white/5 backdrop-blur-sm animate-fade-in-delayed">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-medium text-muted-foreground">
-                SOC-2 Compliant Financial Engine
-              </span>
-            </div>
+            <Shield className="h-4 w-4" />
+            <span>SOC-2 Compliant • Bank-Grade Security</span>
+          </motion.div>
 
-            <h1 className="text-5xl sm:text-7xl font-bold tracking-tighter text-foreground mb-6 leading-[1.1]">
-              Maximize Your <br />
-              <span className="gradient-text">Financial Yield.</span>
-            </h1>
+          {/* Main Headline - Serif Style */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="serif-heading text-5xl sm:text-6xl md:text-7xl text-foreground mb-6"
+          >
+            AI-Powered Financial
+            <br />
+            <span className="gradient-text">Intelligence for Startups</span>
+          </motion.h1>
 
-            <p className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
-              Stop guessing your runway. FinYeld AI connects to your bank accounts to create an
-              intelligent financial model that predicts, optimizes, and yields results.
-            </p>
+          {/* Subheadline */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+          >
+            Stop guessing your runway. FinYeld AI connects to your bank accounts
+            and creates intelligent financial models that predict, optimize, and
+            yield results—seamlessly.
+          </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/register"
-                className="inline-flex h-12 items-center justify-center rounded-lg bg-foreground px-8 text-sm font-medium text-background shadow transition-all hover:bg-foreground/90 hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
-              >
-                Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-              <Link
-                href="#demo"
-                className="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background px-8 text-sm font-medium shadow-sm transition-all hover:bg-accent hover:text-accent-foreground hover:border-foreground/20 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
-              >
-                View Live Demo
-              </Link>
-            </div>
+          {/* Single Primary CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <Link
+              href="/register"
+              className="pill-button inline-flex items-center gap-2 bg-foreground text-background hover:bg-foreground/90 shadow-lg"
+            >
+              Start Free Trial
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
 
-            <div className="mt-8 flex items-center gap-4 text-sm text-muted-foreground">
+          {/* Trust Indicators */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="mt-12 flex flex-wrap items-center justify-center gap-8 text-sm text-muted-foreground"
+          >
+            <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
+                {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
-                    className="h-8 w-8 rounded-full border-2 border-background bg-zinc-800"
+                    className="h-8 w-8 rounded-full border-2 border-background bg-gradient-to-br from-emerald-400 to-teal-500"
+                    style={{ opacity: 1 - i * 0.1 }}
                   />
                 ))}
               </div>
-              <p>Trusted by 500+ founders</p>
+              <span>500+ founders trust us</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-emerald-500" />
+              <span>$2B+ in runway analyzed</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-emerald-500" />
+              <span>99.9% uptime SLA</span>
             </div>
           </motion.div>
+        </div>
+      </section>
 
-          {/* Interactive Hero Visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative perspective-1000"
-          >
-            <div className="transform rotate-y-12 rotate-x-6 hover:rotate-y-0 hover:rotate-x-0 transition-transform duration-700 ease-in-out">
-              <RunwaySimulator />
-            </div>
-          </motion.div>
+      {/* Use Cases Section - Inspired by Reference */}
+      <section className="py-24 px-4 bg-background">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="serif-heading text-3xl md:text-4xl text-foreground mb-4">
+              How Startups Use FinYeld AI
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Real use cases from founders and finance teams who rely on our
+              platform to make smarter financial decisions.
+            </p>
+          </div>
+
+          {/* Use Case Cards */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Card 1 - Runway Analysis */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="use-case-card p-6"
+            >
+              <div className="feature-icon mb-4">
+                <LineChart className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-1">Runway Analysis</h3>
+              <p className="text-sm text-muted-foreground mb-4">Seed & Series A</p>
+              <p className="text-muted-foreground">
+                Automatically calculate your runway across multiple scenarios.
+                Know exactly when you need to raise and how much, with AI-powered
+                forecasting that updates in real-time.
+              </p>
+            </motion.div>
+
+            {/* Card 2 - Burn Rate Optimization */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="use-case-card p-6"
+            >
+              <div className="feature-icon mb-4">
+                <Wallet className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-1">Burn Optimization</h3>
+              <p className="text-sm text-muted-foreground mb-4">Growth Stage</p>
+              <p className="text-muted-foreground">
+                Identify spending anomalies and optimize your burn rate with
+                AI insights. Get alerts before expenses spiral and track every
+                dollar with precision.
+              </p>
+            </motion.div>
+
+            {/* Card 3 - AI CFO Briefings */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="use-case-card p-6"
+            >
+              <div className="feature-icon mb-4">
+                <Brain className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-1">AI CFO Briefings</h3>
+              <p className="text-sm text-muted-foreground mb-4">All Stages</p>
+              <p className="text-muted-foreground">
+                Wake up to AI-generated financial briefings. Get executive
+                summaries, anomaly alerts, and scenario analysis—like having
+                a CFO on autopilot.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Navigation Arrows */}
+          <div className="flex justify-center gap-3 mt-8">
+            <button className="h-10 w-10 rounded-full border border-border flex items-center justify-center hover:bg-accent transition-colors">
+              <ArrowRight className="h-4 w-4 rotate-180" />
+            </button>
+            <button className="h-10 w-10 rounded-full border border-border flex items-center justify-center hover:bg-accent transition-colors">
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Live Demo Section - Runway Simulator */}
+      <section id="demo" className="py-24 px-4 bg-zinc-50/50 dark:bg-zinc-950/50 border-y border-border">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="credibility-badge inline-flex items-center gap-2 mb-4">
+              <Zap className="h-4 w-4" />
+              Interactive Demo
+            </span>
+            <h2 className="serif-heading text-3xl md:text-4xl text-foreground mb-4">
+              Try the Runway Simulator
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              See how FinYeld AI calculates your startup runway in real-time.
+              Adjust the parameters and watch the magic happen.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <RunwaySimulator />
+          </div>
         </div>
       </section>
 
       {/* Features Showcase */}
       <section
         id="features"
-        className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-50/50 dark:bg-zinc-950/50 border-y border-zinc-200 dark:border-white/5"
+        className="py-24 px-4 bg-background"
       >
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 md:text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-sm font-medium text-indigo-500 mb-4">
+            <div className="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-medium text-emerald-600 dark:text-emerald-400 mb-4">
               <Zap className="mr-2 h-3.5 w-3.5" />
               Powerful Features
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-foreground">
+            <h2 className="serif-heading text-3xl md:text-4xl text-foreground mb-4">
               Why founders love FinYeld AI
             </h2>
             <p className="text-muted-foreground text-lg">
@@ -161,8 +261,29 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Integrations Section */}
+      <section className="py-16 bg-zinc-50/50 dark:bg-zinc-950/50 border-y border-border">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-sm text-muted-foreground mb-8">Seamlessly integrates with your financial stack</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60">
+            {['Plaid', 'Stripe', 'QuickBooks', 'Salesforce', 'HubSpot', 'Gusto'].map((name) => (
+              <div key={name} className="flex items-center gap-2 text-muted-foreground">
+                <Building2 className="h-5 w-5" />
+                <span className="font-medium">{name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section id="testimonials" className="py-24 overflow-hidden bg-background">
+        <div className="text-center mb-12">
+          <h2 className="serif-heading text-3xl md:text-4xl text-foreground mb-4">
+            Trusted by Leading Founders
+          </h2>
+          <p className="text-muted-foreground">What our users are saying</p>
+        </div>
         <InfiniteMovingCards
           items={[
             {
@@ -191,16 +312,57 @@ export default function HomePage() {
         />
       </section>
 
-      {/* Mega CTA Section */}
+      {/* Security Section */}
+      <section id="security" className="py-24 px-4 bg-zinc-50/50 dark:bg-zinc-950/50 border-y border-border">
+        <div className="max-w-4xl mx-auto text-center">
+          <span className="credibility-badge inline-flex items-center gap-2 mb-6">
+            <Shield className="h-4 w-4" />
+            Enterprise-Grade Security
+          </span>
+          <h2 className="serif-heading text-3xl md:text-4xl text-foreground mb-6">
+            Your Financial Data is Safe
+          </h2>
+          <p className="text-muted-foreground text-lg mb-12 max-w-2xl mx-auto">
+            Bank-level encryption, SOC-2 compliance, and zero-trust architecture.
+            We take security as seriously as you do.
+          </p>
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            <div className="use-case-card p-6 text-center">
+              <div className="feature-icon mx-auto mb-4">
+                <Shield className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold mb-2">AES-256 Encryption</h3>
+              <p className="text-sm text-muted-foreground">Data encrypted at rest and in transit</p>
+            </div>
+            <div className="use-case-card p-6 text-center">
+              <div className="feature-icon mx-auto mb-4">
+                <Building2 className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold mb-2">SOC-2 Type II</h3>
+              <p className="text-sm text-muted-foreground">Audited security controls</p>
+            </div>
+            <div className="use-case-card p-6 text-center">
+              <div className="feature-icon mx-auto mb-4">
+                <Zap className="h-6 w-6" />
+              </div>
+              <h3 className="font-semibold mb-2">99.9% Uptime SLA</h3>
+              <p className="text-sm text-muted-foreground">Enterprise reliability guaranteed</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
       <section className="relative py-32 bg-zinc-950 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <h2 className="text-white text-[12vw] font-bold tracking-tighter leading-none opacity-90 select-none">
+          <h2 className="text-white text-[10vw] md:text-[8vw] font-bold tracking-tighter leading-none opacity-90 select-none">
             YIELD
           </h2>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 -mt-4 md:-mt-12 mb-12">
-            <h2 className="text-emerald-500/50 text-[12vw] font-bold tracking-tighter leading-none select-none">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 -mt-4 md:-mt-8 mb-12">
+            <h2 className="text-emerald-500/50 text-[10vw] md:text-[8vw] font-bold tracking-tighter leading-none select-none">
               MORE
             </h2>
           </div>
@@ -232,7 +394,9 @@ export default function HomePage() {
       <footer className="bg-black py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 bg-emerald-500 rounded-md"></div>
+            <div className="h-6 w-6 bg-emerald-500 rounded-md flex items-center justify-center">
+              <TrendingUp className="h-3 w-3 text-white" />
+            </div>
             <span className="text-white font-bold tracking-tight">FinYeld AI</span>
           </div>
 
