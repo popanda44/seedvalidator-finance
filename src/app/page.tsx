@@ -13,38 +13,46 @@ export default function HomePage() {
   return (
     <div className="min-h-screen selection:bg-foreground selection:text-background overflow-x-hidden">
       {/* Floating Navigation */}
-      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
-        <div className="floating-nav px-2 py-2 flex items-center gap-1">
-          <Link href="/" className="flex items-center gap-2 px-4 py-2">
-            <div className="relative h-7 w-7 rounded-lg overflow-hidden flex-shrink-0">
-              <Image
-                src="/logo.png"
-                alt="FinYeld AI"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <span className="font-bold text-foreground">FinYeld AI</span>
-          </Link>
-          <div className="hidden md:flex items-center">
-            <Link href="#features" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Product
-            </Link>
-            <Link href="/pricing" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Pricing
-            </Link>
-            <Link href="#security" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Security
-            </Link>
-            <Link href="/contact" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Contact
-            </Link>
+      {/* Top Navigation Bar */}
+      <nav className="fixed top-0 inset-x-0 z-50 p-4 md:p-6 flex justify-between items-center pointer-events-none">
+
+        {/* Left: Brand Logo */}
+        <Link href="/" className="pointer-events-auto flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-full border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all group">
+          <div className="relative h-7 w-7 rounded-lg overflow-hidden flex-shrink-0 group-hover:scale-105 transition-transform">
+            <Image
+              src="/logo.png"
+              alt="FinYeld AI"
+              fill
+              className="object-cover"
+            />
           </div>
+          <span className="font-bold text-foreground tracking-tight">FinYeld AI</span>
+        </Link>
+
+        {/* Center: Navigation Links (Floating Pill) */}
+        <div className="pointer-events-auto hidden md:flex items-center gap-1 px-2 py-1.5 floating-nav">
+          <Link href="#features" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+            Product
+          </Link>
+          <Link href="/pricing" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+            Pricing
+          </Link>
+          <Link href="#security" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+            Security
+          </Link>
+          <Link href="/contact" className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+            Contact
+          </Link>
+        </div>
+
+        {/* Right: Auth CTA */}
+        <div className="pointer-events-auto">
           <Link
             href="/login"
-            className="ml-2 px-4 py-2 text-sm font-medium text-foreground bg-foreground/5 hover:bg-foreground/10 rounded-full transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-foreground rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-emerald-500/20"
           >
             Sign In
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </nav>
