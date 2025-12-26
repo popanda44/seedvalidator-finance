@@ -1,22 +1,30 @@
 import { PrismaClient } from '@prisma/client'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+declare global {
+  var prisma: PrismaClient | undefined
 }
 
-function createPrismaClient() {
-  // For Supabase and other pooled connections, we need to handle prepared statements
-  // The DATABASE_URL should include ?pgbouncer=true for pooled connections
+// For Supabase pooled connections (port 6543), add to DATABASE_URL:
+// ?pgbouncer=true&connection_limit=1
+
+const prismaClientSingleton = () => {
   return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    // Connection error handling for serverless
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   })
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient()
+// Use global variable to prevent multiple clients in dev
+const prisma = globalThis.prisma ?? prismaClientSingleton()
 
-// Prevent multiple instances in development
 if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma
+  globalThis.prisma = prisma
 }
 
 export default prisma
+export { prisma }
