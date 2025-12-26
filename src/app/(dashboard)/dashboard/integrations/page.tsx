@@ -134,6 +134,12 @@ export default function IntegrationsPage() {
     };
 
     const handleDisconnect = async (integration: Integration) => {
+        // Environment variable-based integrations can't be disconnected from UI
+        if (["openai", "plaid", "stripe", "resend", "slack"].includes(integration.id)) {
+            alert(`${integration.name} is configured via environment variables. To disconnect, remove ${integration.configKey} from your Vercel environment settings.`);
+            return;
+        }
+
         if (!confirm(`Are you sure you want to disconnect ${integration.name}?`)) return;
 
         setConnecting(integration.id);
