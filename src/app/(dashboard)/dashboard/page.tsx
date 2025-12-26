@@ -94,11 +94,11 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Hero Header with Gradient Background */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 p-6 md:p-8">
+      {/* Hero Header with Green Gradient Background */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 p-6 md:p-8">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl" />
 
         <div className="relative z-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -108,7 +108,7 @@ export default function DashboardPage() {
                 <span className="text-xs text-emerald-400 font-medium">Live Data</span>
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">
-                Financial Command Center
+                FinYeld AI Command Center
               </h1>
               <p className="text-slate-300 text-sm">
                 Last synced: {formatDate(new Date())} at {new Date().toLocaleTimeString()}
@@ -135,7 +135,7 @@ export default function DashboardPage() {
               </Button>
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0"
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white border-0 shadow-lg shadow-emerald-500/25"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Transaction
@@ -264,11 +264,10 @@ export default function DashboardPage() {
                     >
                       <div className="flex items-center gap-4">
                         <div
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            transaction.amount > 0
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${transaction.amount > 0
                               ? 'bg-emerald-100 dark:bg-emerald-900/30'
                               : 'bg-slate-100 dark:bg-slate-800'
-                          }`}
+                            }`}
                         >
                           {transaction.amount > 0 ? (
                             <ArrowUpRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
@@ -285,9 +284,8 @@ export default function DashboardPage() {
                       </div>
                       <div className="text-right">
                         <p
-                          className={`text-sm font-semibold ${
-                            transaction.amount > 0 ? 'text-emerald-600 dark:text-emerald-400' : ''
-                          }`}
+                          className={`text-sm font-semibold ${transaction.amount > 0 ? 'text-emerald-600 dark:text-emerald-400' : ''
+                            }`}
                         >
                           {transaction.amount > 0 ? '+' : ''}
                           {formatCurrency(transaction.amount)}
@@ -336,15 +334,14 @@ export default function DashboardPage() {
                     className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"
                   >
                     <div
-                      className={`mt-0.5 ${
-                        alert.type === 'critical'
+                      className={`mt-0.5 ${alert.type === 'critical'
                           ? 'text-red-500'
                           : alert.type === 'warning'
                             ? 'text-orange-500'
                             : alert.type === 'success'
                               ? 'text-emerald-500'
                               : 'text-blue-500'
-                      }`}
+                        }`}
                     >
                       {alert.type === 'critical' || alert.type === 'warning' ? (
                         <AlertTriangle className="w-5 h-5" />

@@ -94,7 +94,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   // Check if user needs onboarding (only on first visit)
   useEffect(() => {
     if (session?.user && typeof window !== 'undefined') {
-      const hasCompletedOnboarding = localStorage.getItem('seedvalidator_onboarding_complete')
+      const hasCompletedOnboarding = localStorage.getItem('finyeld_onboarding_complete')
       if (!hasCompletedOnboarding) {
         // Small delay to let the page load first
         const timer = setTimeout(() => {
@@ -107,7 +107,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const handleOnboardingComplete = () => {
     setShowOnboarding(false)
-    localStorage.setItem('seedvalidator_onboarding_complete', 'true')
+    localStorage.setItem('finyeld_onboarding_complete', 'true')
   }
 
   return (
@@ -138,7 +138,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-slate-800">
           <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
               <Building2 className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg font-bold text-white">FinYeld AI</span>
@@ -165,15 +165,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 className={cn(
                   'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-l-2 border-blue-500'
+                    ? 'bg-gradient-to-r from-emerald-600/20 to-teal-600/20 text-white border-l-2 border-emerald-500'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                 )}
               >
                 <item.icon
-                  className={cn('w-5 h-5', isActive ? 'text-blue-400' : 'text-slate-500')}
+                  className={cn('w-5 h-5', isActive ? 'text-emerald-400' : 'text-slate-500')}
                 />
                 {item.name}
-                {isActive && <ChevronRight className="w-4 h-4 ml-auto text-blue-400" />}
+                {isActive && <ChevronRight className="w-4 h-4 ml-auto text-emerald-400" />}
               </Link>
             )
           })}
