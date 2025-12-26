@@ -94,13 +94,14 @@ export default function IntegrationsPage() {
     // Fetch notification/integration status
     const { data: notificationStatus } = useSWR("/api/notifications", fetcher);
     const { data: hubspotData, mutate: mutateHubspot } = useSWR("/api/integrations/hubspot", fetcher);
+    const { data: aiData } = useSWR("/api/ai/insights", fetcher);
 
     // Determine status based on API responses
     const getStatus = (id: string): "connected" | "disconnected" | "error" => {
         if (id === "resend" && notificationStatus?.email?.configured) return "connected";
         if (id === "slack" && notificationStatus?.slack?.configured) return "connected";
         if (id === "hubspot" && hubspotData?.connected) return "connected";
-        if (id === "openai" && !hubspotData?.demo) return "connected"; // Rough check
+        if (id === "openai" && aiData && !aiData.isDemo) return "connected";
         return "disconnected";
     };
 
@@ -221,12 +222,12 @@ export default function IntegrationsPage() {
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className={`p-3 rounded-lg ${status === "connected"
-                                                    ? "bg-emerald-500/10"
-                                                    : "bg-secondary"
+                                                ? "bg-emerald-500/10"
+                                                : "bg-secondary"
                                                 }`}>
                                                 <integration.icon className={`h-6 w-6 ${status === "connected"
-                                                        ? "text-emerald-500"
-                                                        : "text-muted-foreground"
+                                                    ? "text-emerald-500"
+                                                    : "text-muted-foreground"
                                                     }`} />
                                             </div>
                                             <div>
