@@ -1,37 +1,39 @@
----
-name: Pull Request
-about: Submit changes for review
-title: '[TYPE] Brief description'
-labels: ''
-assignees: ''
----
-
 ## Description
+<!-- Provide a brief description of the changes -->
 
-<!-- Describe your changes in detail -->
 
-## Related Issue
+## Related Issues
+<!-- Link related tickets: Closes #123, Fixes PLT-456 -->
 
-<!-- Link any related issues: Fixes #123 -->
 
 ## Type of Change
+- [ ] `feat` - New feature
+- [ ] `fix` - Bug fix
+- [ ] `docs` - Documentation update
+- [ ] `refactor` - Code refactoring
+- [ ] `test` - Adding tests
+- [ ] `chore` - Maintenance
+- [ ] `hotfix` - Critical fix
 
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📝 Documentation update
-- [ ] 🔧 Refactor (code change that neither fixes a bug nor adds a feature)
+## Screenshots
+<!-- If applicable, add screenshots -->
 
-## Checklist
 
-- [ ] My code follows the project's style guidelines
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] New and existing tests pass locally
-- [ ] I have tested this change in a browser
+## Testing
+<!-- Describe testing done -->
+- [ ] Unit tests added/updated
+- [ ] E2E tests added/updated
+- [ ] Tested locally
 
-## Screenshots (if applicable)
+## Code Review Checklist
+- [ ] Code follows style guide (ESLint, Prettier)
+- [ ] Tests cover new functionality (>80% coverage)
+- [ ] No console.logs or debugging code
+- [ ] Security vulnerabilities addressed
+- [ ] Performance optimized (no N+1 queries)
+- [ ] Documentation updated
+- [ ] Self-reviewed the code
 
-<!-- Add screenshots to help explain your changes -->
+## Deployment Notes
+<!-- Any special deployment considerations -->
+
