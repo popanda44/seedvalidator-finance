@@ -17,8 +17,8 @@ export default function HomePage() {
       <nav className="fixed top-0 inset-x-0 z-50 p-4 md:p-6 flex justify-between items-center pointer-events-none">
 
         {/* Left: Brand Logo */}
-        <Link href="/" className="pointer-events-auto flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-full border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all group">
-          <div className="relative h-7 w-7 rounded-lg overflow-hidden flex-shrink-0 group-hover:scale-105 transition-transform">
+        <Link href="/" className="pointer-events-auto flex items-center gap-3 px-5 py-2.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-full border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all group">
+          <div className="relative h-10 w-10 rounded-xl overflow-hidden flex-shrink-0 group-hover:scale-105 transition-transform shadow-sm">
             <Image
               src="/logo.png"
               alt="FinYeld AI"
@@ -26,7 +26,7 @@ export default function HomePage() {
               className="object-cover"
             />
           </div>
-          <span className="font-bold text-foreground tracking-tight">FinYeld AI</span>
+          <span className="font-bold text-xl text-foreground tracking-tight">FinYeld AI</span>
         </Link>
 
         {/* Center: Navigation Links (Floating Pill) */}
