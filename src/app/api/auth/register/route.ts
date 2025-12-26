@@ -4,91 +4,79 @@ import prisma from '@/lib/prisma'
 import { rateLimitCheck, rateLimitResponse } from '@/lib/rate-limiter'
 
 export async function POST(request: Request) {
-    // Rate limiting for brute force protection
-    if (!rateLimitCheck(request)) {
-        return rateLimitResponse();
+  // Rate limiting for brute force protection
+  if (!rateLimitCheck(request)) {
+    return rateLimitResponse()
+  }
+
+  try {
+    const { name, email, password, companyName } = await request.json()
+
+    // Validate required fields
+    if (!name || !email || !password || !companyName) {
+      return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
     }
 
-    try {
-        const { name, email, password, companyName } = await request.json()
-
-        // Validate required fields
-        if (!name || !email || !password || !companyName) {
-            return NextResponse.json(
-                { error: 'All fields are required' },
-                { status: 400 }
-            )
-        }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(email)) {
-            return NextResponse.json(
-                { error: 'Invalid email format' },
-                { status: 400 }
-            )
-        }
-
-        // Validate password length
-        if (password.length < 8) {
-            return NextResponse.json(
-                { error: 'Password must be at least 8 characters' },
-                { status: 400 }
-            )
-        }
-
-        // Check if user already exists
-        const existingUser = await prisma.user.findUnique({
-            where: { email },
-        })
-
-        if (existingUser) {
-            return NextResponse.json(
-                { error: 'An account with this email already exists' },
-                { status: 409 }
-            )
-        }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 12)
-
-        // Create company first
-        const company = await prisma.company.create({
-            data: {
-                name: companyName,
-            },
-        })
-
-        // Create user with company
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                password: hashedPassword,
-                companyId: company.id,
-                role: 'OWNER',
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-                companyId: true,
-            },
-        })
-
-        return NextResponse.json(
-            {
-                message: 'Account created successfully',
-                user,
-            },
-            { status: 201 }
-        )
-    } catch (error) {
-        console.error('Registration error:', error)
-        return NextResponse.json(
-            { error: 'An error occurred during registration' },
-            { status: 500 }
-        )
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
     }
+
+    // Validate password length
+    if (password.length < 8) {
+      return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 })
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    })
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'An account with this email already exists' },
+        { status: 409 }
+      )
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    // Create company first
+    const company = await prisma.company.create({
+      data: {
+        name: companyName,
+      },
+    })
+
+    // Create user with company
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        companyId: company.id,
+        role: 'OWNER',
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        companyId: true,
+      },
+    })
+
+    return NextResponse.json(
+      {
+        message: 'Account created successfully',
+        user,
+      },
+      { status: 201 }
+    )
+  } catch (error) {
+    console.error('Registration error:', error)
+    return NextResponse.json({ error: 'An error occurred during registration' }, { status: 500 })
+  }
 }

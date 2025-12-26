@@ -1,4 +1,5 @@
 # Target Customer Profiles
+
 ## 5 Detailed User Personas
 
 **Version:** 1.0  
@@ -23,23 +24,23 @@
 
 ### 1.1 Persona Priority Matrix
 
-| Persona | Priority | Revenue Impact | Influence on Purchase | Acquisition Channel |
-|---------|----------|----------------|----------------------|---------------------|
-| Startup CEO | 🔴 Primary | High | Decision Maker | Product-led, Community |
-| CFO | 🔴 Primary | Very High | Decision Maker | Sales, Referrals |
-| Finance Manager | 🟡 Secondary | Medium | Strong Influencer | Product-led, Content |
-| Board Member | 🟡 Secondary | Indirect | Champion | Network, Portfolio |
-| Department Head | 🟢 Tertiary | Low | User/Champion | Internal referral |
+| Persona         | Priority     | Revenue Impact | Influence on Purchase | Acquisition Channel    |
+| --------------- | ------------ | -------------- | --------------------- | ---------------------- |
+| Startup CEO     | 🔴 Primary   | High           | Decision Maker        | Product-led, Community |
+| CFO             | 🔴 Primary   | Very High      | Decision Maker        | Sales, Referrals       |
+| Finance Manager | 🟡 Secondary | Medium         | Strong Influencer     | Product-led, Content   |
+| Board Member    | 🟡 Secondary | Indirect       | Champion              | Network, Portfolio     |
+| Department Head | 🟢 Tertiary  | Low            | User/Champion         | Internal referral      |
 
 ### 1.2 Jobs-to-be-Done Summary
 
-| Persona | Primary JTBD | Secondary JTBD | Success Metric |
-|---------|--------------|----------------|----------------|
-| Startup CEO | Know if we'll survive | Impress investors | Runway >18 months |
-| CFO | Strategic partner to CEO | Efficient operations | 50% faster close |
-| Finance Manager | Eliminate manual work | Error-free reporting | 80% time saved |
-| Board Member | Monitor portfolio health | Guide strategy | Real-time visibility |
-| Department Head | Get budget approved | Track spending | Budget accuracy |
+| Persona         | Primary JTBD             | Secondary JTBD       | Success Metric       |
+| --------------- | ------------------------ | -------------------- | -------------------- |
+| Startup CEO     | Know if we'll survive    | Impress investors    | Runway >18 months    |
+| CFO             | Strategic partner to CEO | Efficient operations | 50% faster close     |
+| Finance Manager | Eliminate manual work    | Error-free reporting | 80% time saved       |
+| Board Member    | Monitor portfolio health | Guide strategy       | Real-time visibility |
+| Department Head | Get budget approved      | Track spending       | Budget accuracy      |
 
 ---
 
@@ -79,12 +80,14 @@
 ### 2.2 Background & Context
 
 **Career Path:**
+
 - ML PhD from Stanford
 - 5 years at Google Brain
 - Left to solve healthcare data fragmentation
 - First-time founder
 
 **Company Situation:**
+
 - Raised $750K pre-seed from angels
 - 18 months of runway (at current burn)
 - Preparing for Seed round ($2-3M target)
@@ -92,48 +95,51 @@
 
 ### 2.3 Goals & Motivations
 
-| Goal Type | Goal | Measurement |
-|-----------|------|-------------|
-| **Primary** | Don't run out of money | Runway >18 months |
-| **Primary** | Raise successful Seed round | $2.5M at $12M valuation |
-| **Secondary** | Hire 3 key engineers | Close 3 offers in 6 months |
-| **Secondary** | Look professional to investors | Positive investor feedback |
-| **Personal** | Reduce finance anxiety | Confidence in financial position |
+| Goal Type     | Goal                           | Measurement                      |
+| ------------- | ------------------------------ | -------------------------------- |
+| **Primary**   | Don't run out of money         | Runway >18 months                |
+| **Primary**   | Raise successful Seed round    | $2.5M at $12M valuation          |
+| **Secondary** | Hire 3 key engineers           | Close 3 offers in 6 months       |
+| **Secondary** | Look professional to investors | Positive investor feedback       |
+| **Personal**  | Reduce finance anxiety         | Confidence in financial position |
 
 ### 2.4 Daily Pain Points
 
 #### 🔴 Critical Pain Points
 
-| Pain Point | Frequency | Emotional Impact | Current Workaround |
-|------------|-----------|------------------|-------------------|
-| **Runway uncertainty** | Daily worry | High anxiety | Manual spreadsheet calc |
-| **Investor deck creation** | Monthly | Stressful | 10+ hours manual work |
-| **"What-if" questions** | Weekly | Frustration | Gut feeling |
-| **Multi-version spreadsheets** | Weekly | Confusion | Hoping for the best |
+| Pain Point                     | Frequency   | Emotional Impact | Current Workaround      |
+| ------------------------------ | ----------- | ---------------- | ----------------------- |
+| **Runway uncertainty**         | Daily worry | High anxiety     | Manual spreadsheet calc |
+| **Investor deck creation**     | Monthly     | Stressful        | 10+ hours manual work   |
+| **"What-if" questions**        | Weekly      | Frustration      | Gut feeling             |
+| **Multi-version spreadsheets** | Weekly      | Confusion        | Hoping for the best     |
 
 #### 🟠 Moderate Pain Points
 
-| Pain Point | Frequency | Current Workaround |
-|------------|-----------|-------------------|
-| Tracking expenses by category | Weekly | Manual tagging |
-| Understanding burn breakdown | Monthly | Basic charts |
-| Sharing with advisors | Monthly | PDF exports |
+| Pain Point                    | Frequency | Current Workaround |
+| ----------------------------- | --------- | ------------------ |
+| Tracking expenses by category | Weekly    | Manual tagging     |
+| Understanding burn breakdown  | Monthly   | Basic charts       |
+| Sharing with advisors         | Monthly   | PDF exports        |
 
 ### 2.5 Behavioral Patterns
 
 **Technology Usage:**
+
 - Power user of Notion, Slack, Linear
 - Comfortable with technical products
 - Prefers self-service over sales calls
 - Mobile-first for monitoring dashboards
 
 **Decision Making:**
+
 - Fast decision maker if value is clear
 - Willing to pay for time savings
 - Influenced by peer recommendations
 - Skeptical of enterprise sales tactics
 
 **Information Sources:**
+
 - Twitter/X startup community
 - Y Combinator resources
 - Lenny's Newsletter
@@ -141,24 +147,24 @@
 
 ### 2.6 Quotes from Interviews
 
-> *"I check our bank balance every morning like it's my heart rate."*
+> _"I check our bank balance every morning like it's my heart rate."_
 
-> *"Every investor meeting, I spend a full day just getting my numbers right. And I'm still never 100% confident."*
+> _"Every investor meeting, I spend a full day just getting my numbers right. And I'm still never 100% confident."_
 
-> *"I tried Finmark but it still felt like too much work to set up properly. I just want something that works."*
+> _"I tried Finmark but it still felt like too much work to set up properly. I just want something that works."_
 
-> *"My co-founder asked me 'what happens if we hire 2 more engineers?' and I had to say 'I don't know, let me check my spreadsheet' for the 100th time."*
+> _"My co-founder asked me 'what happens if we hire 2 more engineers?' and I had to say 'I don't know, let me check my spreadsheet' for the 100th time."_
 
 ### 2.7 Solution Requirements
 
-| Requirement | Priority | Acceptance Criteria |
-|-------------|----------|---------------------|
-| Instant runway visibility | Must-have | Real-time, accurate to the day |
-| Scenario modeling | Must-have | "What if we hire X?" in one click |
-| Investor-ready reports | Must-have | Professional, exportable, fast |
-| Bank connection | Must-have | Automatic sync, no manual entry |
-| Simple pricing | Must-have | Under $200/month |
-| Mobile access | Should-have | Check runway on phone |
+| Requirement               | Priority    | Acceptance Criteria               |
+| ------------------------- | ----------- | --------------------------------- |
+| Instant runway visibility | Must-have   | Real-time, accurate to the day    |
+| Scenario modeling         | Must-have   | "What if we hire X?" in one click |
+| Investor-ready reports    | Must-have   | Professional, exportable, fast    |
+| Bank connection           | Must-have   | Automatic sync, no manual entry   |
+| Simple pricing            | Must-have   | Under $200/month                  |
+| Mobile access             | Should-have | Check runway on phone             |
 
 ### 2.8 Customer Journey
 
@@ -177,6 +183,7 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 > **Promise:** Know your runway, impress your investors, and make confident decisions—all in 5 minutes.
 
 **Key Messages:**
+
 1. "See your real runway right now, not next month"
 2. "Create investor-ready reports in one click"
 3. "Ask 'what if' and get instant answers"
@@ -220,12 +227,14 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 ### 3.2 Background & Context
 
 **Career Path:**
+
 - CPA from University of Texas
 - 6 years at Deloitte (audit → advisory)
 - VP Finance at 2 startups (one IPO'd)
 - CFO at DataFlow Pro for 2 years
 
 **Company Situation:**
+
 - $28M ARR, growing 60% YoY
 - Just closed Series C ($45M)
 - Board wants path to profitability analysis
@@ -234,61 +243,62 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 
 ### 3.3 Goals & Motivations
 
-| Goal Type | Goal | Measurement |
-|-----------|------|-------------|
-| **Primary** | Be strategic partner to CEO | Invited to key decisions |
-| **Primary** | Board-ready in all situations | "Great analysis" feedback |
-| **Secondary** | Reduce close time to 3 days | From 10 days currently |
-| **Secondary** | Enable self-service for dept heads | <5 ad-hoc requests/week |
-| **Personal** | Work-life balance | Leave by 7pm most days |
+| Goal Type     | Goal                               | Measurement               |
+| ------------- | ---------------------------------- | ------------------------- |
+| **Primary**   | Be strategic partner to CEO        | Invited to key decisions  |
+| **Primary**   | Board-ready in all situations      | "Great analysis" feedback |
+| **Secondary** | Reduce close time to 3 days        | From 10 days currently    |
+| **Secondary** | Enable self-service for dept heads | <5 ad-hoc requests/week   |
+| **Personal**  | Work-life balance                  | Leave by 7pm most days    |
 
 ### 3.4 Daily Pain Points
 
 #### 🔴 Critical Pain Points
 
-| Pain Point | Frequency | Emotional Impact | Current Workaround |
-|------------|-----------|------------------|-------------------|
-| **Long month-end close** | Monthly | Exhausting | Extra weekend work |
-| **Board deck preparation** | Quarterly | Very stressful | 20+ hours each time |
-| **Department budget requests** | Weekly | Annoying | Ad-hoc spreadsheets |
-| **Multi-scenario planning** | Monthly | Frustrating | Manual model updates |
+| Pain Point                     | Frequency | Emotional Impact | Current Workaround   |
+| ------------------------------ | --------- | ---------------- | -------------------- |
+| **Long month-end close**       | Monthly   | Exhausting       | Extra weekend work   |
+| **Board deck preparation**     | Quarterly | Very stressful   | 20+ hours each time  |
+| **Department budget requests** | Weekly    | Annoying         | Ad-hoc spreadsheets  |
+| **Multi-scenario planning**    | Monthly   | Frustrating      | Manual model updates |
 
 #### 🟠 Moderate Pain Points
 
-| Pain Point | Frequency | Current Workaround |
-|------------|-----------|-------------------|
-| Tool fragmentation (5+ systems) | Daily | Manual reconciliation |
-| Version control issues | Weekly | File naming conventions |
-| Forecasting accuracy | Monthly | Conservative assumptions |
-| Investor reporting | Quarterly | Heroic effort |
+| Pain Point                      | Frequency | Current Workaround       |
+| ------------------------------- | --------- | ------------------------ |
+| Tool fragmentation (5+ systems) | Daily     | Manual reconciliation    |
+| Version control issues          | Weekly    | File naming conventions  |
+| Forecasting accuracy            | Monthly   | Conservative assumptions |
+| Investor reporting              | Quarterly | Heroic effort            |
 
 ### 3.5 Quotes from Interviews
 
-> *"My team spends 70% of their time on data prep and 30% on actual analysis. I want to flip that."*
+> _"My team spends 70% of their time on data prep and 30% on actual analysis. I want to flip that."_
 
-> *"We tried Planful, but the 6-month implementation killed us. By month 4, our business model had changed."*
+> _"We tried Planful, but the 6-month implementation killed us. By month 4, our business model had changed."_
 
-> *"I don't have time to become an expert in another complex system. I need something that just works."*
+> _"I don't have time to become an expert in another complex system. I need something that just works."_
 
-> *"Every board meeting, I'm terrified someone will ask a question I don't have the data for."*
+> _"Every board meeting, I'm terrified someone will ask a question I don't have the data for."_
 
 ### 3.6 Solution Requirements
 
-| Requirement | Priority | Acceptance Criteria |
-|-------------|----------|---------------------|
-| Fast implementation | Must-have | Productive in <2 weeks |
-| ERP/accounting integration | Must-have | NetSuite or Sage Intacct |
-| Advanced modeling | Must-have | Driver-based, multi-scenario |
-| Collaboration | Must-have | Team workflows, approvals |
-| Professional reporting | Must-have | Board-ready quality |
-| Reasonable cost | Should-have | Under $50K/year |
-| SOC 2 compliance | Should-have | For security review |
+| Requirement                | Priority    | Acceptance Criteria          |
+| -------------------------- | ----------- | ---------------------------- |
+| Fast implementation        | Must-have   | Productive in <2 weeks       |
+| ERP/accounting integration | Must-have   | NetSuite or Sage Intacct     |
+| Advanced modeling          | Must-have   | Driver-based, multi-scenario |
+| Collaboration              | Must-have   | Team workflows, approvals    |
+| Professional reporting     | Must-have   | Board-ready quality          |
+| Reasonable cost            | Should-have | Under $50K/year              |
+| SOC 2 compliance           | Should-have | For security review          |
 
 ### 3.7 Value Proposition for Marcus
 
 > **Promise:** Enterprise-grade FP&A without the enterprise implementation—be productive in days, not months.
 
 **Key Messages:**
+
 1. "Close your books 50% faster"
 2. "Never be caught off-guard by board questions"
 3. "Empower departments without losing control"
@@ -332,12 +342,14 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 ### 4.2 Background & Context
 
 **Career Path:**
+
 - Accounting degree from CU Boulder
 - Started at regional accounting firm
 - Financial Analyst at Series A startup (acquired)
 - Finance Manager at CloudScale for 18 months
 
 **Current Responsibilities:**
+
 - Monthly financial close
 - Budget vs. actual reporting
 - Department budget support
@@ -346,59 +358,60 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 
 ### 4.3 Goals & Motivations
 
-| Goal Type | Goal | Measurement |
-|-----------|------|-------------|
-| **Primary** | Automate repetitive tasks | 80% less manual work |
-| **Primary** | Error-free reporting | Zero corrections needed |
-| **Secondary** | Career advancement | VP Finance promotion |
-| **Secondary** | Learn strategic skills | Time for analysis |
-| **Personal** | Predictable workload | No more weekend emergencies |
+| Goal Type     | Goal                      | Measurement                 |
+| ------------- | ------------------------- | --------------------------- |
+| **Primary**   | Automate repetitive tasks | 80% less manual work        |
+| **Primary**   | Error-free reporting      | Zero corrections needed     |
+| **Secondary** | Career advancement        | VP Finance promotion        |
+| **Secondary** | Learn strategic skills    | Time for analysis           |
+| **Personal**  | Predictable workload      | No more weekend emergencies |
 
 ### 4.4 Daily Pain Points
 
 #### 🔴 Critical Pain Points
 
-| Pain Point | Frequency | Emotional Impact | Current Workaround |
-|------------|-----------|------------------|-------------------|
-| **Manual data entry** | Daily | Soul-crushing | Copy-paste marathon |
-| **Spreadsheet errors** | Weekly | Embarrassing | Triple checking |
-| **Version confusion** | Weekly | Frustrating | "v27_final_FINAL.xlsx" |
-| **Ad-hoc requests** | Daily | Overwhelming | Drop everything |
+| Pain Point             | Frequency | Emotional Impact | Current Workaround     |
+| ---------------------- | --------- | ---------------- | ---------------------- |
+| **Manual data entry**  | Daily     | Soul-crushing    | Copy-paste marathon    |
+| **Spreadsheet errors** | Weekly    | Embarrassing     | Triple checking        |
+| **Version confusion**  | Weekly    | Frustrating      | "v27_final_FINAL.xlsx" |
+| **Ad-hoc requests**    | Daily     | Overwhelming     | Drop everything        |
 
 #### 🟠 Moderate Pain Points
 
-| Pain Point | Frequency | Current Workaround |
-|------------|-----------|-------------------|
-| Training on new tools | Ongoing | YouTube tutorials |
-| Cross-system reconciliation | Monthly | Manual matching |
-| Report formatting | Weekly | Hours of formatting |
+| Pain Point                  | Frequency | Current Workaround  |
+| --------------------------- | --------- | ------------------- |
+| Training on new tools       | Ongoing   | YouTube tutorials   |
+| Cross-system reconciliation | Monthly   | Manual matching     |
+| Report formatting           | Weekly    | Hours of formatting |
 
 ### 4.5 Quotes from Interviews
 
-> *"I spend my Monday mornings fixing the same formulas that broke over the weekend. Every. Single. Week."*
+> _"I spend my Monday mornings fixing the same formulas that broke over the weekend. Every. Single. Week."_
 
-> *"I know there's a better way. I've proposed tools before, but leadership says they're too expensive or take too long to implement."*
+> _"I know there's a better way. I've proposed tools before, but leadership says they're too expensive or take too long to implement."_
 
-> *"I want to be strategic, but I'm stuck being a spreadsheet mechanic."*
+> _"I want to be strategic, but I'm stuck being a spreadsheet mechanic."_
 
-> *"If I could automate just the data collection part, I'd get 20 hours of my life back."*
+> _"If I could automate just the data collection part, I'd get 20 hours of my life back."_
 
 ### 4.6 Solution Requirements
 
-| Requirement | Priority | Acceptance Criteria |
-|-------------|----------|---------------------|
-| Automated data pulls | Must-have | No manual copy-paste |
-| Error detection | Must-have | Catches mistakes before I do |
-| Easy to learn | Must-have | Productive in <1 day |
-| Template library | Should-have | Don't start from scratch |
-| Collaboration | Should-have | Work with team seamlessly |
-| Affordable | Must-have | VP will actually approve it |
+| Requirement          | Priority    | Acceptance Criteria          |
+| -------------------- | ----------- | ---------------------------- |
+| Automated data pulls | Must-have   | No manual copy-paste         |
+| Error detection      | Must-have   | Catches mistakes before I do |
+| Easy to learn        | Must-have   | Productive in <1 day         |
+| Template library     | Should-have | Don't start from scratch     |
+| Collaboration        | Should-have | Work with team seamlessly    |
+| Affordable           | Must-have   | VP will actually approve it  |
 
 ### 4.7 Value Proposition for Jennifer
 
 > **Promise:** Stop being a spreadsheet mechanic. Automate the grunt work and become the strategic analyst you want to be.
 
 **Key Messages:**
+
 1. "Automate data collection, focus on analysis"
 2. "Catch errors before they embarrass you"
 3. "Easy enough to learn in a day"
@@ -441,12 +454,14 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 ### 5.2 Background & Context
 
 **Career Path:**
+
 - Stanford MBA
 - Founded B2B SaaS company (sold for $120M)
 - Joined Horizon Ventures as EIR
 - Now Managing Partner ($400M AUM)
 
 **Current Responsibilities:**
+
 - 6 board seats (chair of 2)
 - Portfolio company oversight
 - New investment evaluation
@@ -454,48 +469,49 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 
 ### 5.3 Goals & Motivations
 
-| Goal Type | Goal | Measurement |
-|-----------|------|-------------|
-| **Primary** | Early problem detection | Catch issues before crises |
-| **Primary** | Portfolio performance | Top quartile returns |
-| **Secondary** | Efficient board prep | <1 hour per company/month |
-| **Secondary** | Consistent metrics | Apples-to-apples comparison |
-| **Personal** | Time leverage | More strategic time |
+| Goal Type     | Goal                    | Measurement                 |
+| ------------- | ----------------------- | --------------------------- |
+| **Primary**   | Early problem detection | Catch issues before crises  |
+| **Primary**   | Portfolio performance   | Top quartile returns        |
+| **Secondary** | Efficient board prep    | <1 hour per company/month   |
+| **Secondary** | Consistent metrics      | Apples-to-apples comparison |
+| **Personal**  | Time leverage           | More strategic time         |
 
 ### 5.4 Daily Pain Points
 
 #### 🔴 Critical Pain Points
 
-| Pain Point | Frequency | Emotional Impact | Current Workaround |
-|------------|-----------|------------------|-------------------|
-| **Inconsistent reporting** | Monthly | Frustrating | Request standardized templates |
-| **Stale data** | Weekly | Concerning | More frequent check-ins |
-| **Surprise bad news** | Occasionally | Very stressful | Deeper due diligence |
-| **Too many formats** | Monthly | Time-consuming | Associate normalizes |
+| Pain Point                 | Frequency    | Emotional Impact | Current Workaround             |
+| -------------------------- | ------------ | ---------------- | ------------------------------ |
+| **Inconsistent reporting** | Monthly      | Frustrating      | Request standardized templates |
+| **Stale data**             | Weekly       | Concerning       | More frequent check-ins        |
+| **Surprise bad news**      | Occasionally | Very stressful   | Deeper due diligence           |
+| **Too many formats**       | Monthly      | Time-consuming   | Associate normalizes           |
 
 ### 5.5 Quotes from Interviews
 
-> *"I have 24 companies sending me reports in 24 different formats. It's chaos."*
+> _"I have 24 companies sending me reports in 24 different formats. It's chaos."_
 
-> *"I found out a portfolio company was 60 days from running out of cash—at the board meeting. That should never happen."*
+> _"I found out a portfolio company was 60 days from running out of cash—at the board meeting. That should never happen."_
 
-> *"If my portfolio companies all used the same tool, I'd actually be able to compare them."*
+> _"If my portfolio companies all used the same tool, I'd actually be able to compare them."_
 
 ### 5.6 Solution Requirements
 
-| Requirement | Priority | Acceptance Criteria |
-|-------------|----------|---------------------|
-| Portfolio dashboard | Must-have | All companies, one view |
-| Real-time metrics | Must-have | Not monthly snapshots |
-| Standardized format | Must-have | Consistent across portfolio |
-| Alert system | Should-have | Notify on concerning trends |
-| Benchmarking | Should-have | Compare to stage peers |
+| Requirement         | Priority    | Acceptance Criteria         |
+| ------------------- | ----------- | --------------------------- |
+| Portfolio dashboard | Must-have   | All companies, one view     |
+| Real-time metrics   | Must-have   | Not monthly snapshots       |
+| Standardized format | Must-have   | Consistent across portfolio |
+| Alert system        | Should-have | Notify on concerning trends |
+| Benchmarking        | Should-have | Compare to stage peers      |
 
 ### 5.7 Value Proposition for David
 
 > **Promise:** See your entire portfolio's financial health in real-time. No more surprises.
 
 **Key Messages:**
+
 1. "One dashboard for all portfolio companies"
 2. "Real-time alerts before problems become crises"
 3. "Compare companies against each other and benchmarks"
@@ -539,12 +555,14 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 ### 6.2 Background & Context
 
 **Career Path:**
+
 - CS degree from University of Washington
 - Senior Engineer at Amazon (6 years)
 - Engineering Manager at startup
 - VP Engineering at CloudScale for 2 years
 
 **Current Responsibilities:**
+
 - Lead 22-person engineering team
 - Own engineering roadmap
 - Manage $3.5M annual budget
@@ -553,48 +571,49 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 
 ### 6.3 Goals & Motivations
 
-| Goal Type | Goal | Measurement |
-|-----------|------|-------------|
-| **Primary** | Hit hiring targets | 8 engineers hired on time |
-| **Primary** | Stay within budget | No overruns |
-| **Secondary** | Get budget approved faster | <2 week approval cycle |
-| **Secondary** | Visibility into spending | Know where money goes |
-| **Personal** | Avoid finance surprises | No "you're over budget" emails |
+| Goal Type     | Goal                       | Measurement                    |
+| ------------- | -------------------------- | ------------------------------ |
+| **Primary**   | Hit hiring targets         | 8 engineers hired on time      |
+| **Primary**   | Stay within budget         | No overruns                    |
+| **Secondary** | Get budget approved faster | <2 week approval cycle         |
+| **Secondary** | Visibility into spending   | Know where money goes          |
+| **Personal**  | Avoid finance surprises    | No "you're over budget" emails |
 
 ### 6.4 Daily Pain Points
 
 #### 🔴 Critical Pain Points
 
-| Pain Point | Frequency | Emotional Impact | Current Workaround |
-|------------|-----------|------------------|-------------------|
-| **Budget visibility** | Weekly | Uncertain | Ask finance team |
-| **Hiring plan approval** | Quarterly | Frustrating | Endless email threads |
-| **Understanding costs** | Monthly | Confusing | Best guesses |
-| **Finance team bottleneck** | Weekly | Annoying | Wait days for answers |
+| Pain Point                  | Frequency | Emotional Impact | Current Workaround    |
+| --------------------------- | --------- | ---------------- | --------------------- |
+| **Budget visibility**       | Weekly    | Uncertain        | Ask finance team      |
+| **Hiring plan approval**    | Quarterly | Frustrating      | Endless email threads |
+| **Understanding costs**     | Monthly   | Confusing        | Best guesses          |
+| **Finance team bottleneck** | Weekly    | Annoying         | Wait days for answers |
 
 ### 6.5 Quotes from Interviews
 
-> *"I asked finance if I could hire one more person and it took them 3 days to get back to me. I just need a simple answer."*
+> _"I asked finance if I could hire one more person and it took them 3 days to get back to me. I just need a simple answer."_
 
-> *"I have no idea if I'm on track with my budget until finance tells me—usually at the end of the quarter."*
+> _"I have no idea if I'm on track with my budget until finance tells me—usually at the end of the quarter."_
 
-> *"Give me something I can check myself. I don't want to bother finance for every little thing."*
+> _"Give me something I can check myself. I don't want to bother finance for every little thing."_
 
 ### 6.6 Solution Requirements
 
-| Requirement | Priority | Acceptance Criteria |
-|-------------|----------|---------------------|
-| Self-service budget view | Must-have | Check status anytime |
-| Hiring plan modeling | Must-have | "What if I hire X?" |
-| Simple interface | Must-have | Not a finance tool |
-| Mobile access | Should-have | Check on the go |
-| Request workflows | Should-have | Easy budget requests |
+| Requirement              | Priority    | Acceptance Criteria  |
+| ------------------------ | ----------- | -------------------- |
+| Self-service budget view | Must-have   | Check status anytime |
+| Hiring plan modeling     | Must-have   | "What if I hire X?"  |
+| Simple interface         | Must-have   | Not a finance tool   |
+| Mobile access            | Should-have | Check on the go      |
+| Request workflows        | Should-have | Easy budget requests |
 
 ### 6.7 Value Proposition for Alex
 
 > **Promise:** See your budget, plan your hires, and get approvals—without waiting for finance.
 
 **Key Messages:**
+
 1. "Check your budget status anytime"
 2. "Model your hiring plan in minutes"
 3. "Self-service, no finance degree needed"
@@ -606,40 +625,40 @@ on Twitter        Reviews pricing     Connects bank      Shares with
 
 ### 7.1 At-a-Glance Comparison
 
-| Attribute | Sarah (CEO) | Marcus (CFO) | Jennifer (FM) | David (Board) | Alex (Dept Head) |
-|-----------|-------------|--------------|---------------|---------------|------------------|
-| **Finance Knowledge** | Low | Expert | Intermediate | High | Low |
-| **Time for FP&A** | 2-3 hrs/wk | 20+ hrs/wk | 40 hrs/wk | 2-3 hrs/wk | 1-2 hrs/wk |
-| **Primary Need** | Runway | Strategy | Automation | Oversight | Budget visibility |
-| **Decision Authority** | Full | High | Low | Advisory | Departmental |
-| **Price Sensitivity** | High | Moderate | High | Low | Uses company tool |
-| **Preferred Experience** | Simple | Powerful | Efficient | Dashboard | Self-service |
+| Attribute                | Sarah (CEO) | Marcus (CFO) | Jennifer (FM) | David (Board) | Alex (Dept Head)  |
+| ------------------------ | ----------- | ------------ | ------------- | ------------- | ----------------- |
+| **Finance Knowledge**    | Low         | Expert       | Intermediate  | High          | Low               |
+| **Time for FP&A**        | 2-3 hrs/wk  | 20+ hrs/wk   | 40 hrs/wk     | 2-3 hrs/wk    | 1-2 hrs/wk        |
+| **Primary Need**         | Runway      | Strategy     | Automation    | Oversight     | Budget visibility |
+| **Decision Authority**   | Full        | High         | Low           | Advisory      | Departmental      |
+| **Price Sensitivity**    | High        | Moderate     | High          | Low           | Uses company tool |
+| **Preferred Experience** | Simple      | Powerful     | Efficient     | Dashboard     | Self-service      |
 
 ### 7.2 Feature Importance by Persona
 
-| Feature | Sarah | Marcus | Jennifer | David | Alex |
-|---------|-------|--------|----------|-------|------|
-| **Runway tracking** | 🔴 | 🟡 | 🟢 | 🔴 | ⚪ |
-| **Scenario planning** | 🔴 | 🔴 | 🟡 | 🟡 | 🟡 |
-| **Investor reports** | 🔴 | 🔴 | 🟡 | 🟢 | ⚪ |
-| **Automated data** | 🟡 | 🔴 | 🔴 | 🟡 | 🟢 |
-| **Natural language** | 🔴 | 🟡 | 🟡 | 🟡 | 🔴 |
-| **Portfolio view** | ⚪ | ⚪ | ⚪ | 🔴 | ⚪ |
-| **Dept budgets** | ⚪ | 🔴 | 🔴 | ⚪ | 🔴 |
-| **Hiring planning** | 🟡 | 🔴 | 🔴 | 🟡 | 🔴 |
+| Feature               | Sarah | Marcus | Jennifer | David | Alex |
+| --------------------- | ----- | ------ | -------- | ----- | ---- |
+| **Runway tracking**   | 🔴    | 🟡     | 🟢       | 🔴    | ⚪   |
+| **Scenario planning** | 🔴    | 🔴     | 🟡       | 🟡    | 🟡   |
+| **Investor reports**  | 🔴    | 🔴     | 🟡       | 🟢    | ⚪   |
+| **Automated data**    | 🟡    | 🔴     | 🔴       | 🟡    | 🟢   |
+| **Natural language**  | 🔴    | 🟡     | 🟡       | 🟡    | 🔴   |
+| **Portfolio view**    | ⚪    | ⚪     | ⚪       | 🔴    | ⚪   |
+| **Dept budgets**      | ⚪    | 🔴     | 🔴       | ⚪    | 🔴   |
+| **Hiring planning**   | 🟡    | 🔴     | 🔴       | 🟡    | 🔴   |
 
 **Legend:** 🔴 Must-have | 🟡 Should-have | 🟢 Nice-to-have | ⚪ Not relevant
 
 ### 7.3 Messaging by Persona
 
-| Persona | Primary Message | CTA |
-|---------|-----------------|-----|
-| **Sarah** | "Know your runway, impress investors" | "Start free trial" |
-| **Marcus** | "Enterprise power, startup speed" | "Book a demo" |
-| **Jennifer** | "Automate the grunt work" | "See automation in action" |
-| **David** | "Portfolio visibility in real-time" | "Request portfolio access" |
-| **Alex** | "Self-service budget control" | "Ask your finance team" |
+| Persona      | Primary Message                       | CTA                        |
+| ------------ | ------------------------------------- | -------------------------- |
+| **Sarah**    | "Know your runway, impress investors" | "Start free trial"         |
+| **Marcus**   | "Enterprise power, startup speed"     | "Book a demo"              |
+| **Jennifer** | "Automate the grunt work"             | "See automation in action" |
+| **David**    | "Portfolio visibility in real-time"   | "Request portfolio access" |
+| **Alex**     | "Self-service budget control"         | "Ask your finance team"    |
 
 ---
 
-*Document maintained by Product Team. Last updated: December 17, 2024*
+_Document maintained by Product Team. Last updated: December 17, 2024_

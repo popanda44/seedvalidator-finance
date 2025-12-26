@@ -14,6 +14,7 @@ AI-powered financial command center for startups. Track your runway, optimize bu
 ## ✨ Features
 
 ### Core FP&A
+
 - **Real-time Dashboard** - Track cash balance, burn rate, runway, and MRR at a glance
 - **Cash Flow Analysis** - Monitor all transactions with category filtering and search
 - **Expense Tracking** - Category-wise breakdown with vendor analysis and trends
@@ -21,16 +22,19 @@ AI-powered financial command center for startups. Track your runway, optimize bu
 - **Smart Alerts** - Automated notifications for runway warnings, spending spikes, and opportunities
 
 ### Bank Integration
+
 - **Plaid Connect** - Securely link bank accounts for automatic transaction sync
 - **Multi-account Support** - Aggregate data from multiple checking and savings accounts
 - **Real-time Sync** - Automatic background synchronization of transactions
 
 ### AI Insights
+
 - **Intelligent Analysis** - AI-powered recommendations for burn optimization
 - **Anomaly Detection** - Automatic flagging of unusual spending patterns
 - **Growth Opportunities** - Data-driven suggestions for revenue acceleration
 
 ### User Experience
+
 - **Dark/Light Mode** - System-aware theme with manual toggle
 - **Responsive Design** - Optimized for desktop, tablet, and mobile
 - **Onboarding Flow** - Guided setup for new users
@@ -38,19 +42,19 @@ AI-powered financial command center for startups. Track your runway, optimize bu
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS 4 |
-| Database | PostgreSQL (Neon) |
-| ORM | Prisma 6 |
-| Auth | NextAuth.js 5 (Auth.js) |
-| Banking | Plaid API |
-| Payments | Stripe (coming soon) |
-| Analytics | PostHog |
-| Error Tracking | Sentry |
-| Hosting | Vercel |
+| Category       | Technology              |
+| -------------- | ----------------------- |
+| Framework      | Next.js 16 (App Router) |
+| Language       | TypeScript 5            |
+| Styling        | Tailwind CSS 4          |
+| Database       | PostgreSQL (Neon)       |
+| ORM            | Prisma 6                |
+| Auth           | NextAuth.js 5 (Auth.js) |
+| Banking        | Plaid API               |
+| Payments       | Stripe (coming soon)    |
+| Analytics      | PostHog                 |
+| Error Tracking | Sentry                  |
+| Hosting        | Vercel                  |
 
 ## 📁 Project Structure
 
@@ -103,22 +107,26 @@ src/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/popanda44/seedvalidator-finance.git
    cd seedvalidator-finance
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env.local
    ```
 
 4. **Configure your `.env.local`**
+
    ```env
    # Database
    DATABASE_URL="postgresql://..."
@@ -140,12 +148,14 @@ src/
    ```
 
 5. **Set up the database**
+
    ```bash
    npx prisma generate
    npx prisma db push
    ```
 
 6. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -154,15 +164,15 @@ src/
 
 ## 📜 Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Create production build |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
-| `npm run db:generate` | Generate Prisma client |
-| `npm run db:push` | Push schema to database |
-| `npm run db:studio` | Open Prisma Studio |
+| Command               | Description              |
+| --------------------- | ------------------------ |
+| `npm run dev`         | Start development server |
+| `npm run build`       | Create production build  |
+| `npm run start`       | Start production server  |
+| `npm run lint`        | Run ESLint               |
+| `npm run db:generate` | Generate Prisma client   |
+| `npm run db:push`     | Push schema to database  |
+| `npm run db:studio`   | Open Prisma Studio       |
 
 ## 🔐 Authentication
 
@@ -183,6 +193,7 @@ Plaid integration allows users to securely connect their bank accounts:
 3. **Production Mode** - Full production access requires Plaid approval
 
 ### Test Credentials (Sandbox)
+
 - Username: `user_good`
 - Password: `pass_good`
 
@@ -197,16 +208,16 @@ SeedValidator uses a "High-End Minimalist" design language:
 
 ## 📊 API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/dashboard` | GET | Dashboard summary data |
-| `/api/transactions` | GET | Transaction list with filtering |
-| `/api/expenses` | GET | Expense breakdown by category |
-| `/api/forecasts` | GET | Revenue projections |
-| `/api/alerts` | GET, PATCH | Alert management |
-| `/api/plaid/create-link-token` | POST | Create Plaid Link token |
-| `/api/plaid/exchange-token` | POST | Exchange public token |
-| `/api/plaid/sync` | POST | Sync transactions |
+| Endpoint                       | Method     | Description                     |
+| ------------------------------ | ---------- | ------------------------------- |
+| `/api/dashboard`               | GET        | Dashboard summary data          |
+| `/api/transactions`            | GET        | Transaction list with filtering |
+| `/api/expenses`                | GET        | Expense breakdown by category   |
+| `/api/forecasts`               | GET        | Revenue projections             |
+| `/api/alerts`                  | GET, PATCH | Alert management                |
+| `/api/plaid/create-link-token` | POST       | Create Plaid Link token         |
+| `/api/plaid/exchange-token`    | POST       | Exchange public token           |
+| `/api/plaid/sync`              | POST       | Sync transactions               |
 
 ## 🌐 Deployment
 

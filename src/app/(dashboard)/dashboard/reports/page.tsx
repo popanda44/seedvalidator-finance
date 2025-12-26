@@ -1,493 +1,515 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
-    FileText,
-    Download,
-    Calendar,
-    Mail,
-    Loader2,
-    CheckCircle,
-    FileSpreadsheet,
-    BarChart3,
-    PieChart,
-    Share2,
-    Link2,
-    Copy,
-    X,
-    Clock,
-    FileJson,
-    FileCode,
-} from "lucide-react";
+  FileText,
+  Download,
+  Calendar,
+  Mail,
+  Loader2,
+  CheckCircle,
+  FileSpreadsheet,
+  BarChart3,
+  PieChart,
+  Share2,
+  Link2,
+  Copy,
+  X,
+  Clock,
+  FileJson,
+  FileCode,
+} from 'lucide-react'
 
-type ReportType = "executive" | "detailed" | "forecast";
-type PeriodType = "month" | "quarter" | "year";
-type FormatType = "pdf" | "csv" | "excel" | "json" | "markdown";
+type ReportType = 'executive' | 'detailed' | 'forecast'
+type PeriodType = 'month' | 'quarter' | 'year'
+type FormatType = 'pdf' | 'csv' | 'excel' | 'json' | 'markdown'
 
 export default function ReportsPage() {
-    const [selectedReport, setSelectedReport] = useState<ReportType>("executive");
-    const [selectedPeriod, setPeriod] = useState<PeriodType>("month");
-    const [selectedFormat, setFormat] = useState<FormatType>("csv");
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [isEmailing, setIsEmailing] = useState(false);
-    const [isSharing, setIsSharing] = useState(false);
-    const [showShareModal, setShowShareModal] = useState(false);
-    const [shareUrl, setShareUrl] = useState<string | null>(null);
-    const [shareExpiry, setShareExpiry] = useState<string | null>(null);
-    const [copied, setCopied] = useState(false);
-    const [success, setSuccess] = useState<string | null>(null);
+  const [selectedReport, setSelectedReport] = useState<ReportType>('executive')
+  const [selectedPeriod, setPeriod] = useState<PeriodType>('month')
+  const [selectedFormat, setFormat] = useState<FormatType>('csv')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isEmailing, setIsEmailing] = useState(false)
+  const [isSharing, setIsSharing] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+  const [shareExpiry, setShareExpiry] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [success, setSuccess] = useState<string | null>(null)
 
-    const reportTypes = [
-        {
-            id: "executive" as ReportType,
-            name: "Executive Summary",
-            description: "High-level overview for stakeholders and board meetings",
-            icon: BarChart3,
-        },
-        {
-            id: "detailed" as ReportType,
-            name: "Detailed Financial Report",
-            description: "Comprehensive breakdown of all transactions and metrics",
-            icon: FileText,
-        },
-        {
-            id: "forecast" as ReportType,
-            name: "Forecast Report",
-            description: "Future projections with scenarios and assumptions",
-            icon: PieChart,
-        },
-    ];
+  const reportTypes = [
+    {
+      id: 'executive' as ReportType,
+      name: 'Executive Summary',
+      description: 'High-level overview for stakeholders and board meetings',
+      icon: BarChart3,
+    },
+    {
+      id: 'detailed' as ReportType,
+      name: 'Detailed Financial Report',
+      description: 'Comprehensive breakdown of all transactions and metrics',
+      icon: FileText,
+    },
+    {
+      id: 'forecast' as ReportType,
+      name: 'Forecast Report',
+      description: 'Future projections with scenarios and assumptions',
+      icon: PieChart,
+    },
+  ]
 
-    const periods = [
-        { id: "month" as PeriodType, name: "This Month" },
-        { id: "quarter" as PeriodType, name: "This Quarter" },
-        { id: "year" as PeriodType, name: "This Year" },
-    ];
+  const periods = [
+    { id: 'month' as PeriodType, name: 'This Month' },
+    { id: 'quarter' as PeriodType, name: 'This Quarter' },
+    { id: 'year' as PeriodType, name: 'This Year' },
+  ]
 
-    const formats = [
-        { id: "csv" as FormatType, name: "CSV", icon: FileSpreadsheet },
-        { id: "excel" as FormatType, name: "Excel", icon: FileSpreadsheet },
-        { id: "pdf" as FormatType, name: "PDF", icon: FileText },
-        { id: "json" as FormatType, name: "JSON", icon: FileJson },
-        { id: "markdown" as FormatType, name: "Markdown", icon: FileCode },
-    ];
+  const formats = [
+    { id: 'csv' as FormatType, name: 'CSV', icon: FileSpreadsheet },
+    { id: 'excel' as FormatType, name: 'Excel', icon: FileSpreadsheet },
+    { id: 'pdf' as FormatType, name: 'PDF', icon: FileText },
+    { id: 'json' as FormatType, name: 'JSON', icon: FileJson },
+    { id: 'markdown' as FormatType, name: 'Markdown', icon: FileCode },
+  ]
 
-    const handleDownload = async () => {
-        setIsGenerating(true);
-        setSuccess(null);
+  const handleDownload = async () => {
+    setIsGenerating(true)
+    setSuccess(null)
 
-        try {
-            if (selectedFormat === "pdf") {
-                // Generate PDF using jsPDF
-                const { default: jsPDF } = await import("jspdf");
+    try {
+      if (selectedFormat === 'pdf') {
+        // Generate PDF using jsPDF
+        const { default: jsPDF } = await import('jspdf')
 
-                const pdf = new jsPDF("p", "mm", "a4");
-                const pageWidth = pdf.internal.pageSize.getWidth();
+        const pdf = new jsPDF('p', 'mm', 'a4')
+        const pageWidth = pdf.internal.pageSize.getWidth()
 
-                // Header
-                pdf.setFillColor(15, 23, 42);
-                pdf.rect(0, 0, pageWidth, 40, "F");
+        // Header
+        pdf.setFillColor(15, 23, 42)
+        pdf.rect(0, 0, pageWidth, 40, 'F')
 
-                pdf.setTextColor(255, 255, 255);
-                pdf.setFontSize(24);
-                pdf.setFont("helvetica", "bold");
-                pdf.text("Financial Report", 20, 25);
+        pdf.setTextColor(255, 255, 255)
+        pdf.setFontSize(24)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text('Financial Report', 20, 25)
 
-                pdf.setFontSize(12);
-                pdf.setFont("helvetica", "normal");
-                const periodLabel = selectedPeriod === "month" ? "This Month" : selectedPeriod === "quarter" ? "This Quarter" : "This Year";
-                pdf.text(`${reportTypes.find(r => r.id === selectedReport)?.name} | ${periodLabel}`, 20, 35);
+        pdf.setFontSize(12)
+        pdf.setFont('helvetica', 'normal')
+        const periodLabel =
+          selectedPeriod === 'month'
+            ? 'This Month'
+            : selectedPeriod === 'quarter'
+              ? 'This Quarter'
+              : 'This Year'
+        pdf.text(
+          `${reportTypes.find((r) => r.id === selectedReport)?.name} | ${periodLabel}`,
+          20,
+          35
+        )
 
-                // Reset colors
-                pdf.setTextColor(15, 23, 42);
+        // Reset colors
+        pdf.setTextColor(15, 23, 42)
 
-                // Metrics
-                pdf.setFontSize(16);
-                pdf.setFont("helvetica", "bold");
-                pdf.text("Key Metrics", 20, 55);
+        // Metrics
+        pdf.setFontSize(16)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text('Key Metrics', 20, 55)
 
-                const metrics = [
-                    ["Cash Balance", "$842,500"],
-                    ["Monthly Burn", "$85,000"],
-                    ["Runway", "9.9 months"],
-                    ["MRR", "$125,000"],
-                ];
+        const metrics = [
+          ['Cash Balance', '$842,500'],
+          ['Monthly Burn', '$85,000'],
+          ['Runway', '9.9 months'],
+          ['MRR', '$125,000'],
+        ]
 
-                let yPos = 65;
-                pdf.setFontSize(11);
-                metrics.forEach(([label, value]) => {
-                    pdf.setFont("helvetica", "normal");
-                    pdf.setTextColor(100, 116, 139);
-                    pdf.text(label, 20, yPos);
-                    pdf.setFont("helvetica", "bold");
-                    pdf.setTextColor(15, 23, 42);
-                    pdf.text(value, 80, yPos);
-                    yPos += 10;
-                });
+        let yPos = 65
+        pdf.setFontSize(11)
+        metrics.forEach(([label, value]) => {
+          pdf.setFont('helvetica', 'normal')
+          pdf.setTextColor(100, 116, 139)
+          pdf.text(label, 20, yPos)
+          pdf.setFont('helvetica', 'bold')
+          pdf.setTextColor(15, 23, 42)
+          pdf.text(value, 80, yPos)
+          yPos += 10
+        })
 
-                // Footer
-                const footerY = pdf.internal.pageSize.getHeight() - 15;
-                pdf.setFontSize(8);
-                pdf.setTextColor(148, 163, 184);
-                pdf.text(`Generated by SeedValidator Finance | ${new Date().toLocaleDateString()}`, 20, footerY);
+        // Footer
+        const footerY = pdf.internal.pageSize.getHeight() - 15
+        pdf.setFontSize(8)
+        pdf.setTextColor(148, 163, 184)
+        pdf.text(
+          `Generated by SeedValidator Finance | ${new Date().toLocaleDateString()}`,
+          20,
+          footerY
+        )
 
-                pdf.save(`seedvalidator-${selectedReport}-${selectedPeriod}.pdf`);
-                setSuccess("PDF report downloaded!");
-            } else {
-                // CSV/Excel export via API
-                const response = await fetch(`/api/export?format=${selectedFormat}&period=${selectedPeriod}`);
+        pdf.save(`seedvalidator-${selectedReport}-${selectedPeriod}.pdf`)
+        setSuccess('PDF report downloaded!')
+      } else {
+        // CSV/Excel export via API
+        const response = await fetch(
+          `/api/export?format=${selectedFormat}&period=${selectedPeriod}`
+        )
 
-                if (!response.ok) throw new Error("Export failed");
+        if (!response.ok) throw new Error('Export failed')
 
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                const extMap: Record<string, string> = { excel: 'xlsx', markdown: 'md', csv: 'csv', json: 'json' };
-                const ext = extMap[selectedFormat] || selectedFormat;
-                a.download = `seedvalidator-${selectedReport}-${selectedPeriod}.${ext}`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                a.remove();
-
-                setSuccess("Report downloaded successfully!");
-            }
-        } catch (error) {
-            console.error("Download error:", error);
-            setSuccess("Download failed. Please try again.");
-        } finally {
-            setIsGenerating(false);
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        const extMap: Record<string, string> = {
+          excel: 'xlsx',
+          markdown: 'md',
+          csv: 'csv',
+          json: 'json',
         }
-    };
+        const ext = extMap[selectedFormat] || selectedFormat
+        a.download = `seedvalidator-${selectedReport}-${selectedPeriod}.${ext}`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        a.remove()
 
-    const handleEmailReport = async () => {
-        setIsEmailing(true);
-        setSuccess(null);
+        setSuccess('Report downloaded successfully!')
+      }
+    } catch (error) {
+      console.error('Download error:', error)
+      setSuccess('Download failed. Please try again.')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
-        try {
-            const response = await fetch("/api/notifications", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    type: "weekly_digest",
-                    data: {
-                        metrics: {
-                            cashBalance: 842500,
-                            burnRate: 85000,
-                            runway: 9.9,
-                            mrr: 125000,
-                            mrrChange: 12.5,
-                            topExpenses: [
-                                { category: "Payroll", amount: 45200 },
-                                { category: "Infrastructure", amount: 12450 },
-                                { category: "Marketing", amount: 8900 },
-                            ],
-                        },
-                    },
-                }),
-            });
+  const handleEmailReport = async () => {
+    setIsEmailing(true)
+    setSuccess(null)
 
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || "Failed to send email");
-            }
+    try {
+      const response = await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'weekly_digest',
+          data: {
+            metrics: {
+              cashBalance: 842500,
+              burnRate: 85000,
+              runway: 9.9,
+              mrr: 125000,
+              mrrChange: 12.5,
+              topExpenses: [
+                { category: 'Payroll', amount: 45200 },
+                { category: 'Infrastructure', amount: 12450 },
+                { category: 'Marketing', amount: 8900 },
+              ],
+            },
+          },
+        }),
+      })
 
-            setSuccess("Report sent to your email!");
-        } catch (error) {
-            console.error("Email error:", error);
-            setSuccess("Email service not configured. Add RESEND_API_KEY to enable.");
-        } finally {
-            setIsEmailing(false);
-        }
-    };
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to send email')
+      }
 
-    const handleShareReport = async () => {
-        setIsSharing(true);
-        setSuccess(null);
+      setSuccess('Report sent to your email!')
+    } catch (error) {
+      console.error('Email error:', error)
+      setSuccess('Email service not configured. Add RESEND_API_KEY to enable.')
+    } finally {
+      setIsEmailing(false)
+    }
+  }
 
-        try {
-            const response = await fetch("/api/reports/share", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    reportType: selectedReport,
-                    period: selectedPeriod,
-                    expiresInDays: 7,
-                }),
-            });
+  const handleShareReport = async () => {
+    setIsSharing(true)
+    setSuccess(null)
 
-            if (!response.ok) {
-                throw new Error("Failed to create share link");
-            }
+    try {
+      const response = await fetch('/api/reports/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reportType: selectedReport,
+          period: selectedPeriod,
+          expiresInDays: 7,
+        }),
+      })
 
-            const data = await response.json();
-            setShareUrl(data.shareUrl);
-            setShareExpiry(data.expiresAt);
-            setShowShareModal(true);
-        } catch (error) {
-            console.error("Share error:", error);
-            setSuccess("Failed to create share link. Please try again.");
-        } finally {
-            setIsSharing(false);
-        }
-    };
+      if (!response.ok) {
+        throw new Error('Failed to create share link')
+      }
 
-    const handleCopyLink = async () => {
-        if (shareUrl) {
-            await navigator.clipboard.writeText(shareUrl);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        }
-    };
+      const data = await response.json()
+      setShareUrl(data.shareUrl)
+      setShareExpiry(data.expiresAt)
+      setShowShareModal(true)
+    } catch (error) {
+      console.error('Share error:', error)
+      setSuccess('Failed to create share link. Please try again.')
+    } finally {
+      setIsSharing(false)
+    }
+  }
 
-    return (
-        <div className="min-h-screen bg-background p-6 lg:p-8">
-            <div className="max-w-4xl mx-auto space-y-8">
-                {/* Header */}
-                <div>
-                    <h1 className="text-3xl font-bold text-foreground">Reports</h1>
-                    <p className="text-muted-foreground mt-1">
-                        Generate, export, and share financial reports
-                    </p>
-                </div>
+  const handleCopyLink = async () => {
+    if (shareUrl) {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
 
-                {/* Report Type Selection */}
-                <div className="space-y-4">
-                    <h2 className="text-lg font-semibold text-foreground">Report Type</h2>
-                    <div className="grid md:grid-cols-3 gap-4">
-                        {reportTypes.map((report) => (
-                            <motion.button
-                                key={report.id}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => setSelectedReport(report.id)}
-                                className={`p-4 rounded-xl border text-left transition-all ${selectedReport === report.id
-                                    ? "border-primary bg-primary/10"
-                                    : "border-border bg-card hover:border-primary/50"
-                                    }`}
-                            >
-                                <report.icon className={`h-6 w-6 mb-2 ${selectedReport === report.id ? "text-primary" : "text-muted-foreground"
-                                    }`} />
-                                <h3 className="font-medium text-foreground">{report.name}</h3>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                    {report.description}
-                                </p>
-                            </motion.button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Period Selection */}
-                <div className="space-y-4">
-                    <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                        <Calendar className="h-5 w-5" />
-                        Time Period
-                    </h2>
-                    <div className="flex gap-3">
-                        {periods.map((period) => (
-                            <button
-                                key={period.id}
-                                onClick={() => setPeriod(period.id)}
-                                className={`px-4 py-2 rounded-lg font-medium transition-all ${selectedPeriod === period.id
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                                    }`}
-                            >
-                                {period.name}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Format Selection */}
-                <div className="space-y-4">
-                    <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
-                        Export Format
-                    </h2>
-                    <div className="flex gap-3">
-                        {formats.map((format) => (
-                            <button
-                                key={format.id}
-                                onClick={() => setFormat(format.id)}
-                                className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-all ${selectedFormat === format.id
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                                    }`}
-                            >
-                                <format.icon className="h-4 w-4" />
-                                {format.name}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Success Message */}
-                {success && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex items-center gap-2 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
-                    >
-                        <CheckCircle className="h-5 w-5" />
-                        {success}
-                    </motion.div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleDownload}
-                        disabled={isGenerating}
-                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50"
-                    >
-                        {isGenerating ? (
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                        ) : (
-                            <Download className="h-5 w-5" />
-                        )}
-                        Download Report
-                    </motion.button>
-
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleShareReport}
-                        disabled={isSharing}
-                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
-                    >
-                        {isSharing ? (
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                        ) : (
-                            <Share2 className="h-5 w-5" />
-                        )}
-                        Share Report
-                    </motion.button>
-
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleEmailReport}
-                        disabled={isEmailing}
-                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 disabled:opacity-50"
-                    >
-                        {isEmailing ? (
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                        ) : (
-                            <Mail className="h-5 w-5" />
-                        )}
-                        Email Report
-                    </motion.button>
-                </div>
-
-                {/* Scheduled Reports */}
-                <div className="mt-8 p-6 rounded-xl bg-card border border-border">
-                    <h2 className="text-lg font-semibold text-foreground mb-4">
-                        Scheduled Reports
-                    </h2>
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                            <div>
-                                <p className="font-medium text-foreground">Weekly Digest</p>
-                                <p className="text-sm text-muted-foreground">Every Monday at 9:00 AM</p>
-                            </div>
-                            <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
-                                Active
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                            <div>
-                                <p className="font-medium text-foreground">Monthly Summary</p>
-                                <p className="text-sm text-muted-foreground">1st of each month</p>
-                            </div>
-                            <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
-                                Active
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                            <div>
-                                <p className="font-medium text-foreground">Board Deck Export</p>
-                                <p className="text-sm text-muted-foreground">Not scheduled</p>
-                            </div>
-                            <span className="px-2 py-1 rounded text-xs font-medium bg-muted text-muted-foreground">
-                                Disabled
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Share Modal */}
-            <AnimatePresence>
-                {showShareModal && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-                        onClick={() => setShowShareModal(false)}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl"
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                    <Link2 className="w-5 h-5 text-blue-500" />
-                                    Share Report
-                                </h3>
-                                <button
-                                    onClick={() => setShowShareModal(false)}
-                                    className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                                >
-                                    <X className="w-5 h-5 text-slate-500" />
-                                </button>
-                            </div>
-
-                            <p className="text-slate-600 dark:text-slate-400 mb-4">
-                                Anyone with this link can view your report. The link expires in 7 days.
-                            </p>
-
-                            <div className="flex gap-2 mb-4">
-                                <input
-                                    type="text"
-                                    value={shareUrl || ""}
-                                    readOnly
-                                    className="flex-1 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-sm"
-                                />
-                                <button
-                                    onClick={handleCopyLink}
-                                    className="px-4 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium flex items-center gap-2 transition-colors"
-                                >
-                                    {copied ? (
-                                        <>
-                                            <CheckCircle className="w-4 h-4" />
-                                            Copied!
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy className="w-4 h-4" />
-                                            Copy
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-
-                            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                                <Clock className="w-4 h-4" />
-                                Expires: {shareExpiry ? new Date(shareExpiry).toLocaleDateString() : "7 days"}
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+  return (
+    <div className="min-h-screen bg-background p-6 lg:p-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Reports</h1>
+          <p className="text-muted-foreground mt-1">
+            Generate, export, and share financial reports
+          </p>
         </div>
-    );
+
+        {/* Report Type Selection */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground">Report Type</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            {reportTypes.map((report) => (
+              <motion.button
+                key={report.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSelectedReport(report.id)}
+                className={`p-4 rounded-xl border text-left transition-all ${
+                  selectedReport === report.id
+                    ? 'border-primary bg-primary/10'
+                    : 'border-border bg-card hover:border-primary/50'
+                }`}
+              >
+                <report.icon
+                  className={`h-6 w-6 mb-2 ${
+                    selectedReport === report.id ? 'text-primary' : 'text-muted-foreground'
+                  }`}
+                />
+                <h3 className="font-medium text-foreground">{report.name}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{report.description}</p>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {/* Period Selection */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Time Period
+          </h2>
+          <div className="flex gap-3">
+            {periods.map((period) => (
+              <button
+                key={period.id}
+                onClick={() => setPeriod(period.id)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  selectedPeriod === period.id
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                }`}
+              >
+                {period.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Format Selection */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Export Format
+          </h2>
+          <div className="flex gap-3">
+            {formats.map((format) => (
+              <button
+                key={format.id}
+                onClick={() => setFormat(format.id)}
+                className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-all ${
+                  selectedFormat === format.id
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                }`}
+              >
+                <format.icon className="h-4 w-4" />
+                {format.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Success Message */}
+        {success && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+          >
+            <CheckCircle className="h-5 w-5" />
+            {success}
+          </motion.div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleDownload}
+            disabled={isGenerating}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50"
+          >
+            {isGenerating ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Download className="h-5 w-5" />
+            )}
+            Download Report
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleShareReport}
+            disabled={isSharing}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+          >
+            {isSharing ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Share2 className="h-5 w-5" />
+            )}
+            Share Report
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleEmailReport}
+            disabled={isEmailing}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 disabled:opacity-50"
+          >
+            {isEmailing ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Mail className="h-5 w-5" />
+            )}
+            Email Report
+          </motion.button>
+        </div>
+
+        {/* Scheduled Reports */}
+        <div className="mt-8 p-6 rounded-xl bg-card border border-border">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Scheduled Reports</h2>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+              <div>
+                <p className="font-medium text-foreground">Weekly Digest</p>
+                <p className="text-sm text-muted-foreground">Every Monday at 9:00 AM</p>
+              </div>
+              <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
+                Active
+              </span>
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+              <div>
+                <p className="font-medium text-foreground">Monthly Summary</p>
+                <p className="text-sm text-muted-foreground">1st of each month</p>
+              </div>
+              <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
+                Active
+              </span>
+            </div>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+              <div>
+                <p className="font-medium text-foreground">Board Deck Export</p>
+                <p className="text-sm text-muted-foreground">Not scheduled</p>
+              </div>
+              <span className="px-2 py-1 rounded text-xs font-medium bg-muted text-muted-foreground">
+                Disabled
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Share Modal */}
+      <AnimatePresence>
+        {showShareModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => setShowShareModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Link2 className="w-5 h-5 text-blue-500" />
+                  Share Report
+                </h3>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+
+              <p className="text-slate-600 dark:text-slate-400 mb-4">
+                Anyone with this link can view your report. The link expires in 7 days.
+              </p>
+
+              <div className="flex gap-2 mb-4">
+                <input
+                  type="text"
+                  value={shareUrl || ''}
+                  readOnly
+                  className="flex-1 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-sm"
+                />
+                <button
+                  onClick={handleCopyLink}
+                  className="px-4 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium flex items-center gap-2 transition-colors"
+                >
+                  {copied ? (
+                    <>
+                      <CheckCircle className="w-4 h-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                <Clock className="w-4 h-4" />
+                Expires: {shareExpiry ? new Date(shareExpiry).toLocaleDateString() : '7 days'}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
 }

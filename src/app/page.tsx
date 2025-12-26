@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { ArrowRight, Zap, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import Link from 'next/link'
+import { ArrowRight, Zap, ChevronRight } from 'lucide-react'
+import { motion } from 'framer-motion'
 
-import { BackgroundBeams } from "@/components/ui/background-beams";
-import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
-import { RunwaySimulator } from "@/components/marketing/runway-simulator";
-import { FeatureShowcase } from "@/components/marketing/feature-showcase";
+import { BackgroundBeams } from '@/components/ui/background-beams'
+import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards'
+import { RunwaySimulator } from '@/components/marketing/runway-simulator'
+import { FeatureShowcase } from '@/components/marketing/feature-showcase'
 
 export default function HomePage() {
   return (
@@ -21,20 +21,34 @@ export default function HomePage() {
                 <div className="h-8 w-8 bg-foreground rounded-full flex items-center justify-center group-hover:bg-foreground/90 transition-colors">
                   <div className="h-3 w-3 bg-background rounded-full" />
                 </div>
-                <span className="text-xl font-bold tracking-tight text-foreground">SeedValidator</span>
+                <span className="text-xl font-bold tracking-tight text-foreground">
+                  SeedValidator
+                </span>
               </Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#features"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Features
               </Link>
-              <Link href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#testimonials"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Testimonials
               </Link>
-              <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="/pricing"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Pricing
               </Link>
-              <Link href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="/contact"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Contact
               </Link>
             </div>
@@ -69,7 +83,9 @@ export default function HomePage() {
           >
             <div className="inline-flex items-center space-x-2 border border-white/10 rounded-full px-3 py-1 mb-6 bg-white/5 backdrop-blur-sm animate-fade-in-delayed">
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-medium text-muted-foreground">SOC-2 Compliant Financial Engine</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                SOC-2 Compliant Financial Engine
+              </span>
             </div>
 
             <h1 className="text-5xl sm:text-7xl font-bold tracking-tighter text-foreground mb-6 leading-[1.1]">
@@ -78,7 +94,8 @@ export default function HomePage() {
             </h1>
 
             <p className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
-              Stop manually updating spreadsheets. SeedValidator connects to your bank accounts to create a living, breathing financial model that updates in real-time.
+              Stop manually updating spreadsheets. SeedValidator connects to your bank accounts to
+              create a living, breathing financial model that updates in real-time.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -99,7 +116,10 @@ export default function HomePage() {
             <div className="mt-8 flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-zinc-800" />
+                  <div
+                    key={i}
+                    className="h-8 w-8 rounded-full border-2 border-background bg-zinc-800"
+                  />
                 ))}
               </div>
               <p>Trusted by 500+ founders</p>
@@ -121,14 +141,19 @@ export default function HomePage() {
       </section>
 
       {/* Features Showcase */}
-      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-50/50 dark:bg-zinc-950/50 border-y border-zinc-200 dark:border-white/5">
+      <section
+        id="features"
+        className="py-24 px-4 sm:px-6 lg:px-8 bg-zinc-50/50 dark:bg-zinc-950/50 border-y border-zinc-200 dark:border-white/5"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 md:text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-sm font-medium text-indigo-500 mb-4">
               <Zap className="mr-2 h-3.5 w-3.5" />
               Powerful Features
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-foreground">Why founders love SeedValidator</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-foreground">
+              Why founders love SeedValidator
+            </h2>
             <p className="text-muted-foreground text-lg">
               We&apos;ve combined the speed of a spreadsheet with the power of a financial engine.
             </p>
@@ -142,10 +167,26 @@ export default function HomePage() {
       <section id="testimonials" className="py-24 overflow-hidden bg-background">
         <InfiniteMovingCards
           items={[
-            { quote: "SeedValidator clarified our burn rate instantly. It's concise and brutal.", name: "Alex Chen", title: "Founder, NexaAI" },
-            { quote: "The only financial tool that feels like it was built for engineers.", name: "Sarah Jones", title: "CTO, DevFlow" },
-            { quote: "I stopped using Excel for runway projections. This is just better.", name: "Mark Davis", title: "CEO, GrowthRocket" },
-            { quote: "Clean, fast, and verified. exactly what VCs want to see.", name: "Emily Wilson", title: "Partner, SeedFund" },
+            {
+              quote: "SeedValidator clarified our burn rate instantly. It's concise and brutal.",
+              name: 'Alex Chen',
+              title: 'Founder, NexaAI',
+            },
+            {
+              quote: 'The only financial tool that feels like it was built for engineers.',
+              name: 'Sarah Jones',
+              title: 'CTO, DevFlow',
+            },
+            {
+              quote: 'I stopped using Excel for runway projections. This is just better.',
+              name: 'Mark Davis',
+              title: 'CEO, GrowthRocket',
+            },
+            {
+              quote: 'Clean, fast, and verified. exactly what VCs want to see.',
+              name: 'Emily Wilson',
+              title: 'Partner, SeedFund',
+            },
           ]}
           direction="left"
           speed="slow"
@@ -198,14 +239,18 @@ export default function HomePage() {
           </div>
 
           <div className="flex gap-8 text-sm text-zinc-500">
-            <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-            <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-            <Link href="/login" className="hover:text-white transition-colors">Login</Link>
+            <Link href="/pricing" className="hover:text-white transition-colors">
+              Pricing
+            </Link>
+            <Link href="/contact" className="hover:text-white transition-colors">
+              Contact
+            </Link>
+            <Link href="/login" className="hover:text-white transition-colors">
+              Login
+            </Link>
           </div>
 
-          <p className="text-zinc-600 text-xs">
-            © 2025 SeedValidator Inc.
-          </p>
+          <p className="text-zinc-600 text-xs">© 2025 SeedValidator Inc.</p>
         </div>
       </footer>
     </div>

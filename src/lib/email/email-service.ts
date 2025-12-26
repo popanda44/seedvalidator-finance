@@ -1,24 +1,24 @@
-import { Resend } from 'resend';
+import { Resend } from 'resend'
 
 // Initialize Resend client only if API key is available
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 // Email sender configuration - Use Resend's default domain for testing
 // For production, add a verified domain and set EMAIL_FROM environment variable
-const FROM_EMAIL = process.env.EMAIL_FROM || 'SeedValidator <onboarding@resend.dev>';
+const FROM_EMAIL = process.env.EMAIL_FROM || 'SeedValidator <onboarding@resend.dev>'
 
 export interface EmailOptions {
-  to: string | string[];
-  subject: string;
-  html: string;
-  text?: string;
-  replyTo?: string;
+  to: string | string[]
+  subject: string
+  html: string
+  text?: string
+  replyTo?: string
 }
 
 export async function sendEmail(options: EmailOptions) {
   if (!resend) {
-    console.warn('Email service not configured - RESEND_API_KEY is missing');
-    return { success: false, error: 'Email service not configured' };
+    console.warn('Email service not configured - RESEND_API_KEY is missing')
+    return { success: false, error: 'Email service not configured' }
   }
 
   try {
@@ -29,23 +29,23 @@ export async function sendEmail(options: EmailOptions) {
       html: options.html,
       text: options.text,
       replyTo: options.replyTo,
-    });
+    })
 
     if (error) {
-      console.error('Failed to send email:', error);
-      throw new Error(error.message);
+      console.error('Failed to send email:', error)
+      throw new Error(error.message)
     }
 
-    return { success: true, id: data?.id };
+    return { success: true, id: data?.id }
   } catch (error) {
-    console.error('Email service error:', error);
-    throw error;
+    console.error('Email service error:', error)
+    throw error
   }
 }
 
 // Alert-specific email functions
 export async function sendRunwayAlert(email: string, companyName: string, runway: number) {
-  const subject = `⚠️ Critical: Runway Below ${runway} Months`;
+  const subject = `⚠️ Critical: Runway Below ${runway} Months`
   const html = `
     <!DOCTYPE html>
     <html>
@@ -85,9 +85,9 @@ export async function sendRunwayAlert(email: string, companyName: string, runway
       </div>
     </body>
     </html>
-  `;
+  `
 
-  return sendEmail({ to: email, subject, html });
+  return sendEmail({ to: email, subject, html })
 }
 
 export async function sendSpendingAlert(
@@ -97,7 +97,7 @@ export async function sendSpendingAlert(
   amount: number,
   percentageIncrease: number
 ) {
-  const subject = `📈 Spending Spike: ${category} up ${percentageIncrease.toFixed(0)}%`;
+  const subject = `📈 Spending Spike: ${category} up ${percentageIncrease.toFixed(0)}%`
   const html = `
     <!DOCTYPE html>
     <html>
@@ -132,24 +132,24 @@ export async function sendSpendingAlert(
       </div>
     </body>
     </html>
-  `;
+  `
 
-  return sendEmail({ to: email, subject, html });
+  return sendEmail({ to: email, subject, html })
 }
 
 export async function sendWeeklyDigest(
   email: string,
   companyName: string,
   metrics: {
-    cashBalance: number;
-    burnRate: number;
-    runway: number;
-    mrr: number;
-    mrrChange: number;
-    topExpenses: { category: string; amount: number }[];
+    cashBalance: number
+    burnRate: number
+    runway: number
+    mrr: number
+    mrrChange: number
+    topExpenses: { category: string; amount: number }[]
   }
 ) {
-  const subject = `📊 Weekly Financial Digest - ${companyName}`;
+  const subject = `📊 Weekly Financial Digest - ${companyName}`
   const html = `
     <!DOCTYPE html>
     <html>
@@ -200,7 +200,7 @@ export async function sendWeeklyDigest(
       </div>
     </body>
     </html>
-  `;
+  `
 
-  return sendEmail({ to: email, subject, html });
+  return sendEmail({ to: email, subject, html })
 }

@@ -31,12 +31,12 @@ After logging in, you'll see the **Financial Command Center** with:
 
 The main dashboard provides a real-time overview of your financial health:
 
-| Metric | Description |
-|--------|-------------|
+| Metric       | Description                         |
+| ------------ | ----------------------------------- |
 | Cash Balance | Total across all connected accounts |
-| Monthly Burn | Average monthly spending |
-| Runway | Months until cash runs out |
-| MRR | Monthly Recurring Revenue |
+| Monthly Burn | Average monthly spending            |
+| Runway       | Months until cash runs out          |
+| MRR          | Monthly Recurring Revenue           |
 
 ### 📈 Forecasts
 
@@ -51,7 +51,7 @@ Access AI-powered revenue forecasting:
 
 Track and analyze your spending:
 
-1. Go to **Expenses** 
+1. Go to **Expenses**
 2. View expense breakdown by category
 3. Click categories to expand subcategories
 4. See top vendors and spending trends
@@ -96,12 +96,12 @@ Stay informed about important events:
 
 ### Available Integrations
 
-| Service | Purpose |
-|---------|---------|
-| Plaid | Bank account syncing |
-| HubSpot | CRM pipeline data |
-| Stripe | Payment processing |
-| OpenAI | AI-powered insights |
+| Service | Purpose              |
+| ------- | -------------------- |
+| Plaid   | Bank account syncing |
+| HubSpot | CRM pipeline data    |
+| Stripe  | Payment processing   |
+| OpenAI  | AI-powered insights  |
 
 ---
 

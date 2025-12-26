@@ -1,4 +1,5 @@
 # Value Proposition Canvas
+
 ## Jobs-to-be-Done & Value Mapping
 
 **Version:** 1.0  
@@ -53,11 +54,11 @@
 
 ### 1.2 Jobs-to-be-Done Categories
 
-| Category | Definition | Example |
-|----------|------------|---------|
-| **Functional Jobs** | Practical tasks to complete | "Create a financial forecast" |
-| **Social Jobs** | How they want to be perceived | "Look competent to investors" |
-| **Emotional Jobs** | How they want to feel | "Feel confident about runway" |
+| Category            | Definition                    | Example                       |
+| ------------------- | ----------------------------- | ----------------------------- |
+| **Functional Jobs** | Practical tasks to complete   | "Create a financial forecast" |
+| **Social Jobs**     | How they want to be perceived | "Look competent to investors" |
+| **Emotional Jobs**  | How they want to feel         | "Feel confident about runway" |
 
 ---
 
@@ -71,37 +72,37 @@
 
 #### Jobs to be Done
 
-| Priority | Job Type | Job Statement |
-|----------|----------|---------------|
-| 🔴 | Functional | **Know how long my company can survive** (runway calculation) |
-| 🔴 | Functional | **Communicate financial status to investors** (investor updates) |
-| 🔴 | Functional | **Make hiring decisions with budget clarity** (headcount planning) |
-| 🟠 | Functional | **Prepare for fundraising conversations** (scenario modeling) |
-| 🔴 | Emotional | **Feel confident I won't run out of cash** (financial security) |
-| 🔴 | Social | **Appear financially competent to investors** (credibility) |
-| 🟠 | Emotional | **Reduce anxiety about finances** (peace of mind) |
+| Priority | Job Type   | Job Statement                                                      |
+| -------- | ---------- | ------------------------------------------------------------------ |
+| 🔴       | Functional | **Know how long my company can survive** (runway calculation)      |
+| 🔴       | Functional | **Communicate financial status to investors** (investor updates)   |
+| 🔴       | Functional | **Make hiring decisions with budget clarity** (headcount planning) |
+| 🟠       | Functional | **Prepare for fundraising conversations** (scenario modeling)      |
+| 🔴       | Emotional  | **Feel confident I won't run out of cash** (financial security)    |
+| 🔴       | Social     | **Appear financially competent to investors** (credibility)        |
+| 🟠       | Emotional  | **Reduce anxiety about finances** (peace of mind)                  |
 
 #### Daily Pain Points
 
-| Pain | Severity | Frequency | Current Impact |
-|------|----------|-----------|----------------|
-| **No real-time runway visibility** | Critical | Daily | Constant anxiety, poor decisions |
-| **Spreadsheet chaos** (multiple versions, formula errors) | High | Weekly | Hours lost, embarrassing errors |
-| **Investor update prep takes too long** | High | Monthly | 10+ hours, delayed updates |
-| **Can't answer "what if" questions quickly** | High | Weekly | Gut feelings instead of data |
-| **Don't know if I can afford next hire** | High | Weekly | Delayed hiring, missed opportunities |
-| **Feel like I'm faking financial competence** | Medium | Ongoing | Imposter syndrome |
+| Pain                                                      | Severity | Frequency | Current Impact                       |
+| --------------------------------------------------------- | -------- | --------- | ------------------------------------ |
+| **No real-time runway visibility**                        | Critical | Daily     | Constant anxiety, poor decisions     |
+| **Spreadsheet chaos** (multiple versions, formula errors) | High     | Weekly    | Hours lost, embarrassing errors      |
+| **Investor update prep takes too long**                   | High     | Monthly   | 10+ hours, delayed updates           |
+| **Can't answer "what if" questions quickly**              | High     | Weekly    | Gut feelings instead of data         |
+| **Don't know if I can afford next hire**                  | High     | Weekly    | Delayed hiring, missed opportunities |
+| **Feel like I'm faking financial competence**             | Medium   | Ongoing   | Imposter syndrome                    |
 
 #### Desired Gains
 
-| Gain | Priority | Success Metric |
-|------|----------|----------------|
-| **Extend runway by making better decisions** | Critical | +6 months runway |
-| **Instant answers to financial questions** | High | <1 minute response time |
-| **Professional investor reports effortlessly** | High | 10 min vs. 10 hours |
-| **Confidence in board meetings** | High | Positive feedback |
-| **More time for product and customers** | Medium | 5+ hours/week saved |
-| **Peace of mind about finances** | Medium | Daily anxiety → weekly check-in |
+| Gain                                           | Priority | Success Metric                  |
+| ---------------------------------------------- | -------- | ------------------------------- |
+| **Extend runway by making better decisions**   | Critical | +6 months runway                |
+| **Instant answers to financial questions**     | High     | <1 minute response time         |
+| **Professional investor reports effortlessly** | High     | 10 min vs. 10 hours             |
+| **Confidence in board meetings**               | High     | Positive feedback               |
+| **More time for product and customers**        | Medium   | 5+ hours/week saved             |
+| **Peace of mind about finances**               | Medium   | Daily anxiety → weekly check-in |
 
 ---
 
@@ -109,34 +110,34 @@
 
 #### Products & Features → Jobs
 
-| Job | Feature | How It's Done |
-|-----|---------|---------------|
-| Know runway | **Real-time Runway Dashboard** | Bank sync + expense forecast = live runway |
-| Investor updates | **One-Click Investor Reports** | Auto-generate PDF with key metrics |
-| Hiring decisions | **Headcount Planner** | Model salary, benefits, impact on burn |
-| Fundraising prep | **Scenario Modeling** | Multiple "what if" projections |
+| Job              | Feature                        | How It's Done                              |
+| ---------------- | ------------------------------ | ------------------------------------------ |
+| Know runway      | **Real-time Runway Dashboard** | Bank sync + expense forecast = live runway |
+| Investor updates | **One-Click Investor Reports** | Auto-generate PDF with key metrics         |
+| Hiring decisions | **Headcount Planner**          | Model salary, benefits, impact on burn     |
+| Fundraising prep | **Scenario Modeling**          | Multiple "what if" projections             |
 
 #### Pain Relievers
 
-| Pain | Pain Reliever | Relief Mechanism |
-|------|---------------|------------------|
-| No real-time visibility | **Live bank connection** | Plaid integration, real-time sync |
-| Spreadsheet chaos | **Single source of truth** | Cloud-based, version-controlled |
-| Long update prep | **Automated report generation** | Templates + data = one click |
-| Can't answer questions | **Natural language queries** | "What's runway if we hire 2 engineers?" |
-| Uncertainty on hires | **Instant burn rate recalc** | Automatic headcount → cash impact |
-| Imposter syndrome | **Benchmarks by stage** | See that you're normal for your stage |
+| Pain                    | Pain Reliever                   | Relief Mechanism                        |
+| ----------------------- | ------------------------------- | --------------------------------------- |
+| No real-time visibility | **Live bank connection**        | Plaid integration, real-time sync       |
+| Spreadsheet chaos       | **Single source of truth**      | Cloud-based, version-controlled         |
+| Long update prep        | **Automated report generation** | Templates + data = one click            |
+| Can't answer questions  | **Natural language queries**    | "What's runway if we hire 2 engineers?" |
+| Uncertainty on hires    | **Instant burn rate recalc**    | Automatic headcount → cash impact       |
+| Imposter syndrome       | **Benchmarks by stage**         | See that you're normal for your stage   |
 
 #### Gain Creators
 
-| Gain | Gain Creator | How It Creates Value |
-|------|--------------|---------------------|
-| Extend runway | **AI-powered optimization** | Identifies cost-saving opportunities |
-| Instant answers | **Conversational AI interface** | Natural language, immediate responses |
-| Effortless reports | **Pre-built templates** | Investor-ready formats, auto-populated |
-| Board confidence | **Rich visualizations** | Professional charts and dashboards |
-| Time savings | **End-to-end automation** | No manual data entry or calculations |
-| Peace of mind | **Proactive alerts** | Notify before problems occur |
+| Gain               | Gain Creator                    | How It Creates Value                   |
+| ------------------ | ------------------------------- | -------------------------------------- |
+| Extend runway      | **AI-powered optimization**     | Identifies cost-saving opportunities   |
+| Instant answers    | **Conversational AI interface** | Natural language, immediate responses  |
+| Effortless reports | **Pre-built templates**         | Investor-ready formats, auto-populated |
+| Board confidence   | **Rich visualizations**         | Professional charts and dashboards     |
+| Time savings       | **End-to-end automation**       | No manual data entry or calculations   |
+| Peace of mind      | **Proactive alerts**            | Notify before problems occur           |
 
 ---
 
@@ -156,37 +157,37 @@
 
 #### Jobs to be Done
 
-| Priority | Job Type | Job Statement |
-|----------|----------|---------------|
-| 🔴 | Functional | **Be the strategic partner to the CEO** (trusted advisor role) |
-| 🔴 | Functional | **Close the books quickly and accurately** (financial close) |
-| 🔴 | Functional | **Prepare for board meetings efficiently** (board reporting) |
-| 🔴 | Functional | **Build sophisticated financial models** (planning & forecasting) |
-| 🟠 | Functional | **Enable self-service for department heads** (decentralized planning) |
-| 🔴 | Social | **Be the most prepared person in the boardroom** (credibility) |
-| 🟠 | Emotional | **Trust the numbers I present** (confidence) |
+| Priority | Job Type   | Job Statement                                                         |
+| -------- | ---------- | --------------------------------------------------------------------- |
+| 🔴       | Functional | **Be the strategic partner to the CEO** (trusted advisor role)        |
+| 🔴       | Functional | **Close the books quickly and accurately** (financial close)          |
+| 🔴       | Functional | **Prepare for board meetings efficiently** (board reporting)          |
+| 🔴       | Functional | **Build sophisticated financial models** (planning & forecasting)     |
+| 🟠       | Functional | **Enable self-service for department heads** (decentralized planning) |
+| 🔴       | Social     | **Be the most prepared person in the boardroom** (credibility)        |
+| 🟠       | Emotional  | **Trust the numbers I present** (confidence)                          |
 
 #### Daily Pain Points
 
-| Pain | Severity | Frequency | Current Impact |
-|------|----------|-----------|----------------|
-| **Month-end close takes 10+ days** | Critical | Monthly | Team burnout, stale data |
-| **Board deck prep is a fire drill** | Critical | Quarterly | 20+ hours, high stress |
-| **Too many ad-hoc requests from departments** | High | Daily | Reactive, not strategic |
-| **5+ disconnected financial systems** | High | Daily | Manual reconciliation |
-| **Scenario planning is manual and slow** | High | Monthly | Missed opportunities |
-| **Implementation of new tools takes months** | High | Occasionally | Delayed value |
+| Pain                                          | Severity | Frequency    | Current Impact           |
+| --------------------------------------------- | -------- | ------------ | ------------------------ |
+| **Month-end close takes 10+ days**            | Critical | Monthly      | Team burnout, stale data |
+| **Board deck prep is a fire drill**           | Critical | Quarterly    | 20+ hours, high stress   |
+| **Too many ad-hoc requests from departments** | High     | Daily        | Reactive, not strategic  |
+| **5+ disconnected financial systems**         | High     | Daily        | Manual reconciliation    |
+| **Scenario planning is manual and slow**      | High     | Monthly      | Missed opportunities     |
+| **Implementation of new tools takes months**  | High     | Occasionally | Delayed value            |
 
 #### Desired Gains
 
-| Gain | Priority | Success Metric |
-|------|----------|----------------|
-| **Close books in 3 days** | Critical | 70% time reduction |
-| **Board-ready in hours, not days** | Critical | 5 hours vs. 20+ hours |
-| **Department heads self-serve** | High | <5 ad-hoc requests/week |
-| **Single source of financial truth** | High | One system, no reconciliation |
-| **Multi-scenario planning in minutes** | High | Instant model updates |
-| **New tools productive in weeks** | High | 2-week implementation |
+| Gain                                   | Priority | Success Metric                |
+| -------------------------------------- | -------- | ----------------------------- |
+| **Close books in 3 days**              | Critical | 70% time reduction            |
+| **Board-ready in hours, not days**     | Critical | 5 hours vs. 20+ hours         |
+| **Department heads self-serve**        | High     | <5 ad-hoc requests/week       |
+| **Single source of financial truth**   | High     | One system, no reconciliation |
+| **Multi-scenario planning in minutes** | High     | Instant model updates         |
+| **New tools productive in weeks**      | High     | 2-week implementation         |
 
 ---
 
@@ -194,35 +195,35 @@
 
 #### Products & Features → Jobs
 
-| Job | Feature | How It's Done |
-|-----|---------|---------------|
-| Strategic partner | **AI Insights & Recommendations** | Proactive analysis, strategic prompts |
-| Fast close | **Automated Close Workflow** | Checklist, reconciliations, approvals |
-| Board prep | **One-Click Board Package** | Auto-generate comprehensive deck |
-| Sophisticated modeling | **Driver-Based Models** | Flexible, connected assumptions |
-| Enable departments | **Self-Service Portals** | Role-based access, budget views |
+| Job                    | Feature                           | How It's Done                         |
+| ---------------------- | --------------------------------- | ------------------------------------- |
+| Strategic partner      | **AI Insights & Recommendations** | Proactive analysis, strategic prompts |
+| Fast close             | **Automated Close Workflow**      | Checklist, reconciliations, approvals |
+| Board prep             | **One-Click Board Package**       | Auto-generate comprehensive deck      |
+| Sophisticated modeling | **Driver-Based Models**           | Flexible, connected assumptions       |
+| Enable departments     | **Self-Service Portals**          | Role-based access, budget views       |
 
 #### Pain Relievers
 
-| Pain | Pain Reliever | Relief Mechanism |
-|------|---------------|------------------|
-| 10+ day close | **Close Management Module** | Automated workflow, parallel processing |
-| Board deck fire drill | **Board Package Automation** | Pre-built templates, real-time data |
-| Ad-hoc request overload | **Department Self-Service** | Dashboards by department |
-| System fragmentation | **Unified Data Platform** | ERP, HRIS, CRM integrations |
-| Manual scenario planning | **Scenario Comparison Engine** | Side-by-side, instant updates |
-| Long implementation | **Rapid Implementation** | 2-week guided setup |
+| Pain                     | Pain Reliever                  | Relief Mechanism                        |
+| ------------------------ | ------------------------------ | --------------------------------------- |
+| 10+ day close            | **Close Management Module**    | Automated workflow, parallel processing |
+| Board deck fire drill    | **Board Package Automation**   | Pre-built templates, real-time data     |
+| Ad-hoc request overload  | **Department Self-Service**    | Dashboards by department                |
+| System fragmentation     | **Unified Data Platform**      | ERP, HRIS, CRM integrations             |
+| Manual scenario planning | **Scenario Comparison Engine** | Side-by-side, instant updates           |
+| Long implementation      | **Rapid Implementation**       | 2-week guided setup                     |
 
 #### Gain Creators
 
-| Gain | Gain Creator | How It Creates Value |
-|------|--------------|---------------------|
-| 3-day close | **AI-Assisted Reconciliation** | Automatic matching, exception flagging |
-| Board-ready in hours | **Dynamic Board Templates** | Real-time data, professional design |
-| Self-service success | **Intuitive Department UI** | No training required |
-| Single source of truth | **Real-Time Data Sync** | Always current, no manual updates |
-| Minutes for scenarios | **What-If Engine** | Instant impact analysis |
-| Weeks to productive | **Pre-Built Integrations** | Connect and go |
+| Gain                   | Gain Creator                   | How It Creates Value                   |
+| ---------------------- | ------------------------------ | -------------------------------------- |
+| 3-day close            | **AI-Assisted Reconciliation** | Automatic matching, exception flagging |
+| Board-ready in hours   | **Dynamic Board Templates**    | Real-time data, professional design    |
+| Self-service success   | **Intuitive Department UI**    | No training required                   |
+| Single source of truth | **Real-Time Data Sync**        | Always current, no manual updates      |
+| Minutes for scenarios  | **What-If Engine**             | Instant impact analysis                |
+| Weeks to productive    | **Pre-Built Integrations**     | Connect and go                         |
 
 ---
 
@@ -242,37 +243,37 @@
 
 #### Jobs to be Done
 
-| Priority | Job Type | Job Statement |
-|----------|----------|---------------|
-| 🔴 | Functional | **Complete monthly close efficiently** (operational execution) |
-| 🔴 | Functional | **Eliminate manual data entry** (productivity) |
-| 🔴 | Functional | **Produce accurate reports** (quality) |
-| 🟠 | Functional | **Support department budget requests** (collaboration) |
-| 🟠 | Social | **Be seen as reliable and competent** (reputation) |
-| 🔴 | Emotional | **Avoid embarrassing errors** (confidence) |
-| 🟠 | Emotional | **Feel like I'm doing strategic work** (fulfillment) |
+| Priority | Job Type   | Job Statement                                                  |
+| -------- | ---------- | -------------------------------------------------------------- |
+| 🔴       | Functional | **Complete monthly close efficiently** (operational execution) |
+| 🔴       | Functional | **Eliminate manual data entry** (productivity)                 |
+| 🔴       | Functional | **Produce accurate reports** (quality)                         |
+| 🟠       | Functional | **Support department budget requests** (collaboration)         |
+| 🟠       | Social     | **Be seen as reliable and competent** (reputation)             |
+| 🔴       | Emotional  | **Avoid embarrassing errors** (confidence)                     |
+| 🟠       | Emotional  | **Feel like I'm doing strategic work** (fulfillment)           |
 
 #### Daily Pain Points
 
-| Pain | Severity | Frequency | Current Impact |
-|------|----------|-----------|----------------|
-| **Hours of manual data entry** | Critical | Daily | 4+ hours/day lost |
-| **Formula errors in spreadsheets** | Critical | Weekly | Embarrassing corrections |
-| **Version control chaos** | High | Weekly | Confusion, rework |
-| **Ad-hoc request interruptions** | High | Daily | Can't focus |
-| **Formatting reports takes forever** | Medium | Weekly | Tedious work |
-| **No time for analysis** | Medium | Ongoing | Career stagnation |
+| Pain                                 | Severity | Frequency | Current Impact           |
+| ------------------------------------ | -------- | --------- | ------------------------ |
+| **Hours of manual data entry**       | Critical | Daily     | 4+ hours/day lost        |
+| **Formula errors in spreadsheets**   | Critical | Weekly    | Embarrassing corrections |
+| **Version control chaos**            | High     | Weekly    | Confusion, rework        |
+| **Ad-hoc request interruptions**     | High     | Daily     | Can't focus              |
+| **Formatting reports takes forever** | Medium   | Weekly    | Tedious work             |
+| **No time for analysis**             | Medium   | Ongoing   | Career stagnation        |
 
 #### Desired Gains
 
-| Gain | Priority | Success Metric |
-|------|----------|----------------|
-| **Automated data collection** | Critical | Zero manual entry |
-| **Error-free reporting** | Critical | Zero corrections needed |
-| **Single version of truth** | High | No version confusion |
-| **Time for strategic work** | High | 50% time on analysis |
-| **Professional templates** | Medium | Immediate credibility |
-| **Career advancement** | Medium | Promotion within 2 years |
+| Gain                          | Priority | Success Metric           |
+| ----------------------------- | -------- | ------------------------ |
+| **Automated data collection** | Critical | Zero manual entry        |
+| **Error-free reporting**      | Critical | Zero corrections needed  |
+| **Single version of truth**   | High     | No version confusion     |
+| **Time for strategic work**   | High     | 50% time on analysis     |
+| **Professional templates**    | Medium   | Immediate credibility    |
+| **Career advancement**        | Medium   | Promotion within 2 years |
 
 ---
 
@@ -280,25 +281,25 @@
 
 #### Pain Relievers
 
-| Pain | Pain Reliever | Relief Mechanism |
-|------|---------------|------------------|
-| Manual data entry | **Auto Data Sync** | Pull from accounting, bank, HRIS |
-| Formula errors | **Built-in Validation** | Automatic error detection |
-| Version chaos | **Cloud-Native Platform** | One version, full history |
+| Pain                 | Pain Reliever               | Relief Mechanism                  |
+| -------------------- | --------------------------- | --------------------------------- |
+| Manual data entry    | **Auto Data Sync**          | Pull from accounting, bank, HRIS  |
+| Formula errors       | **Built-in Validation**     | Automatic error detection         |
+| Version chaos        | **Cloud-Native Platform**   | One version, full history         |
 | Ad-hoc interruptions | **Self-Service Dashboards** | Departments access their own data |
-| Report formatting | **Template Library** | Professional, pre-formatted |
-| No analysis time | **Automation** | Reclaim 20+ hours/week |
+| Report formatting    | **Template Library**        | Professional, pre-formatted       |
+| No analysis time     | **Automation**              | Reclaim 20+ hours/week            |
 
 #### Gain Creators
 
-| Gain | Gain Creator | How It Creates Value |
-|------|--------------|---------------------|
-| Automated data | **100+ Integrations** | Connect all data sources |
-| Error-free | **AI Error Detection** | Flags anomalies before publish |
-| Single version | **Real-Time Collaboration** | Everyone sees same data |
-| Strategic time | **Workflow Automation** | Focus on what matters |
-| Professional output | **Curated Templates** | Best practices built in |
-| Career growth | **Analytics Training** | Learn while using |
+| Gain                | Gain Creator                | How It Creates Value           |
+| ------------------- | --------------------------- | ------------------------------ |
+| Automated data      | **100+ Integrations**       | Connect all data sources       |
+| Error-free          | **AI Error Detection**      | Flags anomalies before publish |
+| Single version      | **Real-Time Collaboration** | Everyone sees same data        |
+| Strategic time      | **Workflow Automation**     | Focus on what matters          |
+| Professional output | **Curated Templates**       | Best practices built in        |
+| Career growth       | **Analytics Training**      | Learn while using              |
 
 ---
 
@@ -318,34 +319,34 @@
 
 #### Jobs to be Done
 
-| Priority | Job Type | Job Statement |
-|----------|----------|---------------|
-| 🔴 | Functional | **Monitor portfolio company health** (oversight) |
-| 🔴 | Functional | **Detect problems early** (risk management) |
-| 🟠 | Functional | **Provide useful guidance to founders** (add value) |
-| 🟠 | Functional | **Report to LPs efficiently** (fund management) |
-| 🔴 | Emotional | **Avoid being surprised by bad news** (control) |
-| 🟠 | Social | **Be a helpful, engaged board member** (reputation) |
+| Priority | Job Type   | Job Statement                                       |
+| -------- | ---------- | --------------------------------------------------- |
+| 🔴       | Functional | **Monitor portfolio company health** (oversight)    |
+| 🔴       | Functional | **Detect problems early** (risk management)         |
+| 🟠       | Functional | **Provide useful guidance to founders** (add value) |
+| 🟠       | Functional | **Report to LPs efficiently** (fund management)     |
+| 🔴       | Emotional  | **Avoid being surprised by bad news** (control)     |
+| 🟠       | Social     | **Be a helpful, engaged board member** (reputation) |
 
 #### Daily Pain Points
 
-| Pain | Severity | Frequency | Current Impact |
-|------|----------|-----------|----------------|
-| **Inconsistent reporting formats** | High | Monthly | Hours normalizing data |
-| **Stale data (monthly snapshots only)** | High | Weekly | Decisions on old info |
-| **Surprises in board meetings** | Critical | Occasionally | Reactive firefighting |
-| **Portfolio-wide view is impossible** | High | Monthly | No comparative analysis |
-| **Time-consuming prep for each company** | Medium | Monthly | 2+ hours per company |
+| Pain                                     | Severity | Frequency    | Current Impact          |
+| ---------------------------------------- | -------- | ------------ | ----------------------- |
+| **Inconsistent reporting formats**       | High     | Monthly      | Hours normalizing data  |
+| **Stale data (monthly snapshots only)**  | High     | Weekly       | Decisions on old info   |
+| **Surprises in board meetings**          | Critical | Occasionally | Reactive firefighting   |
+| **Portfolio-wide view is impossible**    | High     | Monthly      | No comparative analysis |
+| **Time-consuming prep for each company** | Medium   | Monthly      | 2+ hours per company    |
 
 #### Desired Gains
 
-| Gain | Priority | Success Metric |
-|------|----------|----------------|
-| **Real-time portfolio visibility** | Critical | Live dashboards |
-| **Early warning on problems** | Critical | Alerts before crises |
-| **Standardized metrics** | High | Apples-to-apples comparison |
-| **Minimal prep time** | Medium | 15 min per company |
-| **Benchmarking capability** | Medium | Compare to peers |
+| Gain                               | Priority | Success Metric              |
+| ---------------------------------- | -------- | --------------------------- |
+| **Real-time portfolio visibility** | Critical | Live dashboards             |
+| **Early warning on problems**      | Critical | Alerts before crises        |
+| **Standardized metrics**           | High     | Apples-to-apples comparison |
+| **Minimal prep time**              | Medium   | 15 min per company          |
+| **Benchmarking capability**        | Medium   | Compare to peers            |
 
 ---
 
@@ -353,23 +354,23 @@
 
 #### Pain Relievers
 
-| Pain | Pain Reliever | Relief Mechanism |
-|------|---------------|------------------|
-| Inconsistent formats | **Standardized Dashboard** | Same format, all companies |
-| Stale data | **Real-Time Sync** | Live bank and metrics data |
-| Board surprises | **Proactive Alerts** | Email/SMS when thresholds hit |
-| No portfolio view | **Portfolio Dashboard** | All companies, one screen |
-| Time-consuming prep | **Auto-Generated Summaries** | AI-created company briefs |
+| Pain                 | Pain Reliever                | Relief Mechanism              |
+| -------------------- | ---------------------------- | ----------------------------- |
+| Inconsistent formats | **Standardized Dashboard**   | Same format, all companies    |
+| Stale data           | **Real-Time Sync**           | Live bank and metrics data    |
+| Board surprises      | **Proactive Alerts**         | Email/SMS when thresholds hit |
+| No portfolio view    | **Portfolio Dashboard**      | All companies, one screen     |
+| Time-consuming prep  | **Auto-Generated Summaries** | AI-created company briefs     |
 
 #### Gain Creators
 
-| Gain | Gain Creator | How It Creates Value |
-|------|--------------|---------------------|
-| Real-time visibility | **Investor Portal** | Role-based access to live data |
-| Early warning | **Intelligent Alerts** | ML-powered anomaly detection |
-| Standardized metrics | **Investor Metrics Pack** | Required fields for all portcos |
-| Minimal prep | **Executive Summary Generator** | One-click company overview |
-| Benchmarking | **Stage-Based Comparisons** | Portfolio vs. industry norms |
+| Gain                 | Gain Creator                    | How It Creates Value            |
+| -------------------- | ------------------------------- | ------------------------------- |
+| Real-time visibility | **Investor Portal**             | Role-based access to live data  |
+| Early warning        | **Intelligent Alerts**          | ML-powered anomaly detection    |
+| Standardized metrics | **Investor Metrics Pack**       | Required fields for all portcos |
+| Minimal prep         | **Executive Summary Generator** | One-click company overview      |
+| Benchmarking         | **Stage-Based Comparisons**     | Portfolio vs. industry norms    |
 
 ---
 
@@ -389,34 +390,34 @@
 
 #### Jobs to be Done
 
-| Priority | Job Type | Job Statement |
-|----------|----------|---------------|
-| 🔴 | Functional | **Understand my budget status** (visibility) |
-| 🔴 | Functional | **Plan and get approval for hires** (headcount) |
-| 🟠 | Functional | **Track spending against plan** (control) |
-| 🟠 | Functional | **Minimize interaction with finance team** (self-service) |
-| 🔴 | Emotional | **Avoid budget surprises** (predictability) |
-| 🟠 | Social | **Be seen as financially responsible** (trust) |
+| Priority | Job Type   | Job Statement                                             |
+| -------- | ---------- | --------------------------------------------------------- |
+| 🔴       | Functional | **Understand my budget status** (visibility)              |
+| 🔴       | Functional | **Plan and get approval for hires** (headcount)           |
+| 🟠       | Functional | **Track spending against plan** (control)                 |
+| 🟠       | Functional | **Minimize interaction with finance team** (self-service) |
+| 🔴       | Emotional  | **Avoid budget surprises** (predictability)               |
+| 🟠       | Social     | **Be seen as financially responsible** (trust)            |
 
 #### Daily Pain Points
 
-| Pain | Severity | Frequency | Current Impact |
-|------|----------|-----------|----------------|
-| **No visibility into budget** | High | Weekly | Ask finance, wait days |
-| **Hiring approval takes too long** | High | Monthly | Miss candidates |
-| **Don't understand finance language** | Medium | Weekly | Confusion |
-| **Finance is a bottleneck** | Medium | Weekly | Delays and frustration |
-| **Budget surprises at end of quarter** | High | Quarterly | Credibility damage |
+| Pain                                   | Severity | Frequency | Current Impact         |
+| -------------------------------------- | -------- | --------- | ---------------------- |
+| **No visibility into budget**          | High     | Weekly    | Ask finance, wait days |
+| **Hiring approval takes too long**     | High     | Monthly   | Miss candidates        |
+| **Don't understand finance language**  | Medium   | Weekly    | Confusion              |
+| **Finance is a bottleneck**            | Medium   | Weekly    | Delays and frustration |
+| **Budget surprises at end of quarter** | High     | Quarterly | Credibility damage     |
 
 #### Desired Gains
 
-| Gain | Priority | Success Metric |
-|------|----------|----------------|
-| **Self-service budget access** | Critical | Check anytime |
-| **Fast hiring approvals** | Critical | <3 days |
-| **Simple, non-financial interface** | High | No training needed |
-| **Real-time spending visibility** | High | Daily updates |
-| **Predictable budget outcomes** | High | No surprises |
+| Gain                                | Priority | Success Metric     |
+| ----------------------------------- | -------- | ------------------ |
+| **Self-service budget access**      | Critical | Check anytime      |
+| **Fast hiring approvals**           | Critical | <3 days            |
+| **Simple, non-financial interface** | High     | No training needed |
+| **Real-time spending visibility**   | High     | Daily updates      |
+| **Predictable budget outcomes**     | High     | No surprises       |
 
 ---
 
@@ -424,23 +425,23 @@
 
 #### Pain Relievers
 
-| Pain | Pain Reliever | Relief Mechanism |
-|------|---------------|------------------|
-| No visibility | **Department Budget Dashboard** | Real-time, always accessible |
-| Slow approvals | **Digital Request Workflow** | Submit → route → approve |
-| Finance language | **Plain English Interface** | No jargon, simple terms |
-| Finance bottleneck | **Self-Service Portal** | Most answers available directly |
-| Budget surprises | **Spending Alerts** | Notify at thresholds |
+| Pain               | Pain Reliever                   | Relief Mechanism                |
+| ------------------ | ------------------------------- | ------------------------------- |
+| No visibility      | **Department Budget Dashboard** | Real-time, always accessible    |
+| Slow approvals     | **Digital Request Workflow**    | Submit → route → approve        |
+| Finance language   | **Plain English Interface**     | No jargon, simple terms         |
+| Finance bottleneck | **Self-Service Portal**         | Most answers available directly |
+| Budget surprises   | **Spending Alerts**             | Notify at thresholds            |
 
 #### Gain Creators
 
-| Gain | Gain Creator | How It Creates Value |
-|------|--------------|---------------------|
-| Self-service | **Mobile-Friendly Dashboard** | Check from anywhere |
-| Fast approvals | **Automated Routing** | Right approver, instantly |
-| Simple interface | **Manager-Focused UX** | Designed for non-finance |
-| Real-time visibility | **Live Expense Tracking** | Daily refresh from accounting |
-| Predictable outcomes | **Projection View** | See where you'll end up |
+| Gain                 | Gain Creator                  | How It Creates Value          |
+| -------------------- | ----------------------------- | ----------------------------- |
+| Self-service         | **Mobile-Friendly Dashboard** | Check from anywhere           |
+| Fast approvals       | **Automated Routing**         | Right approver, instantly     |
+| Simple interface     | **Manager-Focused UX**        | Designed for non-finance      |
+| Real-time visibility | **Live Expense Tracking**     | Daily refresh from accounting |
+| Predictable outcomes | **Projection View**           | See where you'll end up       |
 
 ---
 
@@ -480,24 +481,24 @@
 
 ### 7.2 Value by Persona Summary
 
-| Persona | Primary Value | Key Metric | Headline |
-|---------|---------------|------------|----------|
-| **Startup CEO** | Runway visibility | +6 months runway | "Know if you'll make it" |
-| **CFO** | Operational efficiency | 50% faster close | "Enterprise power, startup speed" |
-| **Finance Manager** | Automation | 20 hrs/week saved | "Stop being a spreadsheet mechanic" |
-| **Board Member** | Portfolio oversight | Real-time visibility | "No more surprises" |
-| **Department Head** | Self-service access | Instant answers | "Budget clarity without finance" |
+| Persona             | Primary Value          | Key Metric           | Headline                            |
+| ------------------- | ---------------------- | -------------------- | ----------------------------------- |
+| **Startup CEO**     | Runway visibility      | +6 months runway     | "Know if you'll make it"            |
+| **CFO**             | Operational efficiency | 50% faster close     | "Enterprise power, startup speed"   |
+| **Finance Manager** | Automation             | 20 hrs/week saved    | "Stop being a spreadsheet mechanic" |
+| **Board Member**    | Portfolio oversight    | Real-time visibility | "No more surprises"                 |
+| **Department Head** | Self-service access    | Instant answers      | "Budget clarity without finance"    |
 
 ### 7.3 Competitive Differentiation
 
-| Dimension | Traditional FP&A | SeedValidator |
-|-----------|------------------|---------------|
-| **Time to Value** | 2-8 months | 5 minutes |
-| **Annual Cost** | $60,000-$250,000 | $1,200-$7,200 |
-| **AI Capability** | Bolt-on, basic | Native, conversational |
-| **Target User** | Finance experts | Everyone |
-| **Implementation** | Complex, paid | Self-service, free |
-| **Contract Terms** | Multi-year | Month-to-month |
+| Dimension          | Traditional FP&A | SeedValidator          |
+| ------------------ | ---------------- | ---------------------- |
+| **Time to Value**  | 2-8 months       | 5 minutes              |
+| **Annual Cost**    | $60,000-$250,000 | $1,200-$7,200          |
+| **AI Capability**  | Bolt-on, basic   | Native, conversational |
+| **Target User**    | Finance experts  | Everyone               |
+| **Implementation** | Complex, paid    | Self-service, free     |
+| **Contract Terms** | Multi-year       | Month-to-month         |
 
 ### 7.4 The Unfair Advantage
 
@@ -505,4 +506,4 @@
 
 ---
 
-*Document maintained by Product Team. Last updated: December 17, 2024*
+_Document maintained by Product Team. Last updated: December 17, 2024_

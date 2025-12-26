@@ -19,6 +19,7 @@ Get dashboard summary with key metrics, transactions, and alerts.
 | `companyId` | string | Optional - Company ID for real data |
 
 **Response:**
+
 ```json
 {
   "metrics": {
@@ -53,6 +54,7 @@ Generate report data for specified type and period.
 | `period` | string | `month`, `quarter`, `year` |
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -71,6 +73,7 @@ Generate report data for specified type and period.
 Create shareable report link.
 
 **Body:**
+
 ```json
 {
   "reportData": {...},
@@ -79,6 +82,7 @@ Create shareable report link.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -120,6 +124,7 @@ Export financial data in multiple formats.
 Get expense breakdown by category.
 
 **Response:**
+
 ```json
 {
   "categories": [
@@ -149,6 +154,7 @@ Get AI-powered financial forecasts.
 | `confidence` | number | Confidence level (0.90, 0.95) |
 
 **Response:**
+
 ```json
 {
   "forecast": {
@@ -190,12 +196,12 @@ Get HubSpot integration status and pipeline data.
 
 ### Plaid Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/plaid/create-link-token` | POST | Create Plaid Link token |
-| `/api/plaid/exchange-token` | POST | Exchange public token |
-| `/api/plaid/sync` | POST | Sync transactions |
-| `/api/plaid/webhook` | POST | Handle webhooks |
+| Endpoint                       | Method | Description             |
+| ------------------------------ | ------ | ----------------------- |
+| `/api/plaid/create-link-token` | POST   | Create Plaid Link token |
+| `/api/plaid/exchange-token`    | POST   | Exchange public token   |
+| `/api/plaid/sync`              | POST   | Sync transactions       |
+| `/api/plaid/webhook`           | POST   | Handle webhooks         |
 
 ---
 
@@ -206,6 +212,7 @@ Get HubSpot integration status and pipeline data.
 Get AI-powered financial insights.
 
 **Response:**
+
 ```json
 {
   "insights": [
@@ -223,7 +230,7 @@ Get AI-powered financial insights.
 
 ## Authentication
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/auth/[...nextauth]` | * | NextAuth.js handlers |
-| `/api/auth/register` | POST | User registration |
+| Endpoint                  | Method | Description          |
+| ------------------------- | ------ | -------------------- |
+| `/api/auth/[...nextauth]` | \*     | NextAuth.js handlers |
+| `/api/auth/register`      | POST   | User registration    |

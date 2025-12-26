@@ -1,11 +1,11 @@
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs'
 
 Sentry.init({
-    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-    tracesSampleRate: 1.0,
+  tracesSampleRate: 1.0,
 
-    debug: false,
+  debug: false,
 
-    enabled: process.env.NODE_ENV === 'production',
-});
+  enabled: process.env.NODE_ENV === 'production',
+})

@@ -1,4 +1,5 @@
 # MVP Technical Specification
+
 ## SeedValidator Finance - Phase 1 (Months 1-3)
 
 **Version:** 1.0  
@@ -11,16 +12,16 @@
 
 ### 1.1 RICE Prioritization Summary
 
-| Feature | Reach | Impact | Confidence | Effort | RICE Score | Priority |
-|---------|-------|--------|------------|--------|------------|----------|
-| Real-Time Cash Dashboard | 10 | 3 | 90% | 2 | 13.5 | 🔴 P0 |
-| Runway Calculator + Alerts | 10 | 3 | 95% | 1 | 28.5 | 🔴 P0 |
-| Bank Integration (Plaid) | 10 | 3 | 85% | 3 | 8.5 | 🔴 P0 |
-| Expense Tracking | 9 | 2 | 90% | 2 | 8.1 | 🔴 P0 |
-| Revenue Forecasting | 8 | 2 | 80% | 3 | 4.3 | 🟡 P1 |
-| Alert System | 9 | 2 | 90% | 2 | 8.1 | 🟡 P1 |
-| Executive Dashboard | 10 | 2 | 90% | 2 | 9.0 | 🔴 P0 |
-| PDF Export | 7 | 1 | 95% | 1 | 6.7 | 🟢 P2 |
+| Feature                    | Reach | Impact | Confidence | Effort | RICE Score | Priority |
+| -------------------------- | ----- | ------ | ---------- | ------ | ---------- | -------- |
+| Real-Time Cash Dashboard   | 10    | 3      | 90%        | 2      | 13.5       | 🔴 P0    |
+| Runway Calculator + Alerts | 10    | 3      | 95%        | 1      | 28.5       | 🔴 P0    |
+| Bank Integration (Plaid)   | 10    | 3      | 85%        | 3      | 8.5        | 🔴 P0    |
+| Expense Tracking           | 9     | 2      | 90%        | 2      | 8.1        | 🔴 P0    |
+| Revenue Forecasting        | 8     | 2      | 80%        | 3      | 4.3        | 🟡 P1    |
+| Alert System               | 9     | 2      | 90%        | 2      | 8.1        | 🟡 P1    |
+| Executive Dashboard        | 10    | 2      | 90%        | 2      | 9.0        | 🔴 P0    |
+| PDF Export                 | 7     | 1      | 95%        | 1      | 6.7        | 🟢 P2    |
 
 ---
 
@@ -31,6 +32,7 @@
 **User Story:** As a startup CEO, I want to see my cash position at a glance so I know exactly where we stand financially.
 
 #### Components:
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    CASH FLOW DASHBOARD                          │
@@ -65,12 +67,13 @@
 ```
 
 #### Technical Requirements:
-| Requirement | Implementation |
-|-------------|----------------|
-| Bank Sync | Plaid API integration |
-| Update Frequency | Daily automated sync |
-| Data Retention | 24 months history |
-| Categorization | Auto + manual override |
+
+| Requirement      | Implementation         |
+| ---------------- | ---------------------- |
+| Bank Sync        | Plaid API integration  |
+| Update Frequency | Daily automated sync   |
+| Data Retention   | 24 months history      |
+| Categorization   | Auto + manual override |
 
 ---
 
@@ -79,6 +82,7 @@
 **User Story:** As a founder, I want to know exactly when we'll run out of cash so I can plan fundraising.
 
 #### Calculation Logic:
+
 ```typescript
 // Runway Calculation
 runway_months = current_cash / average_burn_rate
@@ -91,12 +95,13 @@ average_burn_rate = sum(last_6_months_expenses) / 6
 ```
 
 #### Alert Thresholds:
-| Runway | Alert Level | Action |
-|--------|-------------|--------|
-| < 6 months | 🔴 Critical | Email + SMS + Dashboard banner |
-| < 9 months | 🟠 Warning | Email + Dashboard badge |
-| < 12 months | 🟡 Caution | Dashboard badge |
-| ≥ 12 months | 🟢 Healthy | No alert |
+
+| Runway      | Alert Level | Action                         |
+| ----------- | ----------- | ------------------------------ |
+| < 6 months  | 🔴 Critical | Email + SMS + Dashboard banner |
+| < 9 months  | 🟠 Warning  | Email + Dashboard badge        |
+| < 12 months | 🟡 Caution  | Dashboard badge                |
+| ≥ 12 months | 🟢 Healthy  | No alert                       |
 
 ---
 
@@ -105,6 +110,7 @@ average_burn_rate = sum(last_6_months_expenses) / 6
 **User Story:** As a Finance Manager, I want expenses auto-categorized so I know where money is going.
 
 #### Category Taxonomy:
+
 ```
 ├── 💼 Payroll & Benefits
 │   ├── Salaries
@@ -141,17 +147,19 @@ average_burn_rate = sum(last_6_months_expenses) / 6
 **User Story:** As a CEO, I want to project revenue so I can plan growth.
 
 #### Forecasting Methods (MVP):
+
 1. **Linear Projection** - Based on historical growth rate
 2. **Manual Override** - User-defined targets
 3. **Seasonal Adjustment** - Optional modifier
 
 #### Metrics Calculated:
-| Metric | Formula |
-|--------|---------|
-| MRR | Sum of monthly recurring revenue |
-| ARR | MRR × 12 |
-| Growth Rate | (Current MRR - Previous MRR) / Previous MRR |
-| Projected Revenue | Linear extrapolation |
+
+| Metric            | Formula                                     |
+| ----------------- | ------------------------------------------- |
+| MRR               | Sum of monthly recurring revenue            |
+| ARR               | MRR × 12                                    |
+| Growth Rate       | (Current MRR - Previous MRR) / Previous MRR |
+| Projected Revenue | Linear extrapolation                        |
 
 ---
 
@@ -160,13 +168,14 @@ average_burn_rate = sum(last_6_months_expenses) / 6
 **User Story:** As a CEO, I want proactive alerts so I never get surprised by financial issues.
 
 #### Alert Types:
-| Alert Type | Trigger | Channel |
-|------------|---------|---------|
-| Runway Critical | < 6 months | Email, SMS, In-App |
-| Spending Spike | > 50% MoM increase in category | Email, In-App |
-| Large Transaction | > $10K single transaction | In-App |
-| Payment Due | Bill due in 7 days | Email |
-| Weekly Digest | Every Monday 8am | Email |
+
+| Alert Type        | Trigger                        | Channel            |
+| ----------------- | ------------------------------ | ------------------ |
+| Runway Critical   | < 6 months                     | Email, SMS, In-App |
+| Spending Spike    | > 50% MoM increase in category | Email, In-App      |
+| Large Transaction | > $10K single transaction      | In-App             |
+| Payment Due       | Bill due in 7 days             | Email              |
+| Weekly Digest     | Every Monday 8am               | Email              |
 
 ---
 
@@ -175,6 +184,7 @@ average_burn_rate = sum(last_6_months_expenses) / 6
 **User Story:** As a CEO, I want all key metrics on one screen so I can quickly assess company health.
 
 #### 6 Key Metrics:
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                   EXECUTIVE DASHBOARD                            │
@@ -207,20 +217,20 @@ average_burn_rate = sum(last_6_months_expenses) / 6
 
 ### 3.1 Tech Stack
 
-| Layer | Technology | Rationale |
-|-------|------------|-----------|
+| Layer         | Technology              | Rationale                     |
+| ------------- | ----------------------- | ----------------------------- |
 | **Framework** | Next.js 14 (App Router) | SSR, API routes, modern React |
-| **Language** | TypeScript | Type safety, better DX |
-| **Styling** | Tailwind CSS | Rapid UI development |
-| **Database** | PostgreSQL (Neon) | Reliable, scalable |
-| **ORM** | Prisma | Type-safe database access |
-| **Auth** | NextAuth.js | OAuth, credentials |
-| **Bank Data** | Plaid API | Industry standard |
-| **Charts** | Recharts | React-native charting |
-| **State** | React Query (TanStack) | Server state management |
-| **Forms** | React Hook Form + Zod | Validation |
-| **Email** | Resend | Transactional emails |
-| **Hosting** | Vercel | Optimal for Next.js |
+| **Language**  | TypeScript              | Type safety, better DX        |
+| **Styling**   | Tailwind CSS            | Rapid UI development          |
+| **Database**  | PostgreSQL (Neon)       | Reliable, scalable            |
+| **ORM**       | Prisma                  | Type-safe database access     |
+| **Auth**      | NextAuth.js             | OAuth, credentials            |
+| **Bank Data** | Plaid API               | Industry standard             |
+| **Charts**    | Recharts                | React-native charting         |
+| **State**     | React Query (TanStack)  | Server state management       |
+| **Forms**     | React Hook Form + Zod   | Validation                    |
+| **Email**     | Resend                  | Transactional emails          |
+| **Hosting**   | Vercel                  | Optimal for Next.js           |
 
 ### 3.2 Database Schema (Core)
 
@@ -307,7 +317,7 @@ model FinancialSnapshot {
   mrr             Float?
   arr             Float?
   createdAt       DateTime        @default(now())
-  
+
   @@unique([companyId, date])
 }
 
@@ -356,21 +366,21 @@ enum AlertSeverity {
 
 ### 3.3 API Routes
 
-| Route | Method | Description |
-|-------|--------|-------------|
-| `/api/auth/*` | - | NextAuth routes |
-| `/api/plaid/link-token` | POST | Get Plaid link token |
-| `/api/plaid/exchange-token` | POST | Exchange public token |
-| `/api/plaid/webhook` | POST | Plaid webhook handler |
-| `/api/accounts` | GET | List bank accounts |
-| `/api/accounts/[id]/sync` | POST | Trigger account sync |
-| `/api/transactions` | GET | List transactions |
-| `/api/transactions/[id]` | PATCH | Update category |
-| `/api/dashboard` | GET | Dashboard metrics |
-| `/api/forecasts` | GET, POST | Revenue forecasts |
-| `/api/alerts` | GET | List alerts |
-| `/api/alerts/[id]/dismiss` | POST | Dismiss alert |
-| `/api/reports/pdf` | GET | Generate PDF report |
+| Route                       | Method    | Description           |
+| --------------------------- | --------- | --------------------- |
+| `/api/auth/*`               | -         | NextAuth routes       |
+| `/api/plaid/link-token`     | POST      | Get Plaid link token  |
+| `/api/plaid/exchange-token` | POST      | Exchange public token |
+| `/api/plaid/webhook`        | POST      | Plaid webhook handler |
+| `/api/accounts`             | GET       | List bank accounts    |
+| `/api/accounts/[id]/sync`   | POST      | Trigger account sync  |
+| `/api/transactions`         | GET       | List transactions     |
+| `/api/transactions/[id]`    | PATCH     | Update category       |
+| `/api/dashboard`            | GET       | Dashboard metrics     |
+| `/api/forecasts`            | GET, POST | Revenue forecasts     |
+| `/api/alerts`               | GET       | List alerts           |
+| `/api/alerts/[id]/dismiss`  | POST      | Dismiss alert         |
+| `/api/reports/pdf`          | GET       | Generate PDF report   |
 
 ### 3.4 Folder Structure
 
@@ -431,29 +441,29 @@ seedvalidator-finance/
 
 ## 4. MVP Success Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Beta Users | 100 | User signups |
-| Weekly Active Rate | 60% | WAU/MAU |
-| NPS Score | 8/10 | User survey |
-| MRR (Month 6) | $50K | Revenue |
-| Time to First Value | < 5 min | Onboarding time |
-| Core Feature Adoption | 80% | % using runway calc |
+| Metric                | Target  | Measurement         |
+| --------------------- | ------- | ------------------- |
+| Beta Users            | 100     | User signups        |
+| Weekly Active Rate    | 60%     | WAU/MAU             |
+| NPS Score             | 8/10    | User survey         |
+| MRR (Month 6)         | $50K    | Revenue             |
+| Time to First Value   | < 5 min | Onboarding time     |
+| Core Feature Adoption | 80%     | % using runway calc |
 
 ---
 
 ## 5. Deferred Features (Post-MVP)
 
-| Feature | Reason for Deferral | Target Phase |
-|---------|---------------------|--------------|
-| AI Scenario Planning | Complex ML infrastructure | Phase 2 |
-| Vendor Cost Optimization | Requires benchmark data | Phase 2 |
-| Customer Profitability | Needs CRM deep integration | Phase 3 |
-| Fundraising Intelligence | Advanced feature | Phase 3 |
-| Advanced ML Forecasting | Requires historical data | Phase 2 |
-| Multi-Currency | International complexity | Phase 3 |
-| Public API | Stability needed first | Phase 2 |
+| Feature                  | Reason for Deferral        | Target Phase |
+| ------------------------ | -------------------------- | ------------ |
+| AI Scenario Planning     | Complex ML infrastructure  | Phase 2      |
+| Vendor Cost Optimization | Requires benchmark data    | Phase 2      |
+| Customer Profitability   | Needs CRM deep integration | Phase 3      |
+| Fundraising Intelligence | Advanced feature           | Phase 3      |
+| Advanced ML Forecasting  | Requires historical data   | Phase 2      |
+| Multi-Currency           | International complexity   | Phase 3      |
+| Public API               | Stability needed first     | Phase 2      |
 
 ---
 
-*Document maintained by Engineering Team. Last updated: December 17, 2024*
+_Document maintained by Engineering Team. Last updated: December 17, 2024_

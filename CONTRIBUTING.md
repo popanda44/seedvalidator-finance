@@ -7,15 +7,17 @@ Thank you for contributing! Please follow these guidelines.
 ## 🌿 Git Workflow
 
 ### Branch Structure
-| Branch | Purpose |
-|--------|---------|
-| `main` | Production code (protected) |
-| `develop` | Integration branch |
-| `feature/*` | New features |
-| `bugfix/*` | Bug fixes |
-| `hotfix/*` | Critical patches |
+
+| Branch      | Purpose                     |
+| ----------- | --------------------------- |
+| `main`      | Production code (protected) |
+| `develop`   | Integration branch          |
+| `feature/*` | New features                |
+| `bugfix/*`  | Bug fixes                   |
+| `hotfix/*`  | Critical patches            |
 
 ### Branch Naming
+
 ```
 feature/PLT-123-add-burn-rate-calculation
 bugfix/PLT-456-fix-date-timezone-issue
@@ -26,16 +28,17 @@ hotfix/PLT-789-critical-security-patch
 
 ## 📝 Commit Messages (Conventional Commits)
 
-| Prefix | Use Case |
-|--------|----------|
-| `feat:` | New feature |
-| `fix:` | Bug fix |
-| `docs:` | Documentation |
+| Prefix      | Use Case         |
+| ----------- | ---------------- |
+| `feat:`     | New feature      |
+| `fix:`      | Bug fix          |
+| `docs:`     | Documentation    |
 | `refactor:` | Code refactoring |
-| `test:` | Adding tests |
-| `chore:` | Maintenance |
+| `test:`     | Adding tests     |
+| `chore:`    | Maintenance      |
 
 **Examples:**
+
 ```
 feat: add revenue forecasting API endpoint
 fix: resolve duplicate transaction bug
@@ -69,11 +72,13 @@ docs: update API documentation
 ## 🧪 Testing
 
 ### Testing Pyramid
+
 - 70% Unit Tests (functions, components)
 - 20% Integration Tests (API endpoints)
 - 10% E2E Tests (critical user flows)
 
 ### Commands
+
 ```bash
 npm run test          # Run unit tests
 npm run test:e2e      # Run E2E tests
