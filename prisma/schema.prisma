@@ -585,3 +585,62 @@ enum IntegrationStatus {
   ERROR
   DISCONNECTED
 }
+
+// ==========================================
+// Security & Compliance Models
+// ==========================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  eventType   String   // e.g., AUTH_LOGIN_SUCCESS, DATA_EXPORT
+  severity    String   // LOW, MEDIUM, HIGH, CRITICAL
+  userId      String?
+  companyId   String?
+  ipAddress   String?
+  userAgent   String?
+  resource    String?  // e.g., 'user', 'transaction', 'report'
+  resourceId  String?
+  action      String?  // e.g., 'read', 'create', 'update', 'delete'
+  details     Json?    // Additional context
+  metadata    Json?    // Extra metadata
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([eventType])
+  @@index([severity])
+  @@index([createdAt])
+}
+
+model WebhookLog {
+  id          String   @id @default(cuid())
+  companyId   String
+  provider    String   // PLAID, STRIPE, SALESFORCE
+  eventType   String
+  payload     Json
+  status      String   // SUCCESS, FAILED
+  error       String?
+  processedAt DateTime @default(now())
+
+  @@index([companyId])
+  @@index([provider])
+  @@index([processedAt])
+}
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  name        String
+  keyHash     String    @unique  // SHA-256 hash of API key
+  keyPrefix   String    // First 8 chars for identification
+  userId      String
+  companyId   String
+  permissions String[]  // ['read:transactions', 'write:reports']
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([keyHash])
+}
