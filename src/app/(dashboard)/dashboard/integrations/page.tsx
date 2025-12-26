@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import useSWR from "swr";
 import {
@@ -9,7 +9,6 @@ import {
     Check,
     X,
     Loader2,
-    RefreshCw,
     Building2,
     CreditCard,
     BarChart3,
@@ -49,6 +48,15 @@ const integrations: Integration[] = [
         status: "disconnected",
         category: "CRM",
         configKey: "HUBSPOT_CLIENT_ID",
+    },
+    {
+        id: "salesforce",
+        name: "Salesforce",
+        description: "Sync contacts and pipeline data",
+        icon: Building2,
+        status: "disconnected",
+        category: "CRM",
+        configKey: "SALESFORCE_CLIENT_ID",
     },
     {
         id: "stripe",
@@ -94,6 +102,7 @@ export default function IntegrationsPage() {
     // Fetch notification/integration status
     const { data: notificationStatus } = useSWR("/api/notifications", fetcher);
     const { data: hubspotData, mutate: mutateHubspot } = useSWR("/api/integrations/hubspot", fetcher);
+    const { data: salesforceData, mutate: mutateSalesforce } = useSWR("/api/integrations/salesforce", fetcher);
     const { data: aiData } = useSWR("/api/ai/insights", fetcher);
 
     // Determine status based on API responses
@@ -101,6 +110,7 @@ export default function IntegrationsPage() {
         if (id === "resend" && notificationStatus?.email?.configured) return "connected";
         if (id === "slack" && notificationStatus?.slack?.configured) return "connected";
         if (id === "hubspot" && hubspotData?.connected) return "connected";
+        if (id === "salesforce" && salesforceData?.connected) return "connected";
         if (id === "openai" && aiData && !aiData.isDemo) return "connected";
         return "disconnected";
     };
@@ -119,6 +129,8 @@ export default function IntegrationsPage() {
                 } else if (data.error) {
                     alert(`HubSpot not configured: ${data.message}`);
                 }
+            } else if (integration.id === "salesforce") {
+                window.location.href = `/api/integrations/salesforce/auth`;
             } else if (integration.id === "plaid") {
                 // Plaid is handled via PlaidLink component
                 alert("Use the 'Connect Bank' button in settings to link a bank account");
@@ -151,6 +163,13 @@ export default function IntegrationsPage() {
                     body: JSON.stringify({ action: "disconnect" }),
                 });
                 mutateHubspot();
+            } else if (integration.id === "salesforce") {
+                await fetch("/api/integrations/salesforce", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "disconnect" }),
+                });
+                mutateSalesforce();
             }
         } catch (error) {
             console.error("Disconnect error:", error);
