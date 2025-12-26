@@ -16,7 +16,7 @@ export const SALESFORCE_CONFIG = {
   authUrl: `${SALESFORCE_URL}/services/oauth2/authorize`,
   tokenUrl: `${SALESFORCE_URL}/services/oauth2/token`,
   redirectUri: `${APP_URL}/api/integrations/salesforce/callback`,
-  scopes: ['api', 'refresh_token', 'offline_access'],
+  scopes: ['api', 'refresh_token'],
 }
 
 export async function getSalesforceAuthUrl(companyId: string, redirectUri?: string) {
