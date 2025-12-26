@@ -1,4 +1,4 @@
-# SeedValidator Finance - API Reference
+# FinYeld AI - API Reference
 
 ## Overview
 

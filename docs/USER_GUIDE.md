@@ -1,8 +1,8 @@
-# SeedValidator Finance - User Guide
+# FinYeld AI - User Guide
 
 ## Welcome
 
-SeedValidator Finance is an AI-powered FP&A (Financial Planning & Analysis) platform designed for startups. This guide will help you get started and make the most of the platform.
+FinYeld AI is an AI-powered financial intelligence platform designed for startups. This guide will help you get started and maximize your financial yield.
 
 ---
 
