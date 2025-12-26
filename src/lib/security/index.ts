@@ -67,3 +67,23 @@ export {
     type AuditSeverity,
     type AuditLogEntry,
 } from './audit'
+
+// RBAC - Role-Based Access Control
+export {
+    hasPermission,
+    hasAnyPermission,
+    hasAllPermissions,
+    isRoleAtLeast,
+    getRoutePermission,
+    getAuthContext,
+    requireAuth,
+    requirePermission,
+    requireRole,
+    requireCompanyAccess,
+    ROLE_PERMISSIONS,
+    ROLE_HIERARCHY,
+    ROUTE_PERMISSIONS,
+    type UserRole,
+    type Permission,
+    type AuthContext,
+} from './rbac'

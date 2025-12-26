@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import prisma from '@/lib/prisma'
-import { rateLimitCheck, rateLimitResponse } from '@/lib/rate-limiter'
+import { rateLimitMiddleware, rateLimitResponse, checkAuthRateLimit } from '@/lib/rate-limiter'
 
 export async function POST(request: Request) {
   // Rate limiting for brute force protection
-  if (!rateLimitCheck(request)) {
-    return rateLimitResponse()
+  const rateLimitResult = rateLimitMiddleware(request, 'auth')
+  if (!rateLimitResult.allowed) {
+    return rateLimitResponse(rateLimitResult)
   }
 
   try {
