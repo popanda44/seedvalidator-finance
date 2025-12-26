@@ -264,6 +264,120 @@
 }
 
 /* ==========================================
+   Mobile-First Responsive Utilities
+   ========================================== */
+
+/* Touch-friendly tap targets (min 44px) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Safe area for mobile devices with notches */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Smooth touch scrolling */
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Touch feedback */
+.touch-feedback {
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.touch-feedback:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* Prevent text selection on touch */
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Mobile-optimized button */
+.btn-mobile {
+  min-height: 48px;
+  padding: 12px 24px;
+  font-size: 16px;
+  /* Prevents iOS zoom on focus */
+}
+
+/* Input zoom prevention on iOS */
+@media screen and (max-width: 768px) {
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Responsive spacing */
+.gap-responsive {
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .gap-responsive {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gap-responsive {
+    gap: 1.5rem;
+  }
+}
+
+/* Mobile card optimization */
+.card-mobile {
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .card-mobile {
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+  }
+}
+
+/* ==========================================
    Enhanced Animations
    ========================================== */
 
