@@ -7,6 +7,7 @@ Welcome to FinYeld AI! This guide outlines our development practices and how to 
 ## Git Workflow
 
 ### Branch Structure
+
 - **main** - Production code (protected, requires PR)
 - **develop** - Integration branch for features
 - **feature/** - New features
@@ -14,6 +15,7 @@ Welcome to FinYeld AI! This guide outlines our development practices and how to 
 - **hotfix/** - Critical production fixes
 
 ### Branch Naming Convention
+
 ```
 feature/PLT-123-add-burn-rate-calculation
 bugfix/PLT-456-fix-date-timezone-issue
@@ -26,18 +28,19 @@ hotfix/PLT-789-critical-security-patch
 
 Format: `type: description`
 
-| Type | Use Case |
-|------|----------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation |
-| `refactor` | Code refactoring |
-| `test` | Adding tests |
-| `chore` | Maintenance tasks |
-| `style` | Formatting (no code change) |
-| `perf` | Performance improvement |
+| Type       | Use Case                    |
+| ---------- | --------------------------- |
+| `feat`     | New feature                 |
+| `fix`      | Bug fix                     |
+| `docs`     | Documentation               |
+| `refactor` | Code refactoring            |
+| `test`     | Adding tests                |
+| `chore`    | Maintenance tasks           |
+| `style`    | Formatting (no code change) |
+| `perf`     | Performance improvement     |
 
 **Examples:**
+
 ```
 feat: add revenue forecasting API endpoint
 fix: resolve duplicate transaction bug
@@ -59,6 +62,7 @@ chore: upgrade Next.js to v14.2
 6. **Squash and merge** to develop
 
 ### PR Template Checklist
+
 - [ ] Code follows style guide
 - [ ] Tests cover new functionality (>80% coverage)
 - [ ] No console.logs or debugging code
@@ -93,11 +97,13 @@ npm run dev
 ## Testing
 
 ### Testing Pyramid
+
 - **70%** Unit Tests (functions, components)
 - **20%** Integration Tests (API endpoints)
 - **10%** E2E Tests (critical user flows)
 
 ### Commands
+
 ```bash
 # Run unit tests
 npm test
@@ -113,6 +119,7 @@ npm test -- path/to/test.ts
 ```
 
 ### Tools
+
 - **Unit**: Jest + React Testing Library
 - **Integration**: Supertest for APIs
 - **E2E**: Playwright
@@ -122,6 +129,7 @@ npm test -- path/to/test.ts
 ## Code Style
 
 ### ESLint & Prettier
+
 ```bash
 # Lint code
 npm run lint
@@ -131,6 +139,7 @@ npm run format
 ```
 
 ### Key Rules
+
 - Use TypeScript strict mode
 - No `any` types (use proper typing)
 - Export default for pages, named for utilities
@@ -153,6 +162,7 @@ npm run format
 ## Review Checklist
 
 Before requesting review:
+
 - [ ] Self-reviewed the code
 - [ ] Ran tests locally
 - [ ] Updated documentation

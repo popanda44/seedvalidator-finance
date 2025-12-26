@@ -63,10 +63,17 @@ function MetricCard({
               <div className="flex items-center gap-1 mt-1">
                 {trend === 'up' && <ArrowUpRight className="w-3 h-3 text-emerald-500" />}
                 {trend === 'down' && <ArrowDownRight className="w-3 h-3 text-red-500" />}
-                <span className={`text-xs font-medium ${trend === 'up' ? 'text-emerald-500' :
-                    trend === 'down' ? 'text-red-500' : 'text-muted-foreground'
-                  }`}>
-                  {change > 0 ? '+' : ''}{change}%
+                <span
+                  className={`text-xs font-medium ${
+                    trend === 'up'
+                      ? 'text-emerald-500'
+                      : trend === 'down'
+                        ? 'text-red-500'
+                        : 'text-muted-foreground'
+                  }`}
+                >
+                  {change > 0 ? '+' : ''}
+                  {change}%
                 </span>
               </div>
             )}
@@ -88,9 +95,7 @@ function StatusDot({ status }: { status: 'healthy' | 'warning' | 'critical' }) {
     warning: 'bg-amber-500',
     critical: 'bg-red-500',
   }
-  return (
-    <span className={`inline-block w-2 h-2 rounded-full ${colors[status]} animate-pulse`} />
-  )
+  return <span className={`inline-block w-2 h-2 rounded-full ${colors[status]} animate-pulse`} />
 }
 
 export default function DashboardPage() {
@@ -158,7 +163,11 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2 mb-1">
             <StatusDot status={runwayStatus} />
             <span className="text-xs text-muted-foreground font-medium">
-              {runwayStatus === 'healthy' ? 'All systems healthy' : runwayStatus === 'warning' ? 'Needs attention' : 'Critical alert'}
+              {runwayStatus === 'healthy'
+                ? 'All systems healthy'
+                : runwayStatus === 'warning'
+                  ? 'Needs attention'
+                  : 'Critical alert'}
             </span>
           </div>
           <h1 className="text-2xl font-bold text-foreground">Financial Overview</h1>
@@ -167,12 +176,7 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-          >
+          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
             <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
             Sync
           </Button>
@@ -206,9 +210,13 @@ export default function DashboardPage() {
         <MetricCard
           title="Runway"
           value={`${metrics.runway?.toFixed(1) || 0} mo`}
-          trend={runwayStatus === 'healthy' ? 'up' : runwayStatus === 'warning' ? 'neutral' : 'down'}
+          trend={
+            runwayStatus === 'healthy' ? 'up' : runwayStatus === 'warning' ? 'neutral' : 'down'
+          }
           icon={Target}
-          subtitle={runwayStatus === 'healthy' ? 'Healthy' : runwayStatus === 'warning' ? 'Monitor' : 'Low'}
+          subtitle={
+            runwayStatus === 'healthy' ? 'Healthy' : runwayStatus === 'warning' ? 'Monitor' : 'Low'
+          }
         />
         <MetricCard
           title="MRR"
@@ -278,8 +286,13 @@ export default function DashboardPage() {
                       className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${transaction.amount > 0 ? 'bg-emerald-100 dark:bg-emerald-900/30' : 'bg-muted'
-                          }`}>
+                        <div
+                          className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                            transaction.amount > 0
+                              ? 'bg-emerald-100 dark:bg-emerald-900/30'
+                              : 'bg-muted'
+                          }`}
+                        >
                           {transaction.amount > 0 ? (
                             <ArrowUpRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                           ) : (
@@ -292,12 +305,21 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className={`text-sm font-semibold ${transaction.amount > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-foreground'
-                          }`}>
-                          {transaction.amount > 0 ? '+' : ''}{formatCurrency(transaction.amount)}
+                        <p
+                          className={`text-sm font-semibold ${
+                            transaction.amount > 0
+                              ? 'text-emerald-600 dark:text-emerald-400'
+                              : 'text-foreground'
+                          }`}
+                        >
+                          {transaction.amount > 0 ? '+' : ''}
+                          {formatCurrency(transaction.amount)}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {formatDate(new Date(transaction.date), { month: 'short', day: 'numeric' })}
+                          {formatDate(new Date(transaction.date), {
+                            month: 'short',
+                            day: 'numeric',
+                          })}
                         </p>
                       </div>
                     </motion.div>
@@ -342,13 +364,16 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 alerts.slice(0, 3).map((alert: any) => (
-                  <div
-                    key={alert.id}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-muted/50"
-                  >
-                    <div className={`mt-0.5 ${alert.type === 'critical' ? 'text-red-500' :
-                        alert.type === 'warning' ? 'text-amber-500' : 'text-emerald-500'
-                      }`}>
+                  <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                    <div
+                      className={`mt-0.5 ${
+                        alert.type === 'critical'
+                          ? 'text-red-500'
+                          : alert.type === 'warning'
+                            ? 'text-amber-500'
+                            : 'text-emerald-500'
+                      }`}
+                    >
                       {alert.type === 'critical' || alert.type === 'warning' ? (
                         <AlertTriangle className="w-4 h-4" />
                       ) : (

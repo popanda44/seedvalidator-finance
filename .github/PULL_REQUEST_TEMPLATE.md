@@ -1,12 +1,13 @@
 ## Description
+
 <!-- Provide a brief description of the changes -->
 
-
 ## Related Issues
+
 <!-- Link related tickets: Closes #123, Fixes PLT-456 -->
 
-
 ## Type of Change
+
 - [ ] `feat` - New feature
 - [ ] `fix` - Bug fix
 - [ ] `docs` - Documentation update
@@ -16,16 +17,19 @@
 - [ ] `hotfix` - Critical fix
 
 ## Screenshots
+
 <!-- If applicable, add screenshots -->
 
-
 ## Testing
+
 <!-- Describe testing done -->
+
 - [ ] Unit tests added/updated
 - [ ] E2E tests added/updated
 - [ ] Tested locally
 
 ## Code Review Checklist
+
 - [ ] Code follows style guide (ESLint, Prettier)
 - [ ] Tests cover new functionality (>80% coverage)
 - [ ] No console.logs or debugging code
@@ -35,5 +39,5 @@
 - [ ] Self-reviewed the code
 
 ## Deployment Notes
-<!-- Any special deployment considerations -->
 
+<!-- Any special deployment considerations -->

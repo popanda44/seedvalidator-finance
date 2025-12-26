@@ -122,11 +122,7 @@ export default function RegisterPage() {
       heading="Start your free trial"
       subheading="No credit card required • 14-day free trial"
     >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="space-y-5"
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
         {/* Error Display */}
         {formError && (
           <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2 text-destructive">

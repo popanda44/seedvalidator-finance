@@ -19,7 +19,14 @@ export const metadata: Metadata = {
   title: 'FinYeld AI | Intelligent Financial Analytics for Startups',
   description:
     'AI-powered financial intelligence platform. Real-time analytics, predictive forecasting, and investor-ready insights that maximize your yield.',
-  keywords: ['fintech', 'AI analytics', 'startup finance', 'cash flow', 'runway calculator', 'financial intelligence'],
+  keywords: [
+    'fintech',
+    'AI analytics',
+    'startup finance',
+    'cash flow',
+    'runway calculator',
+    'financial intelligence',
+  ],
 }
 
 export default function RootLayout({

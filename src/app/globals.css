@@ -184,7 +184,6 @@
 }
 
 @keyframes pulse-soft {
-
   0%,
   100% {
     opacity: 1;
@@ -234,7 +233,12 @@
 
 /* Premium accent gradient - Green to Teal */
 .gradient-accent {
-  background: linear-gradient(135deg, hsl(152 70% 40%) 0%, hsl(180 60% 45%) 50%, hsl(200 65% 50%) 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(152 70% 40%) 0%,
+    hsl(180 60% 45%) 50%,
+    hsl(200 65% 50%) 100%
+  );
 }
 
 /* Success gradient - Bright Green */
@@ -310,7 +314,9 @@
 
 /* Touch feedback */
 .touch-feedback {
-  transition: transform 0.1s ease, opacity 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    opacity 0.1s ease;
 }
 
 .touch-feedback:active {
@@ -335,12 +341,11 @@
 
 /* Input zoom prevention on iOS */
 @media screen and (max-width: 768px) {
-
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  input[type="tel"],
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='number'],
+  input[type='tel'],
   textarea,
   select {
     font-size: 16px !important;
@@ -398,7 +403,8 @@
 }
 
 .animate-scroll {
-  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear
+    infinite;
 }
 
 .animate-shimmer {
@@ -416,7 +422,6 @@
 
 /* Glow pulse effect */
 @keyframes glow-pulse {
-
   0%,
   100% {
     box-shadow: 0 0 4px 2px hsl(var(--primary) / 0.2);
@@ -433,7 +438,6 @@
 
 /* Float animation */
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0px);
@@ -478,27 +482,27 @@
 }
 
 /* Stagger delay */
-.stagger-children>*:nth-child(1) {
+.stagger-children > *:nth-child(1) {
   animation-delay: 0ms;
 }
 
-.stagger-children>*:nth-child(2) {
+.stagger-children > *:nth-child(2) {
   animation-delay: 75ms;
 }
 
-.stagger-children>*:nth-child(3) {
+.stagger-children > *:nth-child(3) {
   animation-delay: 150ms;
 }
 
-.stagger-children>*:nth-child(4) {
+.stagger-children > *:nth-child(4) {
   animation-delay: 225ms;
 }
 
-.stagger-children>*:nth-child(5) {
+.stagger-children > *:nth-child(5) {
   animation-delay: 300ms;
 }
 
-.stagger-children>*:nth-child(6) {
+.stagger-children > *:nth-child(6) {
   animation-delay: 375ms;
 }
 
@@ -547,7 +551,6 @@
 
 /* Breathing animation */
 @keyframes breathe {
-
   0%,
   100% {
     transform: scale(1);
@@ -594,7 +597,6 @@
 
 /* Number tick */
 @keyframes number-tick {
-
   0%,
   100% {
     transform: translateY(0);
@@ -635,7 +637,6 @@
 
 /* Gradient Animation */
 @keyframes gradient-x {
-
   0%,
   100% {
     background-size: 200% 200%;

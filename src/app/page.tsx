@@ -21,9 +21,7 @@ export default function HomePage() {
                 <div className="h-8 w-8 bg-foreground rounded-full flex items-center justify-center group-hover:bg-foreground/90 transition-colors">
                   <div className="h-3 w-3 bg-background rounded-full" />
                 </div>
-                <span className="text-xl font-bold tracking-tight text-foreground">
-                  FinYeld AI
-                </span>
+                <span className="text-xl font-bold tracking-tight text-foreground">FinYeld AI</span>
               </Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
@@ -94,8 +92,8 @@ export default function HomePage() {
             </h1>
 
             <p className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
-              Stop guessing your runway. FinYeld AI connects to your bank accounts to
-              create an intelligent financial model that predicts, optimizes, and yields results.
+              Stop guessing your runway. FinYeld AI connects to your bank accounts to create an
+              intelligent financial model that predicts, optimizes, and yields results.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">

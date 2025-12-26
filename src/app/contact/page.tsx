@@ -75,9 +75,7 @@ export default function ContactPage() {
               <div className="h-8 w-8 bg-foreground rounded-full flex items-center justify-center group-hover:bg-foreground/90 transition-colors">
                 <div className="h-3 w-3 bg-background rounded-full" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-foreground">
-                FinYeld AI
-              </span>
+              <span className="text-xl font-bold tracking-tight text-foreground">FinYeld AI</span>
             </Link>
             <div className="flex items-center space-x-4">
               <Link
@@ -109,8 +107,8 @@ export default function ContactPage() {
               Get in touch
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Have questions about FinYeld AI? We&apos;d love to hear from you. Our team
-              typically responds within 24 hours.
+              Have questions about FinYeld AI? We&apos;d love to hear from you. Our team typically
+              responds within 24 hours.
             </p>
           </motion.div>
         </div>

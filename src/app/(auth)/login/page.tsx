@@ -5,16 +5,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { motion } from 'framer-motion'
-import {
-  Loader2,
-  AlertCircle,
-  ArrowRight,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  Github,
-} from 'lucide-react'
+import { Loader2, AlertCircle, ArrowRight, Mail, Lock, Eye, EyeOff, Github } from 'lucide-react'
 
 import { AuthSplitLayout } from '@/components/auth/auth-split-layout'
 import { Button } from '@/components/ui/button'
@@ -64,15 +55,8 @@ function LoginContent() {
   }
 
   return (
-    <AuthSplitLayout
-      heading="Welcome back"
-      subheading="Sign in to continue to your dashboard"
-    >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="space-y-5"
-      >
+    <AuthSplitLayout heading="Welcome back" subheading="Sign in to continue to your dashboard">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
         {/* Error Display */}
         {(error || formError) && (
           <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2 text-destructive">
@@ -145,9 +129,7 @@ function LoginContent() {
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="you@company.com"
                 required
                 className="w-full bg-secondary/40 border border-input rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
@@ -170,9 +152,7 @@ function LoginContent() {
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="••••••••"
                 required
                 className="w-full bg-secondary/40 border border-input rounded-xl pl-10 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
