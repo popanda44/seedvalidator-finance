@@ -60,7 +60,7 @@ export const AuthSplitLayout = ({
             </div>
           </div>
           <div>
-            <span className="text-xl font-bold text-foreground tracking-tight">SeedValidator</span>
+            <span className="text-xl font-bold text-foreground tracking-tight">FinYeld AI</span>
             <p className="text-xs text-muted-foreground">Financial Intelligence Platform</p>
           </div>
         </div>

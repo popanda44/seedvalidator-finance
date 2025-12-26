@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'SeedValidator Finance | AI-Powered FP&A for Startups',
+  title: 'FinYeld AI | Intelligent Financial Analytics for Startups',
   description:
-    'Real-time financial visibility, automated forecasting, and investor-ready reports. Know your runway. Plan with confidence.',
-  keywords: ['startup finance', 'cash flow', 'runway calculator', 'FP&A', 'financial planning'],
+    'AI-powered financial intelligence platform. Real-time analytics, predictive forecasting, and investor-ready insights that maximize your yield.',
+  keywords: ['fintech', 'AI analytics', 'startup finance', 'cash flow', 'runway calculator', 'financial intelligence'],
 }
 
 export default function RootLayout({

@@ -5,7 +5,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 // Email sender configuration - Use Resend's default domain for testing
 // For production, add a verified domain and set EMAIL_FROM environment variable
-const FROM_EMAIL = process.env.EMAIL_FROM || 'SeedValidator <onboarding@resend.dev>'
+const FROM_EMAIL = process.env.EMAIL_FROM || 'FinYeld AI <onboarding@resend.dev>'
 
 export interface EmailOptions {
   to: string | string[]
@@ -79,7 +79,7 @@ export async function sendRunwayAlert(email: string, companyName: string, runway
           <a href="https://potent-fin.vercel.app/dashboard" class="cta">View Dashboard →</a>
         </div>
         <div class="footer">
-          <p>SeedValidator Finance | AI-Powered FP&A for Startups</p>
+          <p>FinYeld AI | Intelligent Financial Analytics</p>
           <p>You received this because you have runway alerts enabled.</p>
         </div>
       </div>
@@ -127,7 +127,7 @@ export async function sendSpendingAlert(
           <a href="https://potent-fin.vercel.app/dashboard/expenses" class="cta">Review Expenses →</a>
         </div>
         <div class="footer">
-          <p>SeedValidator Finance | AI-Powered FP&A for Startups</p>
+          <p>FinYeld AI | Intelligent Financial Analytics</p>
         </div>
       </div>
     </body>
@@ -195,7 +195,7 @@ export async function sendWeeklyDigest(
           <a href="https://potent-fin.vercel.app/dashboard" class="cta">View Full Dashboard →</a>
         </div>
         <div class="footer">
-          <p>SeedValidator Finance | AI-Powered FP&A for Startups</p>
+          <p>FinYeld AI | Intelligent Financial Analytics</p>
         </div>
       </div>
     </body>

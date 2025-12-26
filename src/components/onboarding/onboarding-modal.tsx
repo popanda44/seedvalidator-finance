@@ -28,7 +28,7 @@ interface OnboardingModalProps {
 const steps = [
   {
     id: 'welcome',
-    title: 'Welcome to SeedValidator',
+    title: 'Welcome to FinYeld AI',
     description: 'Your AI-powered financial command center for startups.',
   },
   {
@@ -136,7 +136,7 @@ export function OnboardingModal({
                 </div>
                 <h2 className="text-2xl font-bold text-foreground mb-2">Hey {userName}! 👋</h2>
                 <p className="text-muted-foreground mb-8">
-                  Welcome to SeedValidator, your AI-powered financial command center. Let&apos;s get
+                  Welcome to FinYeld AI, your AI-powered financial command center. Let&apos;s get
                   you set up in under 2 minutes.
                 </p>
 

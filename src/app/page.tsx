@@ -22,7 +22,7 @@ export default function HomePage() {
                   <div className="h-3 w-3 bg-background rounded-full" />
                 </div>
                 <span className="text-xl font-bold tracking-tight text-foreground">
-                  SeedValidator
+                  FinYeld AI
                 </span>
               </Link>
             </div>
@@ -89,13 +89,13 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-5xl sm:text-7xl font-bold tracking-tighter text-foreground mb-6 leading-[1.1]">
-              The Financial <br />
-              <span className="text-muted-foreground">Nervous System.</span>
+              Maximize Your <br />
+              <span className="gradient-text">Financial Yield.</span>
             </h1>
 
             <p className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
-              Stop manually updating spreadsheets. SeedValidator connects to your bank accounts to
-              create a living, breathing financial model that updates in real-time.
+              Stop guessing your runway. FinYeld AI connects to your bank accounts to
+              create an intelligent financial model that predicts, optimizes, and yields results.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -103,7 +103,7 @@ export default function HomePage() {
                 href="/register"
                 className="inline-flex h-12 items-center justify-center rounded-lg bg-foreground px-8 text-sm font-medium text-background shadow transition-all hover:bg-foreground/90 hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
               >
-                Start Validation <ArrowRight className="ml-2 h-4 w-4" />
+                Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link
                 href="#demo"
@@ -152,7 +152,7 @@ export default function HomePage() {
               Powerful Features
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 text-foreground">
-              Why founders love SeedValidator
+              Why founders love FinYeld AI
             </h2>
             <p className="text-muted-foreground text-lg">
               We&apos;ve combined the speed of a spreadsheet with the power of a financial engine.
@@ -168,7 +168,7 @@ export default function HomePage() {
         <InfiniteMovingCards
           items={[
             {
-              quote: "SeedValidator clarified our burn rate instantly. It's concise and brutal.",
+              quote: "FinYeld AI clarified our burn rate instantly. It's concise and powerful.",
               name: 'Alex Chen',
               title: 'Founder, NexaAI',
             },
@@ -199,11 +199,11 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <h2 className="text-white text-[12vw] font-bold tracking-tighter leading-none opacity-90 select-none">
-            VALIDATE
+            YIELD
           </h2>
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 -mt-4 md:-mt-12 mb-12">
-            <h2 className="text-zinc-500 text-[12vw] font-bold tracking-tighter leading-none opacity-50 select-none">
-              NOW
+            <h2 className="text-emerald-500/50 text-[12vw] font-bold tracking-tighter leading-none select-none">
+              MORE
             </h2>
           </div>
 
@@ -217,7 +217,7 @@ export default function HomePage() {
                 href="/register"
                 className="w-full sm:w-auto inline-flex h-14 items-center justify-center rounded-full bg-white px-10 text-lg font-bold text-black hover:bg-zinc-200 transition-colors"
               >
-                Start Validation
+                Get Started Free
               </Link>
               <Link
                 href="/contact"
@@ -234,8 +234,8 @@ export default function HomePage() {
       <footer className="bg-black py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 bg-white rounded-md"></div>
-            <span className="text-white font-bold tracking-tight">SeedValidator</span>
+            <div className="h-6 w-6 bg-emerald-500 rounded-md"></div>
+            <span className="text-white font-bold tracking-tight">FinYeld AI</span>
           </div>
 
           <div className="flex gap-8 text-sm text-zinc-500">
@@ -250,7 +250,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <p className="text-zinc-600 text-xs">© 2025 SeedValidator Inc.</p>
+          <p className="text-zinc-600 text-xs">© 2025 FinYeld AI Inc.</p>
         </div>
       </footer>
     </div>

@@ -25,7 +25,7 @@ export async function createLinkToken(userId: string, _companyId: string) {
 
   const response = await plaidClient.linkTokenCreate({
     user: { client_user_id: userId },
-    client_name: 'SeedValidator Finance',
+    client_name: 'FinYeld AI',
     products: [Products.Transactions],
     country_codes: [CountryCode.Us],
     language: 'en',

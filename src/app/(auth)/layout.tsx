@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'Authentication | SeedValidator Finance',
-  description: 'Sign in to your SeedValidator Finance account',
+export const metadata = {
+  title: 'Sign In | FinYeld AI',
+  description: 'Sign in to your FinYeld AI account',
 }
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {

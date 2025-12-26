@@ -42,11 +42,11 @@ function UserSection() {
   const user = session?.user
   const initials = user?.name
     ? user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
     : 'U'
 
   const handleSignOut = () => {
@@ -141,7 +141,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
               <Building2 className="w-4 h-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-white">SeedValidator</span>
+            <span className="text-lg font-bold text-white">FinYeld AI</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}

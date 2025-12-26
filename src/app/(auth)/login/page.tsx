@@ -208,7 +208,7 @@ function LoginContent() {
 
         {/* Sign Up Link */}
         <p className="text-center text-sm text-muted-foreground">
-          New to SeedValidator?{' '}
+          New to FinYeld AI?{' '}
           <Link
             href="/register"
             className="font-semibold text-primary hover:text-primary/80 transition-colors"

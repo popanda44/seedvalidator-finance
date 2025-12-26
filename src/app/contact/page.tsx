@@ -76,7 +76,7 @@ export default function ContactPage() {
                 <div className="h-3 w-3 bg-background rounded-full" />
               </div>
               <span className="text-xl font-bold tracking-tight text-foreground">
-                SeedValidator
+                FinYeld AI
               </span>
             </Link>
             <div className="flex items-center space-x-4">
@@ -109,7 +109,7 @@ export default function ContactPage() {
               Get in touch
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Have questions about SeedValidator? We&apos;d love to hear from you. Our team
+              Have questions about FinYeld AI? We&apos;d love to hear from you. Our team
               typically responds within 24 hours.
             </p>
           </motion.div>
@@ -136,10 +136,10 @@ export default function ContactPage() {
                     <div>
                       <p className="font-medium text-foreground">Email</p>
                       <a
-                        href="mailto:hello@seedvalidator.com"
+                        href="mailto:hello@finyeld.ai"
                         className="text-muted-foreground hover:text-primary transition-colors"
                       >
-                        hello@seedvalidator.com
+                        hello@finyeld.ai
                       </a>
                     </div>
                   </div>
@@ -330,7 +330,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 bg-foreground rounded-md"></div>
-            <span className="font-bold tracking-tight">SeedValidator</span>
+            <span className="font-bold tracking-tight">FinYeld AI</span>
           </div>
 
           <div className="flex gap-8 text-sm text-muted-foreground">
@@ -345,7 +345,7 @@ export default function ContactPage() {
             </Link>
           </div>
 
-          <p className="text-muted-foreground text-xs">© 2025 SeedValidator Inc.</p>
+          <p className="text-muted-foreground text-xs">© 2025 FinYeld AI Inc.</p>
         </div>
       </footer>
     </div>

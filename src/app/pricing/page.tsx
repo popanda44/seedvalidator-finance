@@ -103,7 +103,7 @@ export default function PricingPage() {
                 <div className="h-3 w-3 bg-background rounded-full" />
               </div>
               <span className="text-xl font-bold tracking-tight text-foreground">
-                SeedValidator
+                FinYeld AI
               </span>
             </Link>
             <div className="flex items-center space-x-4">
@@ -257,7 +257,7 @@ export default function PricingPage() {
             Ready to take control of your finances?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Join 500+ founders who trust SeedValidator for their financial clarity.
+            Join 500+ founders who trust FinYeld AI for their financial clarity.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/register">
@@ -280,7 +280,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="h-6 w-6 bg-foreground rounded-md"></div>
-            <span className="font-bold tracking-tight">SeedValidator</span>
+            <span className="font-bold tracking-tight">FinYeld AI</span>
           </div>
 
           <div className="flex gap-8 text-sm text-muted-foreground">
@@ -298,7 +298,7 @@ export default function PricingPage() {
             </Link>
           </div>
 
-          <p className="text-muted-foreground text-xs">© 2025 SeedValidator Inc.</p>
+          <p className="text-muted-foreground text-xs">© 2025 FinYeld AI Inc.</p>
         </div>
       </footer>
     </div>

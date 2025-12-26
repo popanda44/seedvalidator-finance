@@ -28,7 +28,7 @@ export const AIChatPreview = () => {
           <Bot className="w-5 h-5 text-white" />
         </div>
         <div>
-          <div className="text-sm font-medium text-white">SeedValidator AI</div>
+          <div className="text-sm font-medium text-white">FinYeld AI</div>
           <div className="text-xs text-emerald-400 flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Online

@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
           <Building2 className="w-5 h-5 text-white" />
         </div>
-        <span className="text-xl font-bold text-slate-900 dark:text-white">SeedValidator</span>
+        <span className="text-xl font-bold text-slate-900 dark:text-white">FinYeld AI</span>
       </div>
 
       <Card className="border-0 shadow-xl bg-white dark:bg-slate-900">
