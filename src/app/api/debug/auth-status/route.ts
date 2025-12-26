@@ -12,14 +12,16 @@ export async function GET() {
       authenticated: !!session,
       session: session
         ? {
-            user: {
-              id: session.user?.id,
-              email: session.user?.email,
-              name: session.user?.name,
-              role: session.user?.role,
-            },
-            expires: session.expires,
-          }
+          user: {
+            id: session.user?.id,
+            email: session.user?.email,
+            name: session.user?.name,
+            role: session.user?.role,
+            companyId: session.user?.companyId,
+            companyName: session.user?.companyName,
+          },
+          expires: session.expires,
+        }
         : null,
     })
   } catch (error) {
