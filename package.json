@@ -45,6 +45,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "eslint-config-next": "^16.1.1",
     "framer-motion": "^12.23.26",
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",
@@ -80,7 +81,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.0.10",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "prettier": "^3.7.4",
@@ -88,6 +88,7 @@
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.50.1"
   }
 }
