@@ -36,7 +36,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 // Fetcher for SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Clean metric card component
+// Enhanced metric card with glassmorphism and animations
 function MetricCard({
   title,
   value,
@@ -44,6 +44,7 @@ function MetricCard({
   trend,
   icon: Icon,
   subtitle,
+  delay = 0,
 }: {
   title: string
   value: string | number
@@ -51,40 +52,50 @@ function MetricCard({
   trend?: 'up' | 'down' | 'neutral'
   icon: any
   subtitle?: string
+  delay?: number
 }) {
+  const trendColors = {
+    up: 'text-emerald-500',
+    down: 'text-red-500',
+    neutral: 'text-muted-foreground',
+  }
+
   return (
-    <Card className="bg-card border-border/50 hover:border-primary/30 transition-colors">
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <p className="text-xs font-medium text-muted-foreground mb-1">{title}</p>
-            <p className="text-xl font-bold text-foreground">{value}</p>
-            {change !== undefined && (
-              <div className="flex items-center gap-1 mt-1">
-                {trend === 'up' && <ArrowUpRight className="w-3 h-3 text-emerald-500" />}
-                {trend === 'down' && <ArrowDownRight className="w-3 h-3 text-red-500" />}
-                <span
-                  className={`text-xs font-medium ${
-                    trend === 'up'
-                      ? 'text-emerald-500'
-                      : trend === 'down'
-                        ? 'text-red-500'
-                        : 'text-muted-foreground'
-                  }`}
-                >
-                  {change > 0 ? '+' : ''}
-                  {change}%
-                </span>
-              </div>
-            )}
-            {subtitle && <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay }}
+    >
+      <Card className="group relative overflow-hidden bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-border/50 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+        {/* Subtle glow on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+        <CardContent className="p-4 relative z-10">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className="text-xs font-medium text-muted-foreground mb-1.5">{title}</p>
+              <p className="text-xl font-bold text-foreground tracking-tight">{value}</p>
+              {change !== undefined && (
+                <div className="flex items-center gap-1 mt-1.5">
+                  {trend === 'up' && <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" />}
+                  {trend === 'down' && <ArrowDownRight className="w-3.5 h-3.5 text-red-500" />}
+                  <span className={`text-xs font-semibold ${trendColors[trend || 'neutral']}`}>
+                    {change > 0 ? '+' : ''}
+                    {change}%
+                  </span>
+                </div>
+              )}
+              {subtitle && (
+                <p className="text-xs text-muted-foreground mt-1.5">{subtitle}</p>
+              )}
+            </div>
+            <div className="p-2.5 rounded-xl bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
+              <Icon className="w-5 h-5" />
+            </div>
           </div>
-          <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
-            <Icon className="w-5 h-5" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 
@@ -199,6 +210,7 @@ export default function DashboardPage() {
           change={5.2}
           trend="up"
           icon={DollarSign}
+          delay={0}
         />
         <MetricCard
           title="Burn Rate"
@@ -206,6 +218,7 @@ export default function DashboardPage() {
           change={metrics.burnChange || 0}
           trend={metrics.burnChange < 0 ? 'up' : 'down'}
           icon={Flame}
+          delay={0.05}
         />
         <MetricCard
           title="Runway"
@@ -217,6 +230,7 @@ export default function DashboardPage() {
           subtitle={
             runwayStatus === 'healthy' ? 'Healthy' : runwayStatus === 'warning' ? 'Monitor' : 'Low'
           }
+          delay={0.1}
         />
         <MetricCard
           title="MRR"
@@ -224,12 +238,14 @@ export default function DashboardPage() {
           change={metrics.mrrChange || 0}
           trend={metrics.mrrChange > 0 ? 'up' : 'neutral'}
           icon={TrendingUp}
+          delay={0.15}
         />
         <MetricCard
           title="Team Size"
           value={metrics.teamSize || 0}
           icon={Users}
           subtitle="Members"
+          delay={0.2}
         />
         <MetricCard
           title="Net Burn"
@@ -237,6 +253,7 @@ export default function DashboardPage() {
           trend={metrics.netBurn < 0 ? 'up' : 'down'}
           icon={Zap}
           subtitle={metrics.netBurn < 0 ? 'Profitable' : 'Burning'}
+          delay={0.25}
         />
       </div>
 
@@ -245,150 +262,171 @@ export default function DashboardPage() {
         {/* Left Column - Charts & Transactions */}
         <div className="xl:col-span-2 space-y-6">
           {/* Burn Trend Chart */}
-          <Card className="border-border/50">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-primary" />
-                Financial Trend
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BurnTrendChart data={burnTrend.length > 0 ? burnTrend : undefined} />
-            </CardContent>
-          </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+          >
+            <Card className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-border/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-primary" />
+                  Financial Trend
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <BurnTrendChart data={burnTrend.length > 0 ? burnTrend : undefined} />
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Recent Transactions */}
-          <Card className="border-border/50">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Clock className="w-4 h-4 text-primary" />
-                Recent Transactions
-              </CardTitle>
-              <Button variant="ghost" size="sm" className="text-primary">
-                View All
-              </Button>
-            </CardHeader>
-            <CardContent>
-              {recentTransactions.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">No transactions yet</p>
-                  <PlaidLinkDemoButton onSuccess={handleBankConnected} variant="outline" size="sm">
-                    Connect Bank to Import
-                  </PlaidLinkDemoButton>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {recentTransactions.slice(0, 6).map((transaction: any) => (
-                    <motion.div
-                      key={transaction.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                            transaction.amount > 0
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+          >
+            <Card className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-border/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-primary" />
+                  Recent Transactions
+                </CardTitle>
+                <Button variant="ghost" size="sm" className="text-primary">
+                  View All
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {recentTransactions.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground mb-4">No transactions yet</p>
+                    <PlaidLinkDemoButton onSuccess={handleBankConnected} variant="outline" size="sm">
+                      Connect Bank to Import
+                    </PlaidLinkDemoButton>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {recentTransactions.slice(0, 6).map((transaction: any) => (
+                      <motion.div
+                        key={transaction.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-9 h-9 rounded-lg flex items-center justify-center ${transaction.amount > 0
                               ? 'bg-emerald-100 dark:bg-emerald-900/30'
                               : 'bg-muted'
-                          }`}
-                        >
-                          {transaction.amount > 0 ? (
-                            <ArrowUpRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                          ) : (
-                            <ArrowDownRight className="w-4 h-4 text-muted-foreground" />
-                          )}
+                              }`}
+                          >
+                            {transaction.amount > 0 ? (
+                              <ArrowUpRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                            ) : (
+                              <ArrowDownRight className="w-4 h-4 text-muted-foreground" />
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">{transaction.name}</p>
+                            <p className="text-xs text-muted-foreground">{transaction.category}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{transaction.name}</p>
-                          <p className="text-xs text-muted-foreground">{transaction.category}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p
-                          className={`text-sm font-semibold ${
-                            transaction.amount > 0
+                        <div className="text-right">
+                          <p
+                            className={`text-sm font-semibold ${transaction.amount > 0
                               ? 'text-emerald-600 dark:text-emerald-400'
                               : 'text-foreground'
-                          }`}
-                        >
-                          {transaction.amount > 0 ? '+' : ''}
-                          {formatCurrency(transaction.amount)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {formatDate(new Date(transaction.date), {
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                              }`}
+                          >
+                            {transaction.amount > 0 ? '+' : ''}
+                            {formatCurrency(transaction.amount)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatDate(new Date(transaction.date), {
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
 
         {/* Right Column - AI Insights & Actions */}
         <div className="space-y-6">
           {/* AI Insights Panel */}
-          <Card className="border-border/50">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Brain className="w-4 h-4 text-primary" />
-                AI Insights
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AIInsightsPanel />
-            </CardContent>
-          </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.35 }}
+          >
+            <Card className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-border/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-primary" />
+                  AI Insights
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AIInsightsPanel />
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Alerts */}
-          <Card className="border-border/50">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-500" />
-                Alerts
-              </CardTitle>
-              <Button variant="ghost" size="sm" className="text-primary">
-                View All
-              </Button>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {alerts.length === 0 ? (
-                <div className="text-center py-4">
-                  <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">All clear! No alerts</p>
-                </div>
-              ) : (
-                alerts.slice(0, 3).map((alert: any) => (
-                  <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                    <div
-                      className={`mt-0.5 ${
-                        alert.type === 'critical'
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.45 }}
+          >
+            <Card className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-border/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  Alerts
+                </CardTitle>
+                <Button variant="ghost" size="sm" className="text-primary">
+                  View All
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {alerts.length === 0 ? (
+                  <div className="text-center py-4">
+                    <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">All clear! No alerts</p>
+                  </div>
+                ) : (
+                  alerts.slice(0, 3).map((alert: any) => (
+                    <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                      <div
+                        className={`mt-0.5 ${alert.type === 'critical'
                           ? 'text-red-500'
                           : alert.type === 'warning'
                             ? 'text-amber-500'
                             : 'text-emerald-500'
-                      }`}
-                    >
-                      {alert.type === 'critical' || alert.type === 'warning' ? (
-                        <AlertTriangle className="w-4 h-4" />
-                      ) : (
-                        <CheckCircle2 className="w-4 h-4" />
-                      )}
+                          }`}
+                      >
+                        {alert.type === 'critical' || alert.type === 'warning' ? (
+                          <AlertTriangle className="w-4 h-4" />
+                        ) : (
+                          <CheckCircle2 className="w-4 h-4" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{alert.title}</p>
+                        <p className="text-xs text-muted-foreground">{alert.message}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{alert.title}</p>
-                      <p className="text-xs text-muted-foreground">{alert.message}</p>
-                    </div>
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Quick Actions */}
           <div className="space-y-3">

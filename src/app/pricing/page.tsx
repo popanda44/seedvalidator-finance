@@ -157,54 +157,65 @@ export default function PricingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={cn(
-                  'relative rounded-2xl p-8 border transition-all duration-300 hover:shadow-xl',
-                  plan.popular
-                    ? 'border-primary bg-primary/5 shadow-lg scale-105'
-                    : 'border-border bg-card hover:border-primary/50'
-                )}
+                className="relative group"
               >
+                {/* Glow effect for popular plan */}
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold bg-primary text-primary-foreground shadow-lg">
-                      <Sparkles className="w-3 h-3" />
-                      Most Popular
-                    </span>
-                  </div>
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur-sm opacity-50 group-hover:opacity-75 transition-opacity" />
                 )}
 
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
-                  <p className="text-sm text-muted-foreground">{plan.description}</p>
+                <div className={cn(
+                  'relative rounded-2xl p-8 border transition-all duration-300 h-full',
+                  'bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm',
+                  plan.popular
+                    ? 'border-emerald-500/50 shadow-xl shadow-emerald-500/10'
+                    : 'border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5'
+                )}>
+                  {plan.popular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg">
+                        <Sparkles className="w-3 h-3" />
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="mb-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
+                    <p className="text-sm text-muted-foreground">{plan.description}</p>
+                  </div>
+
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-foreground">${plan.price}</span>
+                    <span className="text-muted-foreground">/{plan.period}</span>
+                  </div>
+
+                  <ul className="space-y-3 mb-8">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <Check className={cn(
+                          "w-5 h-5 shrink-0 mt-0.5",
+                          plan.popular ? "text-emerald-500" : "text-primary"
+                        )} />
+                        <span className="text-sm text-foreground">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link href="/register">
+                    <Button
+                      className={cn(
+                        'w-full',
+                        plan.popular
+                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg'
+                          : 'bg-foreground text-background hover:bg-foreground/90'
+                      )}
+                    >
+                      {plan.cta}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                 </div>
-
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-foreground">${plan.price}</span>
-                  <span className="text-muted-foreground">/{plan.period}</span>
-                </div>
-
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-sm text-foreground">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link href="/register">
-                  <Button
-                    className={cn(
-                      'w-full',
-                      plan.popular
-                        ? 'bg-primary hover:bg-primary/90'
-                        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                    )}
-                  >
-                    {plan.cta}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
               </motion.div>
             ))}
           </div>
@@ -233,7 +244,7 @@ export default function PricingPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="p-6 rounded-xl bg-card border border-border"
+                className="p-6 rounded-xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300"
               >
                 <div className="flex items-start gap-3">
                   <HelpCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, Shield, TrendingUp, BarChart3, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -29,14 +30,22 @@ export const AuthSplitLayout = ({
         <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-muted/30 to-transparent" />
       </div>
 
-      {/* Floating Orb - Subtle */}
+      {/* Floating Orbs - Enhanced */}
       <motion.div
         animate={{
           scale: [1, 1.05, 1],
           opacity: [0.15, 0.25, 0.15],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-[10%] right-[15%] w-[300px] h-[300px] bg-primary/20 blur-[100px] rounded-full"
+        className="absolute top-[10%] right-[15%] w-[300px] h-[300px] bg-emerald-500/20 blur-[100px] rounded-full"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        className="absolute bottom-[20%] left-[10%] w-[200px] h-[200px] bg-teal-500/20 blur-[80px] rounded-full"
       />
 
       {/* Main Content */}
@@ -46,7 +55,7 @@ export const AuthSplitLayout = ({
           href="/"
           className="group mb-8 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all w-fit"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card/80 group-hover:border-primary/50 transition-colors">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm group-hover:border-primary/50 transition-colors">
             <ArrowLeft className="h-4 w-4" />
           </div>
           <span className="text-sm font-medium">Back to home</span>
@@ -54,10 +63,13 @@ export const AuthSplitLayout = ({
 
         {/* Logo & Brand */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-11 w-11 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-            <div className="h-5 w-5 bg-background rounded-lg flex items-center justify-center">
-              <div className="h-2 w-2 bg-primary rounded-full" />
-            </div>
+          <div className="relative h-11 w-11 rounded-xl overflow-hidden shadow-lg shadow-emerald-500/20">
+            <Image
+              src="/logo.png"
+              alt="FinYeld AI"
+              fill
+              className="object-cover"
+            />
           </div>
           <div>
             <span className="text-xl font-bold text-foreground tracking-tight">FinYeld AI</span>
@@ -71,8 +83,8 @@ export const AuthSplitLayout = ({
           <p className="text-muted-foreground text-sm">{subheading}</p>
         </div>
 
-        {/* Form Card */}
-        <div className="w-full bg-card/70 backdrop-blur-sm border border-border/60 p-6 rounded-2xl shadow-xl shadow-black/5">
+        {/* Form Card - Enhanced Glassmorphism */}
+        <div className="w-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-border/60 p-6 rounded-2xl shadow-xl shadow-black/5">
           {children}
         </div>
 
