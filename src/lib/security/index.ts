@@ -116,3 +116,12 @@ export {
     type RequestContext,
 } from './request-logger'
 
+// Security Monitoring
+export {
+    SecurityMonitor,
+    type SecurityAlertType,
+    type AlertSeverity,
+    type SecurityAlert,
+} from './security-monitor'
+
+
