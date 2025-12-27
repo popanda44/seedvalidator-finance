@@ -48,6 +48,11 @@ export {
     expenseFilterSchema,
     apiKeySchema,
     webhookPayloadSchema,
+    // New schemas
+    forecastRequestSchema,
+    bankConnectionSchema,
+    transactionImportSchema,
+    createApiKeyRequestSchema,
     // Functions
     sanitizeHtml,
     escapeHtml,
@@ -87,3 +92,27 @@ export {
     type Permission,
     type AuthContext,
 } from './rbac'
+
+// API Key Authentication
+export {
+    ApiKeyService,
+    requireApiKey,
+    requirePermissionForApiKey,
+    hashApiKey as hashApiKeyForValidation,
+    generateTempApiKey,
+    type ApiKeyValidationResult,
+    type CreateApiKeyOptions,
+} from './api-keys'
+
+// Request Logging
+export {
+    createRequestContext,
+    logRequest,
+    logRequestError,
+    withRequestLogging,
+    getClientIP,
+    measureRequestTime,
+    type RequestLogEntry,
+    type RequestContext,
+} from './request-logger'
+

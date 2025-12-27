@@ -209,7 +209,7 @@ export const expenseFilterSchema = z.object({
  */
 export const apiKeySchema = z
     .string()
-    .regex(/^fyk_[a-zA-Z0-9_-]{32}$/, 'Invalid API key format')
+    .regex(/^fyk_[a-zA-Z0-9_-]+$/, 'Invalid API key format')
 
 /**
  * Webhook payload validation
@@ -218,6 +218,62 @@ export const webhookPayloadSchema = z.object({
     type: z.string(),
     timestamp: z.coerce.date().optional(),
     payload: z.record(z.unknown()),
+})
+
+// ==========================================
+// FORECAST & INTEGRATION VALIDATORS
+// ==========================================
+
+/**
+ * Forecast request validation
+ */
+export const forecastRequestSchema = z.object({
+    companyId: uuidSchema,
+    forecastType: z.enum(['revenue', 'expense', 'cash_flow', 'runway', 'headcount']),
+    forecastHorizon: z.number().int().min(1).max(36),
+    method: z.enum(['linear', 'exponential', 'seasonal', 'ai_powered', 'manual']).optional(),
+    includeScenarios: z.array(z.enum(['best_case', 'base_case', 'worst_case'])).optional(),
+    assumptions: z.record(z.unknown()).optional(),
+})
+
+/**
+ * Bank connection validation (Plaid integration)
+ */
+export const bankConnectionSchema = z.object({
+    publicToken: z.string().min(1, 'Public token is required'),
+    institutionId: z.string().min(1, 'Institution ID is required'),
+    institutionName: z.string().optional(),
+    accounts: z.array(z.object({
+        id: z.string().min(1),
+        name: z.string().min(1),
+        type: z.enum(['checking', 'savings', 'credit', 'depository', 'investment', 'loan', 'other']),
+        mask: z.string().optional(),
+    })).min(1, 'At least one account must be selected'),
+})
+
+/**
+ * Transaction import validation (bulk import)
+ */
+export const transactionImportSchema = z.object({
+    transactions: z.array(z.object({
+        amount: amountSchema,
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD'),
+        name: z.string().min(1).max(500),
+        category: z.string().optional(),
+        merchant: z.string().max(200).optional(),
+        notes: z.string().max(1000).optional(),
+    })).min(1).max(1000, 'Maximum 1000 transactions per import'),
+    bankAccountId: uuidSchema,
+    skipDuplicates: z.boolean().default(true),
+})
+
+/**
+ * API key creation request
+ */
+export const createApiKeyRequestSchema = z.object({
+    name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
+    permissions: z.array(z.string()).optional(),
+    expiresInDays: z.number().int().min(1).max(365).optional(),
 })
 
 // ==========================================
