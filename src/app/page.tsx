@@ -14,7 +14,7 @@ import { AIInsightTerminal } from '@/components/marketing/ai-insight-terminal'
 import { IntegrationPulse } from '@/components/marketing/integration-pulse'
 import { ComparisonTable } from '@/components/marketing/comparison-table'
 import { MobileMenuPanel, HamburgerIcon, useMobileMenu } from '@/components/layout/mobile-menu'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { CreativeThemeToggle } from '@/components/ui/creative-theme-toggle'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -153,7 +153,7 @@ export default function HomePage() {
         <div className="relative z-10 flex items-center gap-2">
           {/* Theme Toggle - Desktop */}
           <div className="hidden md:block">
-            <ThemeToggle />
+            <CreativeThemeToggle />
           </div>
 
           {/* Desktop Sign In */}
