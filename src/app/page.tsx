@@ -1,4 +1,5 @@
 'use client'
+// PATHS-inspired homepage enhancements - v2
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -183,28 +184,28 @@ export default function HomePage() {
 
       {/* Hero Section with Cloud Gradient */}
       <section className="cloud-gradient-bg relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16">
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          {/* Credibility Badge */}
+        <div className="relative z-10 max-w-4xl mx-auto text-center hero-glow">
+          {/* AI Platform Badge - PATHS inspired */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 credibility-badge mb-8"
+            className="ai-badge mb-6"
           >
-            <Shield className="h-4 w-4" />
-            <span>SOC-2 Compliant • Bank-Grade Security</span>
+            <Zap className="h-3.5 w-3.5" />
+            <span>AI-Powered Platform</span>
           </motion.div>
 
-          {/* Main Headline - Serif Style */}
+          {/* Main Headline - Enhanced dramatic styling */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="serif-heading text-5xl sm:text-6xl md:text-7xl text-foreground mb-6"
+            className="serif-heading hero-headline text-foreground mb-6"
           >
-            AI-Powered Financial
+            Step Into The Future
             <br />
-            <span className="gradient-text">Intelligence for Startups</span>
+            <span className="gradient-text">Of Financial Intelligence.</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -214,22 +215,28 @@ export default function HomePage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            Stop guessing your runway. FinYeld AI connects to your bank accounts
-            and creates intelligent financial models that predict, optimize, and
-            yield results—seamlessly.
+            FinYeld AI uses AI to structure personalized financial insights that evolve with
+            your startup, empowering you to optimize runway with speed and precision.
           </motion.p>
 
-          {/* Single Primary CTA */}
+          {/* Dual CTA Buttons - PATHS style */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-wrap items-center justify-center gap-4"
           >
             <Link
               href="/register"
               className="pill-button inline-flex items-center gap-2 bg-foreground text-background hover:bg-foreground/90 shadow-lg"
             >
-              Start Free Trial
+              Get Started
+            </Link>
+            <Link
+              href="#features"
+              className="cta-outline text-foreground"
+            >
+              Explore Features
               <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
@@ -269,6 +276,7 @@ export default function HomePage() {
       <section className="py-24 px-4 bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
+            <span className="section-tag">Solutions</span>
             <h2 className="serif-heading text-3xl md:text-4xl text-foreground mb-4">
               How Startups Use FinYeld AI
             </h2>
@@ -362,6 +370,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="mb-12"
           >
+            <span className="section-tag">Live Preview</span>
             <h3 className="text-2xl md:text-3xl font-semibold text-foreground mb-3">
               See FinYeld AI in Action
             </h3>
@@ -428,6 +437,7 @@ export default function HomePage() {
       {/* Testimonials */}
       <section id="testimonials" className="py-24 overflow-hidden bg-background">
         <div className="text-center mb-12">
+          <span className="section-tag">Testimonials</span>
           <h2 className="serif-heading text-3xl md:text-4xl text-foreground mb-4">
             Trusted by Leading Founders
           </h2>
