@@ -18,6 +18,8 @@
     "postinstall": "prisma generate",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
     "test:e2e": "playwright test",
     "format": "prettier --write ."
   },
